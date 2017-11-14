@@ -15,7 +15,8 @@ To some extent it is similar to the PSR standards, with some differences in inde
 * Using **snake_case**
   * Classes, namespaces, methods and functions: with capital initial.
   * Variables in lower case.
-  * Constans  all in upper case
+  * Constants all in upper case.
+
 
 ## Objectives
 * Fun.
