@@ -7,7 +7,7 @@ The idea is to release new Atlas version but now in open source.
 Little by little, in my spare time.
 
 
-## Code stlye
+## Code style
 To some extent it is similar to the PSR standards, with some differences in indenting, braces and naming that we decided as our style in the year 2003, regardless of the programming language used:
 
 * Indenting and braces: **Allman style**
