@@ -8,9 +8,9 @@ Little by little, in my spare time.
 
 
 ## Code stlye
-To some extent it is similar to the PSR standards, with some differences in intent, braces and naming that we decided already in the year 2003, regardless of the programming language used:
+To some extent it is similar to the PSR standards, with some differences in indenting, braces and naming that we decided as our style in the year 2003, regardless of the programming language used:
 
-* Indent and braces: **Allman style**
+* Indenting and braces: **Allman style**
 
 * Using **snake_case**
   * Classes, namespaces, methods and functions: with capital initial.
