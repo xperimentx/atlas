@@ -1,0 +1,14 @@
+cfg/*
+app/*
+control/*
+web/*
+media/*
+log/*
+index.php
+nbproject
+#nbproject/*
+#!nbproject/project.properties
+#!nbproject/project.xml
+.idea/*
+
+
