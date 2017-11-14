@@ -15,7 +15,7 @@ To some extent it is similar to the PSR standards, with some differences in inde
 * Using **snake_case**
   * Classes, namespaces, methods and functions: with capital initial.
   * Variables in lower case.
-  * Contans  all in upper case
+  * Constans  all in upper case
 
 ## Objectives
 * Fun.
@@ -23,4 +23,4 @@ To some extent it is similar to the PSR standards, with some differences in inde
 * Make compatible with autoload PSR-4.
 * Implement Auth modules, Api Rest, PSR-7.
 * Basic DB migrations.
-* Update the crud and control modules using api rest and AJAJ to offer a more dynamic experience.
+* Update the CRUD and control modules using api REST and AJAJ to offer a more dynamic experience.
