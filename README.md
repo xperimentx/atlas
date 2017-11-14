@@ -1,5 +1,5 @@
 # Atlas Php Toolkit
-Atlas iss a development toolkit for small PHP projects.
+Atlas is a development toolkit for small PHP projects.
 
 It does not pretend to replace the big PHP Frameworks. But share with those who may be useful the tastes and preferences of a group of senior developers who, to create small projects, prefer to use their own tools instead of oversized frameworks. Although helped by fantastic third-party libraries, such as FPDF, XpertMailer, ...
 
