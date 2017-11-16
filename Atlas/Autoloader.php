@@ -1,14 +1,19 @@
 <?php
+/**
+ *  Atlas Toolkit  
+ * 
+ * @link  https://github.com/xperimentx/atlas
+ * @link  https://xperimentX.com
+ * 
+ * @copyright 2017 Roberto González Vázquez
+ */
+
 namespace Atlas;
 
-
 /**
- * Autoloader.
+ * Autoloader, PSR-4 compatible
  * 
- * PSR-4 compatible
- * 
- * @author Roberto Gonzalez Vazquez
- * @author xperimentX https://github.com/xperimentx
+ * @author    Roberto González Vázquez
  */
 class Autoloader
 {
@@ -44,7 +49,7 @@ class Autoloader
     {     
         // Basic try to load direct full class name to file name        
         
-        if (file_exists( $filename = ROOT_PATH.'/'.strtolower(str_replace('\\','/',$class_name)).'.php'))
+        if (file_exists( $filename = ROOT_PATH.'/'.str_replace('\\','/',$class_name).'.php'))
         {
             include_once $filename;        
             return;
@@ -61,7 +66,7 @@ class Autoloader
      
                 if (!isset(self::$map[$prefix])) continue;
                 
-                $sufix  = strtolower(str_replace('\\','/',substr($class_name, $pos))).'.php'; // normal translation
+                $sufix  = str_replace('\\','/',substr($class_name, $pos)).'.php'; // normal translation
                                              
                 foreach (self::$map[$prefix] as $base_dir) 
                 {                        
@@ -75,7 +80,7 @@ class Autoloader
         }
         
         // load from include path        
-        if ($filename = stream_resolve_include_path(strtolower(str_replace('\\','/',$class_name)).'.php'))
+        if ($filename = stream_resolve_include_path(str_replace('\\','/',$class_name).'.php'))                
             include_once $filename;                                
     }
     

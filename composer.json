@@ -1,0 +1,18 @@
+{
+	"description": "xperimentX Atlas toolkit",
+	"name"       : "xperimentX/Atlas",
+	"type"       : "project",
+	"homepage"   : "https://github.com/xperimentx/atlas",
+	"license"    : "MIT",
+	
+    "support": 
+    {		
+		"wiki"   : "https://github.com/xperimentx/atlas/wiki",		
+		"source" : "https://github.com/xperimentx/atlas"
+	},
+	
+    "require": 
+    {
+		"php"    : ">=7.0.0"
+	}
+}

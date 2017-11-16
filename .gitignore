@@ -5,10 +5,28 @@ web/*
 media/*
 log/*
 index.php
+
+
+
+# project files --------
 nbproject
-#nbproject/*
-#!nbproject/project.properties
-#!nbproject/project.xml
-.idea/*
+.idea
+.buildpath
+.project
+.settings
+
+# operating system -------
+Thumbs.db
+.DS_Store
 
 
+# composer ---------------
+vendor
+composer.phar
+
+
+# phpunit ----------------
+phpunit.phar
+phpunit.xml
+tests/_output/*
+tests/_support/_generated
