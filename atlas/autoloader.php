@@ -22,6 +22,8 @@ class Autoloader
      *                            'complex/test' ],
      *  ...
      * ];      
+     * 
+     * Ex: Atlas\Autoloader::$map['App_namespace']=[Atlas\ROOT_PATH.'/app', Atlas\ROOT_PATH.'/app/src'];
      */
     static public $map = [];
             
