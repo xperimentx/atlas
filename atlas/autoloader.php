@@ -1,14 +1,14 @@
 <?php
 namespace Atlas;
 
-// Add root path to autoload
-\set_include_path (ROOT_PATH . PATH_SEPARATOR . \get_include_path());
 
 /**
  * Autoloader.
  * 
  * PSR-4 compatible
- * @author Roberto González Vázquez
+ * 
+ * @author Roberto Gonzalez Vazquez
+ * @author xperimentX https://github.com/xperimentx
  */
 class Autoloader
 {
@@ -123,10 +123,7 @@ class Autoloader
               \set_include_path (rtrim($base_dir, '/'). PATH_SEPARATOR . \get_include_path());  
         else  \set_include_path (\get_include_path()  . PATH_SEPARATOR .rtrim($base_dir, '/'))  ;   
         
-    }
-
-            
+    }            
 }
 
 
-spl_autoload_register('Atlas\Autoloader::load_class');
