@@ -13,7 +13,7 @@ namespace Atlas;
 /**
  * Autoloader, PSR-4 compatible
  * 
- * @author    Roberto González Vázquez
+ * @author Roberto González Vázquez
  */
 class Autoloader
 {
