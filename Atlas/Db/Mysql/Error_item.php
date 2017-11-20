@@ -8,7 +8,7 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas\Db;
+namespace Atlas\Db\Mysql;
 
 /**
  * Error info for Mysql::$errors items
@@ -16,7 +16,7 @@ namespace Atlas\Db;
  * @author Roberto González Vázquez
  */
 
-class Mysql_error
+class Error_item
 {
     /**@var string Method    */  public $method       = NULL;
     /**@var int Error code   */  public $code         = NULL;

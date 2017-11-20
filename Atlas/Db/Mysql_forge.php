@@ -20,10 +20,6 @@ namespace Atlas\Db;
 class Mysql_forge extends Mysql
 {
 
-    public function Table_rename( $old_table_name, $neo_table_name)
-    {
-        return $this->Query("ALTER TABLE `$old_table_name RENAME `$neo_table_name`;");
-    }
 
 
     /**
@@ -37,23 +33,7 @@ class Mysql_forge extends Mysql
 
 
 
-    /**
-     * Drops a column or a set of columns from a table
-     * @param string|array Field name or vector of field names to drop.
-     */
-    function Drop_columns ($table, $field_or_array_of_fields)
-    {
-        if (is_string($field_or_array_of_fields))
-            return $this->Query("ALTER TABLE `$table` DROP COLUMN `$field_or_array_of_fields`;");
-
-        $sql = '';
-        foreach ($field_or_array_of_fields as $field)
-        {
-            $sql .=  $sql ? "ALTER TABLE $table DROP COLUMN `$field`": ", DROP COLUMN `$field`";
-        }
-
-        return $this->Query($sql);
-    }
+ 
 
 
 }

@@ -11,6 +11,11 @@
 
 namespace Atlas\Db;
 
+use Atlas\Db\Mysql\Alter_table;
+use Atlas\Db\Mysql\Error_item;
+use mysqli;
+use mysqli_result;
+
 /**
  * Error info for Mysql::$errors items
  *
@@ -20,7 +25,7 @@ namespace Atlas\Db;
 class Mysql
 {
 
-    /** @var \mysqli */ public $mysqli = null;
+    /** @var mysqli */ public $mysqli = null;
 
 
     /** @var Mysql_error Errors                                       */  public $errors     = [];
@@ -40,12 +45,12 @@ class Mysql
      */
     public function Connect($host, $user_name, $password, $db_name='', $charset='utf8')
     {
-        $this->mysqli = new \mysqli($host, $user_name, $password, $db_name);
+        $this->mysqli = new mysqli($host, $user_name, $password, $db_name);
 
 
         if ($this->mysqli->connect_error)            //error de conexión
         {
-            $this->errors[] = $this->last_error = new Mysql_error(  __METHOD__,
+            $this->errors[] = $this->last_error = new Error_item(  __METHOD__,
                                                                     $this->mysqli->connect_errno,
                                                                     $this->mysqli->connect_error );
 
@@ -925,6 +930,14 @@ class Mysql
 
         return $html;
     }
+
+
+
+    function Alter_table($table)
+    {
+        return new Alter_table($table, $this);
+    }
+
 
 
 
