@@ -1,5 +1,14 @@
 <?php
-namespace Atlas;
+/**
+ *  Atlas Toolkit
+ *
+ * @link  https://github.com/xperimentx/atlas
+ * @link  https://xperimentX.com
+ *
+ * @copyright 2017 Roberto González Vázquez
+ */
+
+namespace Atlas\Db;
 
 /**
  * Error info for Mysql::$errors items
@@ -19,6 +28,6 @@ class Mysql_error
         $this->method       = $method      ;
         $this->code         = $code        ;
         $this->description  = $description ;
-        $this->query        = $query       ; 
+        $this->query        = $query       ;
     }
 }

@@ -9,7 +9,7 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas;
+namespace Atlas\Db;
 
 /**
  * Error info for Mysql::$errors items
@@ -73,7 +73,7 @@ class Mysql
     /**
      * Performs a query on the database
      *
-     * @param string  $query             Consulta sql
+     * @param string  $query            Sql query
      * @return mixed|null  null:error or mysqli::query result
      */
     public function Query ($query )
@@ -92,7 +92,7 @@ class Mysql
 
 
     /**
-     * Return first column of first row of a query
+     * Returns first column of first row of a query result
      *
      * @param string  $query  SELECT sql query
      *
@@ -120,11 +120,8 @@ class Mysql
     /**
      * Devuelve la primera columna de una consulta SELECT
      *
-     * @param string     $query             Consulta sql SELECT
-     * @param bool      $throw_exceptions  true indica que se lanzarán excepciones en caso de error
+     * @param string     $query         Select query
      * @return array|null     Vector con los valores de la primera columna devuelta por la consulta
-     *
-     *
      */
     public function Column ($query)
     {
@@ -150,9 +147,8 @@ class Mysql
     /**
      * Devuelve la primera la primera fila de una consulta SELECT en forma de objeto
      *
-     * @param string     $query             Consulta sql para obtener los valores
-     * @param string     $query             Consulta sql para obten
-     * @param string     $class_name        Nombre de la clase. 2016
+     * @param string     $query            Select query
+     * @param string     $class_name       Class Name of objects
      * @return object|null Primera fila, en caso de error o no encontrado devolverá null
      */
     public function Row_object ($query, $class_name='stdClass')
@@ -175,8 +171,7 @@ class Mysql
     /**
      * Devuelve la primera la primera fila de una consulta SELECT en forma de vector asociativo
      *
-     * @param string     $query             Consulta sql para obtener los valores
-     * @param bool      $throw_exceptions  true indica que se lanzarán excepciones en caso de error
+     * @param string     $query            Select query
      *
      * @return array|null Primera fila, en caso de error o no encontrado devolverá null
      */
@@ -200,9 +195,9 @@ class Mysql
 
 
     /**
-     * Devuelve un vector de objetos con las filas de una consulta SELECT
-     * @param string     $query             Consulta sql para obtener los valores
-     * @param string     $class_name        Nombre de la clase. 2016
+     * Array of object qhit the result
+     * @param string     $query             Select query
+     * @param string     $class_name        Class Name of objects
      * @return array|null    Objetos, en caso de error o no encontrado devolverá array vacío
      */
     public function  Rows_objects  ($query, $class_name='stdClass')
@@ -225,7 +220,9 @@ class Mysql
 
 
 
-
+    /*
+     * @param string     $class_name        Class Name of objects
+     */
     public function Fetch_object($result, $class_name='stdClass')
     {
        if (!$result) return null;
@@ -237,7 +234,7 @@ class Mysql
        return $obj;
     }
 
-    
+
 
     public function Fetch_assoc($result)
     {
@@ -253,11 +250,9 @@ class Mysql
 
 
     /**
-     * Devuelve un vector vectores asociativos con las filas de una consulta SELECT
-     * @param string     $query             Consulta sql para obtener los valores
-     * @param bool        $throw_exceptions Dice si lanzan excepciones en caso de error
-     *
-     * @return array[]array[string]    Resultado, en caso de error o no encontrado devolverá array vacío
+     * Array asocciative arrays with the result
+     * @param string     $query             Select query
+     * @return array
      */
     public function Rows_assoc ($query )
     {
@@ -282,11 +277,9 @@ class Mysql
 
 
     /**
-     * Devuelve un vector con los datos de una columna
+     *Returns a clumns as array
      * @param string     $query             Consulta sql para obtener la columna
-     * @param bool        $throw_exceptions Dice si lanzan excepciones en caso de error
-     *
-     * @return array[]    Resultado, en caso de error o no encontrado devolverá array vacío
+     * @return array
      */
     public function Col ($query )
     {
