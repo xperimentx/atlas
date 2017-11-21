@@ -9,45 +9,84 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas\Db;
+namespace Atlas;
 
-use Atlas\Db\Mysql\Alter_table;
-use Atlas\Db\Mysql\Error_item;
+use Atlas\Cfg;
+use Atlas\Mysql\Alter_table;
+use Atlas\Mysql\Error_item;
 use mysqli;
 use mysqli_result;
 
+
 /**
- * Error info for Mysql::$errors items
+ * MySQL helper
  *
  * @author Roberto González Vázquez
  */
-
 class Mysql
 {
 
-    /** @var mysqli */ public $mysqli = null;
+    /** @var mysqli   MySQLi Handler                                    */  public $mysqli = null;
+    /** @var Mysql_error[] Errors                                       */  public $errors     = [];
+    /** @var Mysql_error Last error. Null if last call is successful .  */  public $last_error = null;
+
+    /** @var Mysql\Forge    */ private $forge;
+    /** @var Mysql\Profiler */ private $profiler_obj;
+    function __construct()
+    {
+        $this->forge    = new Mysql\Forge   ($this);
+        $this->profiler = new Mysql\Profiler($this);
+    }
+
+    /**
+     * Profiler extension.
+     * @return Mysql\Profiler
+     */
+    function Profiler()
+    {
+        if (!$this->profiler_obj)
+        $this->profiler_obj = new Mysql\Profiler($this);
+
+        return $this->profiler_obj;
+    }
 
 
-    /** @var Mysql_error Errors                                       */  public $errors     = [];
-    /** @var Mysql_error Last error. Null if last call is succesfull .*/  public $last_error = null;
+    /**
+     * Forge extension.
+     * @return Mysql\Profiler
+     */
+    function Forge()
+    {
+        if (!$this->profiler_obj)
+        $this->profiler_obj = new Mysql\Profiler($this);
 
-
+        return $this->profiler_obj;
+    }
 
 
     /**
      * Creates a new mysqli object and connects it to the MySQL server
      *
-     * @param string $host        Host name or an IP address of MySQL server.
-     * @param string $user_name  The MySQL user name.
+     * @param string $server      Host name or an IP address of MySQL server.
+     * @param string $user_name   The MySQL user name.
      * @param string $password
      * @param string $db_name     Default database to be used when performing queries.
-     * @return bool
+     * @return bool  Is connection successful.
      */
-    public function Connect($host, $user_name, $password, $db_name='', $charset='utf8')
+    public function Connect($server, $user_name, $password, $db_name='', $charset='utf8', $port=3306 ,$socket =null)
     {
-        $this->mysqli = new mysqli($host, $user_name, $password, $db_name);
+        $this->mysqli = new mysqli($server, $user_name, $password, $db_name);
+        return  $this->After_connect($charset);
+    }
 
 
+    /**
+     * To be called after a manual  creation of mysqli object.
+     *
+     * @return bool Is connection successful.
+     */
+    protected function After_connect($charset='utf8')
+    {
         if ($this->mysqli->connect_error)            //error de conexión
         {
             $this->errors[] = $this->last_error = new Error_item(  __METHOD__,
@@ -66,6 +105,7 @@ class Mysql
     }
 
 
+
     protected function Error($method, $query)
     {
         $this->errors[] = $this->last_error = new Mysql_error( $method,
@@ -81,7 +121,7 @@ class Mysql
      * @param string  $query            Sql query
      * @return mixed|null  null:error or mysqli::query result
      */
-    public function Query ($query )
+    protected function Query_internal ($query , $caller_method)
     {
         $this->last_error = null;
 
@@ -90,9 +130,38 @@ class Mysql
             return $result ;
         }
 
-        $this->Error(__METHOD__, $query);
+        $this->Error($caller_method, $query);
         return null;
     }
+
+
+    /**
+     * Performs a query on the database
+     *
+     * @param string  $query            Sql query
+     * @return mixed|null  null:error or mysqli::query result
+     */
+    public function Query ($query )
+    {
+        return $this->Query_internal($query, __METHOD__);
+    }
+
+
+    /**
+     * Performs a query on the database en return the number of affected rows
+     *
+     * @param string  $query   Sql query
+     *
+     * @return int|null  affected rows by query, null if error
+     */
+    public function Query_ar ($query )
+    {
+        return  $this->Query($query)
+                ? $this->mysqli->affected_rows
+                : null;
+    }
+
+
 
 
 
@@ -105,20 +174,17 @@ class Mysql
      */
     public function Scalar ($query )
     {
-        $this->last_error = null;
-
-        if ($result = @$this->mysqli->query($query))  //:=
+        if ($result = $this->Query_internal($query, __METHOD__))  //:=
         {
             $row = $result->fetch_row();
             $result->close();
 
-            return $row? $row[0] : null ;
+            return $row ? $row[0] : null ;
         }
-
-        $this->Error(__METHOD__, $query);
 
         return null;
     }
+
 
 
 
@@ -130,21 +196,17 @@ class Mysql
      */
     public function Column ($query)
     {
-        $this->last_error = null;
+        $lista = [];
 
-        $lista = array();
-
-        if ($result = @$this->mysqli->query($query))
+        if ($result = $this->Query_internal($query, __METHOD__))  //:=
         {
             while ($row= $result->fetch_row())
                 $lista[]= $row[0];
 
             $result->close();
-
-            return $lista;
         }
 
-        $this->Error(__METHOD__, $query); return [];
+        return $lista;
     }
 
 
@@ -158,18 +220,14 @@ class Mysql
      */
     public function Row_object ($query, $class_name='stdClass')
     {
-        $this->last_error = null;
-
-        if ($result = @$this->mysqli->query($query))
+        if ($result = $this->Query_internal($query, __METHOD__))  //:=
         {
             $row    = $result->fetch_object($class_name);
-
             $result->close();
-
             return $row;
         }
 
-        return  $this->Error(__METHOD__, $query, FALSE);
+       return null;
     }
 
 
@@ -182,17 +240,13 @@ class Mysql
      */
     public function Row_assoc ($query)
     {
-        $this->last_error = null;
-
-        if ($result = @$this->mysqli->query($query))
+        if ($result = $this->Query_internal($query, __METHOD__))  //:=
         {
             $row= $result->fetch_assoc();
             $result->close();
-
             return $row;
         }
 
-        $this->Error(__METHOD__, $query);
         return null;
     }
 
@@ -207,19 +261,16 @@ class Mysql
      */
     public function  Rows_objects  ($query, $class_name='stdClass')
     {
-        $this->last_error = null;
+        $lista = [];
 
-        $lista = array();
-        if ($result = @$this->mysqli->query($query))
+        if ($result = $this->Query_internal($query, __METHOD__))  //:=
         {
-            while ($obj = $result->fetch_object($class_name))  $lista[]= $obj;
+            while ($obj = $result->fetch_object($class_name))
+                $lista[]= $obj;
 
             $result->close();
-
-            return $lista;
         }
 
-        $this->Error(__METHOD__, $query);
         return [];
     }
 
@@ -261,49 +312,38 @@ class Mysql
      */
     public function Rows_assoc ($query )
     {
-        $this->last_error = null;
+        $lista = [];
 
-        $lista = array();
-        if ($result = @$this->mysqli->query($query))
+        if ($result = $this->Query_internal($query, __METHOD__))  //:=
         {
             while ($row= $result->fetch_assoc())
-            {
                 $lista[]= $row;
-                //echo ATLAS::Memory_usage();
-            }
-            $result->close();
 
-            return $lista;
+            $result->close();
         }
 
-        $this->Error(__METHOD__, $query);
-        return [];
+        return $lista;
     }
 
 
     /**
-     *Returns a clumns as array
-     * @param string     $query             Consulta sql para obtener la columna
+     * Returns a column as array
+     * @param string     $query
      * @return array
      */
     public function Col ($query )
     {
-        $this->last_error = null;
+        $lista = [];
 
-        $lista = array();
-        if ($result = @$this->mysqli->query($query))
+        if ($result = $this->Query_internal($query, __METHOD__))  //:=
         {
             while ($row= $result->fetch_row())
-            {
                 $lista[] = $row[0];
-            }
-            $result->close();
 
-            return $lista;
+            $result->close();
         }
 
-        $this->Error(__METHOD__, $query);
-        return [];
+        return $lista;
     }
 
 
@@ -316,11 +356,9 @@ class Mysql
      */
     public function Cols_assoc ($query )
     {
-        $this->last_error = null;
+        $lista = [];
 
-        $lista = array();
-
-        if ($result = @$this->mysqli->query($query))
+        if ($result = $this->Query_internal($query, __METHOD__))  //:=
         {
             while ($row= $result->fetch_assoc())
             {
@@ -328,12 +366,9 @@ class Mysql
                     $lista[$i][]= $v;
             }
             $result->close();
-
-            return $lista;
         }
 
-        $this->Error(__METHOD__, $query);
-        return [];
+        return $lista;
     }
 
 
@@ -365,6 +400,7 @@ class Mysql
         return null;
     }
 
+
     /**
      * La consulta debe devolver una columna con el índice (id) y otra con el valor (name)
      * @param string $query    ejemplo: SELECT id , name FROM provincias WHERE comunidad='galicia' ORDER BY name
@@ -389,37 +425,6 @@ class Mysql
         $this->Error(__METHOD__, $query); return [];
     }
 
-
-
-    /**
-     * La consulta debe devolver una columna con el índice (id) , una con el nombre (name) y otra con el valor (value)
-     * @param string $query    ejemplo: SELECT id , name FROM provincias WHERE comunidad='galicia' ORDER BY name
-     * @param bool      $throw_exceptions  true indica que se lanzarán excepciones en caso de error
-     * @return array|null  Los índices contendrán la columna 'id' y los valores la columna 'name', null si error
-    */
-    public function Vector_pad ($width_chars, $pad_char, $unit, $query )
-    {
-        $this->last_error = null;
-
-        // sustituir espacio por nbsp &#160
-        //if ($pad_char==' ') $pad_char=' ';
-
-        $lista = array();
-        if ($result = @$this->mysqli->query($query))
-        {
-            while ($row= $result->fetch_assoc())
-            {
-                $lista [$row['id'] ] = str_replace(' ',' ',$row['name'].str_repeat($pad_char, $width_chars- mb_strlen($row['name'].$row['value'].$unit)).$row['value'].$unit);
-
-            }
-
-            $result->close();
-
-            return $lista;
-        }
-
-        $this->Error(__METHOD__, $query); return [];
-    }
 
 
 
@@ -532,14 +537,8 @@ class Mysql
 
 
 
-    /**
-     * Texto del explicativo último error , o false si al última llamada a un método de la clase tuvo éxito
-     * @return false|string
-     */
-    public function  Error_msg()
-    {
-        return $this->error_msg;
-    }
+
+
 
 
     /**
@@ -606,10 +605,10 @@ class Mysql
         return $this->mysqli->insert_id;
     }
 
+
     /**
-     * Affected rows
-     * ilas afectadas por una modificación, borrado...
-     * @return null|int
+     * Affected rows in a previous MySQL operation
+     * @return int|null
      */
     public function Affected_rows()
     {
@@ -654,49 +653,6 @@ class Mysql
     }
 
 
-
-    /**
-     * Devuelve un csv con los valores de una columna
-     * @param string $query consulta que devuelva una sóla columna
-     * @param bool   $throw_exceptions  true indica que se lanzarán excepciones en caso de error
-     * @return csv
-     * @uses Column()
-     * @see Csv_str()
-     */
-    public function Csv ($query)
-    {
-        $data = $this->Column($query, $throw_exceptions);
-
-        if (!$data) return null;
-
-        return implode(',', $data);
-
-    }
-
-
-
-    /**
-     * Devuelve un csv con los valores de una columna, siendo cada valor una cadena etrecomillada y segura con sql
-     * @param string $query consulta que devuelva una sóla columna
-     * @param bool   $throw_exceptions  true indica que se lanzarán excepciones en caso de error
-     * @return csv
-     * @uses Column()
-     * @see Csv()
-     */
-    public function Csv_str ($query)
-    {
-        $data = $this->Column($query, $throw_exceptions);
-
-        if (!$data) return null;
-
-        $out = array();
-
-        foreach ($datas as $d)
-            $out[]= $this->Str($d);
-
-        return implode(',', $out);
-
-    }
 
 
     // ---- Funciones añadidas y adaptadas de atlas posteriores --
@@ -896,51 +852,15 @@ class Mysql
 
 
 
-    public function profile_init()
-    {
-        self::$db->Query("set profiling_history_size=100");
-        self::$db->Query("set profiling=1");
-    }
-
-    public function profile_result()
-    {
-        return self::$db->Rows_objects('SHOW PROFILES', FALSE);
-    }
 
 
 
-    public function profile_result_html($explain=FALSE)
-    {
-        $html = "<br/><hr><h1>Mysql profile</h1>". DB_REPORT::Html_('SHOW PROFILES' , FALSE, FALSE);
 
-        $profiles = self::$db->Rows_objects('SHOW PROFILES', FALSE);
-
-        if (!$explain)
-            return $html;
-
-        if ($profiles)
-        {
-            foreach ($profiles as $p)
-            {
-                if ($p->Duration<'0.01') continue;
-                $html.="<h1>Query $p->Query_ID - &nbsp; $p->Duration s</h1><pre style='font-weight:bold'>".htmlspecialchars($p->Query)."<pre>";
-                $html.=DB_REPORT::Html_('EXPLAIN '.$p->Query , FALSE, FALSE);
-            }
-        }
-
-        return $html;
-    }
-
-
-
-    function Alter_table($table)
-    {
-        return new Alter_table($table, $this);
-    }
 
 
 
 
 }
+
 
 

@@ -8,7 +8,7 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas\Db\Mysql;
+namespace Atlas\Mysql;
 
 /**
  * Error info for Mysql::$errors items
