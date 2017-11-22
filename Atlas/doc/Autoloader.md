@@ -1,4 +1,4 @@
-[Atlas TOC](-Table_of_contens_.md)
+[Atlas TOC](.)
 
 # Autoloader
 
