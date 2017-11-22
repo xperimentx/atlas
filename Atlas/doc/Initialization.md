@@ -1,6 +1,6 @@
-![xperimentx atlas](images/atlas.png) 
+[Atlas TOC](.) 
 
-[Atlas TOC](.)
+![xperimentx atlas toolkit](images/atlas.png) 
 
 # How to include Atlas Toolkit in your php main file
 
