@@ -2,11 +2,11 @@
 
 ![xperimentx atlas](images/atlas.png) 
 
-> * [About Atlas](#about-atlas)
-> * [Features](#features)
-> * [Goals](#goals)
-> * [Code Style](Code-style.md)
-> * [History](History.md)
+* [About Atlas](#about-atlas)
+* [Features](#features)
+* [Goals](#goals)
+* [Code Style](Code-style.md)
+* [History](History.md)
 
 # About atlas
 
@@ -31,7 +31,7 @@ The todo-list
    - [ ] API REST server foundation.
 
   
-- [] Models
+- [ ] Models
   - [ ] Objected Oriented Models.
   - [ ] Active-record.
   - [ ] Common operation helpers.
