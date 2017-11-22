@@ -7,12 +7,15 @@
 > * [Objetives](Objetives.md)
 > * [Code Style](Code-style.md)
 
-#About atlas
+# About atlas
 
-#Features
+Atlas is a development toolkit for small PHP projects.
+
+# Features
 Features implemented or in development
 
-Autoloader compatible whit PSR-4.
-MySQL & MariaDB support using mysqli.
-Database forge.
-Basic operations helpers.
+* **Autoloader** compatible whit PSR-4.
+* **MySQL** & MariaDB support using mysqli.
+  * Database forge.
+  * Basic operations helpers.
+
