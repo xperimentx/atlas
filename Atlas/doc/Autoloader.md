@@ -1,6 +1,8 @@
-[Atlas TOC](.) 
+[Documentation](README.md)
 
-![xperimentx atlas toolkit](images/atlas.png) 
+![xperimentx atlas](images/atlas.png) 
+
+
 
 # Autoloader
 
