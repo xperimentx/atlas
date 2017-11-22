@@ -16,8 +16,12 @@ namespace Atlas;
  */
 class Cfg
 {
-    /** @var string Main configuration file          , give value before calling Atlas::Initialize ()     */ public static $cfg_file             = '/Cfg/Atlas.php';
-    /** @var string Configuration file for autoloader, give value before calling Atlas::Initialize ()     */ public static $cfg_file_autoloader  = null;
-    /** @var Db\Cfg MySQL or MariaDBcon figuration                                                         */ public static $db                   ;
+    /** @var string Main configuration file,
+      * give value before calling Atlas::Initialize ()     */ public static $cfg_file             = '/Cfg/Atlas.php';
+      
+    /** @var string Configuration file for autoloader,
+     *  give value before calling Atlas::Initialize ()     */ public static $cfg_file_autoloader  = null;
+
+    /** @var Db\Cfg MySQL or MariaDBcon figuration         */ public static $db                   ;
 }
 

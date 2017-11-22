@@ -2,38 +2,35 @@
 
 Atlas Autoloader is  PSR-4 compatible.
 
-* Translates full qualified class name to  file name following PSR-4 specification
-* Load from Altas::$root_path.
-* Mappings to translate namespace prefixes in base directories.
-* Load from from include path.
-* Uses spl_autoload_register.
+* Translates full qualified class name to  file name following PSR-4 specification.
+* Try to load files form include path.
+* `Altas::$root_path` is automatically added to include path.
+* You can define a mapping from namespaces to paths
 
 
-## Maps
 
-**Atlas\Autoloader::$map** is an array that maps namespaces prefixes with their base directories.
-
-* Base directories must not have trailing **/** .
-* Namespace prefixes must not have leading or trailing **\** .
-
-Sample structure of Atlas\Autoloader::$map:
-````json
-[
-    'Namespace_prefix'   => [base directories],
-    'Acme\Couso\Chimes   => ['./vendor/couso/chimes-src' ],
-    'Name_space\Complex  => ['complex/src_1', 'complex/test: 2' ]
- ];
-...
+## Namespace Maps
+`Atlas\Autoloader::Add_to_map()` adds a new base directory or an array of base directories.
+* Base directories must not have trailing `/`.
+* Namespace prefixes must end in `\`
 
 ```php
-Atlas\Autoloader::Add_to_map ('Foo_app2ns', __DIR__.'/fake/dir');
-Atlas\Autoloader::Add_to_map ('Foo_app2ns', [Atlas::$root_path.'/devel/autoloader/src', __DIR__.'/src/x']);
+
+Atlas\Autoloader::Add_to_map ('Namespace_prefix\\', 'My_libraries/Name_space_dir');
+Atlas\Autoloader::Add_to_map ('Acme\\'            , Atlas::$root.'/vendor/Acme/src');
+Atlas\Autoloader::Add_to_map ('Acme\\Special\\'   , [ __DIR__.'/Special', 'vendor/Acme/test/Special']');
 ```
 
+
 ## Load from include path
+
+You can add a directory to include path with `\set_include_path()`
+or use  `Atlas\Autoloader::Add_to_include_path()` method.
+
 ```php
 Atlas\Autoloader::Add_to_include_path(__DIR__.'/src/path_1' );
 ```
+
 
 
 ## Ignore Atlas autoloader

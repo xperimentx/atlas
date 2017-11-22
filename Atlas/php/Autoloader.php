@@ -15,28 +15,17 @@ use Atlas;
 /**
  * Autoloader, PSR-4 compatible
  *
+ * @link /Atlas/doc/Autoloader.md
  * @author Roberto González Vázquez
  */
 class Autoloader
 {
     /**
      * Maps namespaces prefixes with their base directories
-     *
-     * Base directories must not have trailing /
-     * Namespace prefixes must not have  leading or trailing \
-     *
-     * [ 'Namespace_prefix'   => [base directories],
-     *   'Acme\Couso\Chimes   => ['./vendor/couso/chimes-src' ],
-     *   'Name_space\Complex  => ['complex/src',
-     *                            'complex/test' ],
-     *  ...
-     * ];
-     *
-     * Ex: Atlas\Autoloader::$map['App_namespace']=[Atlas::$root_path.'/app', Atlas\ROOT_PATH.'/app/src'];
-     *
      * @see add_map()
+     *
      */
-    static public $map = [];
+    static private $map = [];
 
 
 
@@ -49,19 +38,20 @@ class Autoloader
      */
     public static function Load_class($class_name)
     {
+        $translated     = str_replace('\\','/'.$class_name).'.php';
+
         // First Atlas classe default mapping
-        if('Atlas\\' === substr($class_name, 0, 6) && file_exists( $filename = Atlas::$root_path.'/php/'.str_replace('\\','/',$class_name).'.php'))
+        $filename_1st   = 'Atlas\\' === substr($class_name, 0, 6)
+                        ? 'Atlas\\src\\'.substr($translated, 6)
+                        : $translated;
+
+        // load from include path
+        if ($filename = stream_resolve_include_path($filename_1st))
         {
             include_once $filename;
             return;
         }
 
-        // Basic try to load direct full class name to file name
-        if (file_exists( $filename = Atlas::$root_path.'/'.str_replace('\\','/',$class_name).'.php'))
-        {
-            include_once $filename;
-            return;
-        }
 
         // Resolve namespaces ptefixes
         if (self::$map)
@@ -71,14 +61,13 @@ class Autoloader
             while (false !== $pos = strrpos($prefix, '\\'))
             {
                 $prefix = substr($prefix, 0 , $pos); // prefix part
+                $sufix  = substr($prefix, 0 , $pos); // sufix part
 
-                if (!isset(self::$map[$prefix])) continue;
-
-                $sufix  = str_replace('\\','/',substr($class_name, $pos)).'.php'; // normal translation
+                if (!isset(self::$map[$prefix.'\\'])) continue;
 
                 foreach (self::$map[$prefix] as $base_dir)
                 {
-                    if (file_exists( $filename = $base_dir.$sufix))
+                    if ($filename = stream_resolve_include_path($base_dir.$sufix)) continue;
                     {
                         include_once $filename;
                         return;
@@ -86,10 +75,6 @@ class Autoloader
                 }
             }
         }
-
-        // load from include path
-        if ($filename = stream_resolve_include_path(str_replace('\\','/',$class_name).'.php'))
-            include_once $filename;
     }
 
 
@@ -97,14 +82,16 @@ class Autoloader
     /**
      *  Adds a base directory for a namespace prefix.
      *
-     * @param string      $namespace_prefix Namespace prefix.
+     * @param string      $namespace_prefix Namespace prefix, must end in \\ to avoid conflicts between similar prefixes
+     *
      * @param string|aray $base_dir         A Base directory or a array of directories for namespace prefix class files .
      *                                      If it is a array there will be no normalization,  base directories must not have trailing /
+     *
      * @param bool        $prepend          If true, will prepend base_dir instead of appending it.
      */
     static public function Add_to_map($namespace_prefix, $base_dir, $prepend = false)
     {
-        $namespace_prefix = trim($namespace_prefix, '\\') ;
+        $namespace_prefix = trim($namespace_prefix, '\\').'\\' ;
 
         if (is_array($base_dir))
         {
@@ -130,7 +117,7 @@ class Autoloader
     /**
      * Adds a base directory to the include path
      * @param string $base_dir         A base directory to include
-     * @param bool   $prepend          If true, will prepend basedirt instead of appending it.
+     * @param bool   $prepend          If true, will prepend basedir instead of appending it.
      */
     static public function Add_to_include_path ($base_dir, $prepend = true)
     {
@@ -147,10 +134,10 @@ class Autoloader
     static public function Register()
     {
         // Add root path to autoload
-            Autoloader::Add_to_include_path(Atlas::$root_path, true);
+        Autoloader::Add_to_include_path(Atlas::$root_path, true);
 
-            // register
-            spl_autoload_register('Atlas\Autoloader::load_class');
+        // register
+        spl_autoload_register('Atlas\Autoloader::load_class');
     }
 }
 
