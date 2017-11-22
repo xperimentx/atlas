@@ -5,7 +5,7 @@
 
 
 <p align='center'>
-    ![yualah atlas](images/yualah-atlas.png) 
+    ![yualah atlas](images/yualah-atlas.jpg) 
 </p>
 
 # History
