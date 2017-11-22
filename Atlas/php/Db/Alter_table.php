@@ -8,7 +8,10 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas\Mysql;
+namespace Atlas\Db;
+
+use Atlas;
+use Atlas\Db;
 
 /**
  * Alter table helper
@@ -17,16 +20,19 @@ namespace Atlas\Mysql;
  */
 class Alter_table
 {
-    /** @var \Atlas\Mysql  Db\Mysqli object      */  public $db          = NULL;
+    /** @var Db  Db object                       */  public $db          = NULL;
     /** @var string $table   Table name          */  public $table       = NULL;
 
-    /** @var array  $changes Changes to perform */  protected $changes  = NULL;
+    /** @var array  $changes Changes to perform  */  protected $changes  = NULL;
 
-
-    public function __construct($table, $db_mysqli_object)
+    /**
+     * @param string $table Table name
+     * @param Db     Instance or Db object, null:for default Db
+     */
+    public function __construct($table, $db_object = null)
     {
         $this->table = $table            ;
-        $this->db    = $db_mysqli_object ;
+        $this->db    = $db_object ?? Atlas::$db;
     }
 
 
@@ -56,7 +62,7 @@ class Alter_table
 
     /**
      * Changes table engine
-     * @param string $engine 'MyISAM', 'InnoDB'
+     * @param string $engine 'MyISAM', 'InnoDB', 'Aria'
      * @return $this
      */
     public function Set_engine($engine)
@@ -67,23 +73,21 @@ class Alter_table
 
 
     /**
-     * Changes table engine to InnoDB.
+     * Set comment
+     * @param string $comment
      * @return $this
      */
-    public function Set_engine_innodb()
+    public function Set_comment($comment)
     {
-        return $this->Set_engine('InnoDB');
+        $this->changes[] ="COMENT=$engine";
+        return $this;
     }
 
 
-    /**
-     * Changes table engine to MyISAM
-     * @return $this
-     */
-    public function Set_engine_myisam()
-    {
-        return $this->Set_engine('MyISAM');
-    }
+
+
+
+
 
 
 
@@ -106,7 +110,12 @@ class Alter_table
 
         $this->changes[] ="ADD COLUMN ". $column->Render_sql();
         return $this;
+
+    public function Change_column($old_column_fame, $column)
+    {
+    CHANGE COLUMN
     }
+
 
 
 

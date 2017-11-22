@@ -8,10 +8,10 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas\Mysql;
+namespace Atlas\Db;
 
 use Atlas;
-use Atlas\Mysql;
+use Atlas\Db;
 
 /**
  * MySQL profiling.
@@ -28,7 +28,7 @@ class Forge extends Extension
      */
     public function Alter_table($table)
     {
-        return new Alter_table($table, $this);
+        return new Alter_table($table, $this->db);
     }
 
 

@@ -9,10 +9,10 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas\Mysql;
+namespace Atlas\Db;
 
 use Atlas;
-use Atlas\Db\Mysql;
+use Atlas\Db;
 
 
 /**
@@ -21,15 +21,15 @@ use Atlas\Db\Mysql;
  */
 abstract class Extension
 {
-    /** @var Mysql  Mysql object    */
-    protected $db          = NULL;
+    /** @var Db  Db Mysql object    */
+    public $db ;
 
     /**
-     * @param Mysql $db_mysqli_object
+     * @param Db $db_object Instance or Db object, null:for default Db.
      */
-    function __construct($db_mysqli_object=null)
+    function __construct($db_object=null)
     {
-        $this->db = $db_mysqli_object ?? Atlas::$db;
+        $this->db = $db_object ?? Atlas::$db;
     }
 }
 

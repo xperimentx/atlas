@@ -49,8 +49,14 @@ class Autoloader
      */
     public static function Load_class($class_name)
     {
-        // Basic try to load direct full class name to file name
+        // First Atlas classe default mapping
+        if('Atlas\\' === substr($class_name, 0, 6) && file_exists( $filename = Atlas::$root_path.'/php/'.str_replace('\\','/',$class_name).'.php'))
+        {
+            include_once $filename;
+            return;
+        }
 
+        // Basic try to load direct full class name to file name
         if (file_exists( $filename = Atlas::$root_path.'/'.str_replace('\\','/',$class_name).'.php'))
         {
             include_once $filename;

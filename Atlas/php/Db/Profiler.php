@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Atlas Toolkit
  *
@@ -9,7 +8,7 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas\Mysql;
+namespace Atlas\Db;
 
 /**
  * MySQL profiling.

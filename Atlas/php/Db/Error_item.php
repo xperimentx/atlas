@@ -8,10 +8,10 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas\Mysql;
+namespace Atlas\Db;
 
 /**
- * Error info for Mysql::$errors items
+ * Error info for Db::$errors and Db::$last_error
  *
  * @author Roberto González Vázquez
  */
