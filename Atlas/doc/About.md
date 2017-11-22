@@ -6,6 +6,7 @@
 > * [Features](#features)
 > * [Goals](#goals)
 > * [Code Style](Code-style.md)
+> * [History](History.md)
 
 # About atlas
 
@@ -13,15 +14,43 @@ Atlas is a development toolkit for small PHP projects.
 
 # Features
 
-Features implemented or in development
+The todo-list
 
-### Technical todo-list
+- [x] Autoloader compatible with PSR-4.
 
-[x] Autoloader compatible with PSR-4.
-[x] Database suport: MySQL and MAriaDB.
-[ ] MVC, Auth modules, Api Rest
-[ ] Basic DB migrations.
-[ ] Basic CRUD and CMS features.
+- [ ]Database suport
+  - [x] Basic support MySQL and MariaDB.
+  - [ ] DB migrations.
+  - [ ] DB Forge.
+
+
+ - [ ] REST 
+   - [ ] Rest Server.
+   - [ ] Rest Client.
+ 
+
+  
+- User security 
+  - [ ] Auth modules.
+  - [ ] role-based security.
+  - [ ] User level security.
+  - [ ] Model for user.
+
+  
+- [ ] Application Foundations 
+  - [ ] Web App foundation.
+  - [ ] Control panel- back-office  foundation.
+  
+
+- [ ] CRUD
+  - [ ] Forms static
+  - [ ] Forms AJAJ.
+  - [ ] Lists static
+  - [ ] Lists AJAJ
+
+ 
+ - [ ] Composer compatible
+
 
 
 
