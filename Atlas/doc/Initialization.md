@@ -1,3 +1,5 @@
+![xperimentx atlas](images/atlas.png) 
+
 [Atlas TOC](.)
 
 # How to include Atlas Toolkit in your php main file
