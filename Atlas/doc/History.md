@@ -3,7 +3,7 @@
 
 ![xperimentx atlas](images/atlas.png) 
 
-<p align='center'>
+<p align='center'> 
     <img alt='yualah atlas' src='images/yualah-atlas.jpg' /> 
 </p>
 
