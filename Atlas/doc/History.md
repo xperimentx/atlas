@@ -3,10 +3,10 @@
 
 ![xperimentx atlas](images/atlas.png) 
 
-
 <p align='center'>
-    ![yualah atlas](images/yualah-atlas.png) 
+    <img alt='yualah atlas' src='images/yualah-atlas.jpg' /> 
 </p>
+
 
 # History
 
