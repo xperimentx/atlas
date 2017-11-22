@@ -3,6 +3,7 @@
 # Atlas Php Toolkit
 Atlas is a development toolkit for small PHP projects.
 
-[:books: Basic documentation](Atlas/doc)
+[:blue_book: About atlas](Atlas/doc/About.md)
 
-More info in [wiki](https://github.com/xperimentx/atlas/wiki)
+[:books: Documentation](Atlas/doc/README.MD)
+

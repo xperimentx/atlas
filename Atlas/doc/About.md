@@ -18,37 +18,62 @@ The todo-list
 
 - [x] Autoloader compatible with PSR-4.
 
-- [ ]Database suport
-  - [x] Basic support MySQL and MariaDB.
+- [ ] Database:
+  - [x] MySQL and MariaDB.
+  - [x] Common tasks helpers.
   - [ ] DB migrations.
   - [ ] DB Forge.
 
 
- - [ ] REST 
+ - [ ] REST :
    - [ ] Rest Server.
    - [ ] Rest Client.
- 
+   - [ ] API REST server foundation.
 
   
-- User security 
+- [] Models
+  - [ ] Objected Oriented Models.
+  - [ ] Active-record.
+  - [ ] Common operation helpers.
+  - [ ] Model relationships.
+  - [ ] Validators.
+ 
+
+- [ ] User security :
   - [ ] Auth modules.
-  - [ ] role-based security.
+  - [ ] Role-based security.
   - [ ] User level security.
   - [ ] Model for user.
 
-  
-- [ ] Application Foundations 
-  - [ ] Web App foundation.
-  - [ ] Control panel- back-office  foundation.
-  
 
-- [ ] CRUD
-  - [ ] Forms static
-  - [ ] Forms AJAJ.
-  - [ ] Lists static
-  - [ ] Lists AJAJ
 
- 
+- [ ] Application foundation.
+  - [ ] Routing.
+  - [ ] Controller helpers.
+  - [ ] Html page helpers.
+  - [ ] Cache.
+  - [ ] Basic forms whit validation
+
+
+
+- [ ] Control panel- back-office  foundation.
+
+- [ ] CRUD:
+  - [ ] Advancef Forms.
+  - [ ] Advanced Lists.
+  - [ ] Filterin.
+  - [ ] Automatic reports and exportation for list.
+  - [ ] Interactive  AJAJ lists.
+  - [ ] Interactive  AJAJ FORM.
+
+ - [ ] Reports && table data exportation
+  - [ ] CSV.
+  - [ ] Excel xml data sheet.
+  - [ ] Excel xls.
+  - [ ] Pdf.
+  - [ ] Json.
+
+
  - [ ] Composer compatible
 
 
@@ -60,14 +85,14 @@ This is a personal project, a learning project ,but useful for my work.
 
 It does not pretend to replace the big PHP Frameworks. 
 
-I will copy ideas and solutions from  acclaimed frameworks and great libraries in my own way, just for fun, just for lean.
+I will copy ideas and solutions from  acclaimed frameworks and great libraries in my own way, just for fun, just for learn.
 
 Reinventing the wheel is one of the most rewarding ways to learn, understand and honor the work of others.
 
 
 ### The important goals list
 
-* Have a god time !! :)
+* Have a god time !!  :smiley:
 * Create a open source project
 * Little by little, in my spare time. Fun :D
 * Based on the my old yualah Atlas code, but now simpler! , cleaner! ... and all those good things.
