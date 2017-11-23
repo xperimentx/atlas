@@ -5,9 +5,9 @@
 * [Autoloader](#Autoloader)
 * [Namespace Maps](#namespace-maps)
 * [Add a directory to include path](#add-a-directory-to-include-path)
-* [Include autoloader](#include-autoloader-in-your-index-php-file)
-* [Composer like project](#composer-like-project--using-atlas-autoloader)
-* [History](History.md)
+* [Include autoloader](#include-autoloader-in-your-indexphp-file)
+* [Composer like project](#composer-like-project-using-atlas-autoloader)
+ 
 
 # Autoloader
 
@@ -36,7 +36,7 @@ Autoloader::Add_to_map ('Acme\\Special\\'   , [ __DIR__.'/Special', 'vendor/Acme
 ```
 
 
-# Add a directory to include path
+## Add a directory to include path
 
 You can add a directory to include path with `\set_include_path()`
 or use  `Atlas\Autoloader::Add_to_include_path()` method.

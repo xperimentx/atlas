@@ -14,15 +14,16 @@ Atlas is a development toolkit for small PHP projects.
 
 # Features
 
-The todo-list
+* Checked features are in development.
+* Unchecked features are future goals.
 
 - [x] Autoloader compatible with PSR-4.
 
-- [ ] Database:
+- [x] Database:
   - [x] MySQL and MariaDB.
   - [x] Common tasks helpers.
   - [ ] DB migrations.
-  - [ ] DB Forge.
+  - [x] DB Forge.
 
 
  - [ ] REST :
