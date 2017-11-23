@@ -8,7 +8,7 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas\Db;
+namespace Xperimentx\Atlas\Db;
 
 /**
  * Error info for Db::$errors and Db::$last_error

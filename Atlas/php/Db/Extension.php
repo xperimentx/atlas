@@ -9,10 +9,10 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas\Db;
+namespace Xperimentx\Atlas\Db;
 
-use Atlas;
-use Atlas\Db;
+use Xperimentx\Atlas;
+use Xperimentx\Atlas\Db;
 
 
 /**

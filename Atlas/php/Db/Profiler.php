@@ -8,7 +8,7 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas\Db;
+namespace Xperimentx\Atlas\Db;
 
 /**
  * MySQL profiling.

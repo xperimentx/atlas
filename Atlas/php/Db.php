@@ -9,11 +9,11 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas;
+namespace Xperimentx\Atlas;
 
-use Atlas\Db\Cfg;
-use Atlas\Db\Error_item;
 use mysqli;
+use Xperimentx\Atlas\Db\Cfg;
+use Xperimentx\Atlas\Db\Error_item;
 
 
 /**
@@ -27,21 +27,24 @@ class Db
     /** @var Error_item[] Errors                                         */  public $errors         = [];
     /** @var Error_item   Last error. Null if last call is successful .  */  public $last_error     = null;
     /** @var string       Last SQL statement.                            */  public $last_sql       = null;
-    /** @var Cfg          Configuration, options.                        */  public $cfg            = null;
+    /** @var Cfg       Configuration, options.                        */  public $cfg            = null;
 
-
+    /** @var Db           First object connected. The main Db object.    */  public static $db      = null;
 
     const ENGINE_MYISAM = 'MyISAM';
     const ENGINE_INNODB = 'InnoDB';
     const ENGINE_ARIA   = 'Aria';
+
 
     /**
      * @param Cfg $cfg Configuration, options for create mysqli connection.
      */
     function __construct($cfg=null)
     {
-        if ($cfg)
-            $this->Connect ($cfg);
+        if (!self::$db)
+            self::$db = $this;
+
+        $this->cfg = $cfg ?? new Cfg();
     }
 
 
@@ -50,11 +53,12 @@ class Db
      * @param Cfg Configuration.
      * @return bool  Is connection successful.
      */
-    public function Connect ($cfg)
+    public function Connect ()
     {
+        $cfg = $this->cfg;
+
         $this->last_error = null;
-        $this->cfg        = $cfg;
-        $this->mysqli     = new mysqli( $cfg->server   ,
+        $this->mysqli     = @new mysqli($cfg->server   ,
                                         $cfg->user_name,
                                         $cfg->password ,
                                         $cfg->db_name  ,
@@ -264,7 +268,7 @@ class Db
 
     /**
      * Return a safe value from a scalar for an SQL statement.
-     * @param string|int|flot|bool|null $value Scalar value to process.
+     * @param string|int|float|bool|null $value Scalar value to process.
      * @see Str()
      */
     public function  Safe($value)

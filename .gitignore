@@ -1,9 +1,10 @@
-cfg/*
-app/*
-control/*
-web/*
-media/*
-log/*
+cfg
+app
+control
+web
+media
+log
+devel
 index.php
 
 

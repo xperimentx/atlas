@@ -9,7 +9,9 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-use Atlas\Db;
+
+namespace Xperimentx;
+use Xperimentx\Atlas\Cfg;
 
 
 /**
@@ -48,7 +50,7 @@ class Atlas
 
     /**
      * Initialize Atlas.
-     * 
+     *
      * Load configurations files.
      * Opens main database connection.
      */

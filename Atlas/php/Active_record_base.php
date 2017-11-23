@@ -7,7 +7,7 @@
  *
  * @copyright 2017 Roberto González Vázquez
  */
-namespace Atlas;
+namespace Xperimentx\Atlas;
 
 
 

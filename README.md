@@ -7,3 +7,8 @@ Atlas is a development toolkit for small PHP projects.
 
 [:books: Documentation](Atlas/doc/README.md)
 
+# In the research and develoment
+## first beta estimated summer of 2018
+
+![xperimentx atlas](Atlas/doc/images/pensando.png) 
+

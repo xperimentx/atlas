@@ -2,7 +2,12 @@
 
 ![xperimentx atlas](images/atlas.png) 
 
-
+* [Autoloader](#Autoloader)
+* [Namespace Maps](#namespace-maps)
+* [Add a directory to include path](#add-a-directory-to-include-path)
+* [Include autoloader](#include-autoloader-in-your-index-php-file)
+* [Composer like project](#composer-like-project--using-atlas-autoloader)
+* [History](History.md)
 
 # Autoloader
 
@@ -23,31 +28,57 @@ Atlas Autoloader is  PSR-4 compatible.
 * Namespace prefixes must end in `\`.
 
 ```php
-Atlas\Autoloader::Add_to_map ('Namespace_prefix\\', 'My_libraries/Name_space_dir');
-Atlas\Autoloader::Add_to_map ('Acme\\'            , Atlas::$root.'/vendor/Acme/src');
-Atlas\Autoloader::Add_to_map ('Acme\\Special\\'   , [ __DIR__.'/Special', 'vendor/Acme/test/Special']');
+use Xperimentx\Atlas\Autoloader;
+
+Autoloader::Add_to_map ('Namespace_prefix\\', 'My_libraries/Name_space_dir');
+Autoloader::Add_to_map ('Acme\\'            , Atlas::$root.'/vendor/Acme/src');
+Autoloader::Add_to_map ('Acme\\Special\\'   , [ __DIR__.'/Special', 'vendor/Acme/test/Special']');
 ```
 
 
-## Load from include path
+# Add a directory to include path
 
 You can add a directory to include path with `\set_include_path()`
 or use  `Atlas\Autoloader::Add_to_include_path()` method.
 
 ```php
-Atlas\Autoloader::Add_to_include_path(__DIR__.'/src/path_1' );
+Xperimentx\Atlas\Autoloader::Add_to_include_path(__DIR__.'/src/path_1' );
 ```
 
 
+ 
+## Include autoloader in your index.php file
+* `my_root` is the root directory of your project.
+* Atlas is installed in `my_root/Xperimentx` directory.
 
-## Ignore Atlas autoloader
+### My file is `my_root/index.php`.
 
 ```php
-define('Atlas\IGNORE_AUTOLOADER',1);  // Ignore autoloader
-
-include_ "Atlas/Atlas.php";            // Load Atlas pre initializer
-Atlas::Initialize();                   // Initialize atlas;
-
-echo 'Hello World!';
+include 'Xperimentx\php\Autoloader.php';
+Atlas\Autoloader::Register(__DIR__);
 ```
 
+
+### My file is `my_root/App/Api/index.php`.
+
+`my_root` is 2 levels  up direrctory than `Api`.
+
+```php
+include 'Xperimentx\php\Autoloader.php';
+Xperimentx\Atlas\Autoloader::Register(__DIR__,2); 
+```
+
+
+## Composer like project, using Atlas autoloader
+
+* My file is `my_root/index.php`.
+* Atlas is installed in    `my_root/vendor/Xperimentx` directory.
+* Acme library sources in  `my_root/vendor/Acme/scr` directory.
+
+
+```php
+use Xperimentx\Atlas\Autoloader;
+include 'vendor/Xperimentx/php/Autoloader.php';
+Autoloader::Register(__DIR__);
+Autoloader::Add_to_map ('Acme\\', Atlas::$root.'/vendor/Acme/src');
+```

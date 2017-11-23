@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Atlas Toolkit
  *
@@ -8,22 +9,26 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas\Db;
+namespace Xperimentx\Atlas\Db;
 
-use Atlas;
-use Atlas\Db;
+use Xperimentx\Atlas\Db;
 
 /**
- * Alter table helper
+ * ALTER TABLE helper
  *
  * @author Roberto González Vázquez
  */
 class Alter_table
 {
-    /** @var Db  Db object                       */  public $db          = NULL;
-    /** @var string $table   Table name          */  public $table       = NULL;
+    /** @var Db  Db object                       */
+    public $db          = NULL;
 
-    /** @var array  $changes Changes to perform  */  protected $changes  = NULL;
+    /** @var string $table   Table name          */
+    public $table       = NULL;
+
+    /** @var string[]|Column[]  $changes Changes to perform  */
+    protected $changes  = [];
+
 
     /**
      * @param string $table Table name
@@ -32,7 +37,7 @@ class Alter_table
     public function __construct($table, $db_object = null)
     {
         $this->table = $table            ;
-        $this->db    = $db_object ?? Atlas::$db;
+        $this->db    = $db_object ?? Db::$db;
     }
 
 
@@ -47,12 +52,13 @@ class Alter_table
         return $this;
     }
 
+
     /**
      * Renames the table
      * @param string $new_table_name
      * @return $this
      */
-    public function Rename($new_table_name)
+    public function Rename ($new_table_name)
     {
         $this->changes[] ="RENAME `$new_table_name`";
         return $this;
@@ -65,7 +71,7 @@ class Alter_table
      * @param string $engine 'MyISAM', 'InnoDB', 'Aria'
      * @return $this
      */
-    public function Set_engine($engine)
+    public function Set_engine ($engine)
     {
         $this->changes[] ="ENGINE=$engine";
         return $this;
@@ -77,19 +83,30 @@ class Alter_table
      * @param string $comment
      * @return $this
      */
-    public function Set_comment($comment)
+    public function Set_comment ($comment)
     {
-        $this->changes[] ="COMENT=$engine";
+        $this->changes[] ='COMENT=\''. addslashes($comment).'\'';
         return $this;
     }
 
 
+    /**
+     * Returns SQL for ALTER TABLE query
+     * @return int Affected rows.
+     */
+    function __toString ()
+    {
+        $items = [];
 
+        foreach ($this->changes as $change)
+        {
+            if     (is_string($change))      $items [] = $change;
+            elseif ($change->old_field_name) $items [] = "CHANGE COLUMN `$change->old_column_name` $change";
+            else                             $items [] = "ADD COLUMN  $change";
+        }
 
-
-
-
-
+        return "ALTER TABLE `$this->table` ". join(",\n ", $items).";\n\n";
+    }
 
     /**
      * Run alter table query
@@ -97,7 +114,7 @@ class Alter_table
      */
     function Run()
     {
-        return $this->db->Query_ar("ALTER TABLE `$this->table` ". join(', ', $this->changes).';');
+        return $this->db->Query_ar((string)$this);
     }
 
 
@@ -107,13 +124,14 @@ class Alter_table
      */
     public function Add_column ($column)
     {
-
         $this->changes[] ="ADD COLUMN ". $column->Render_sql();
         return $this;
+    }
 
-    public function Change_column($old_column_fame, $column)
+    public function Change_column ($old_column_name, $column)
     {
-    CHANGE COLUMN
+        $this->changes[] ="CHANGE COLUMN `$old_column_name` ". $column->Render_sql();
+        return $this;
     }
 
 

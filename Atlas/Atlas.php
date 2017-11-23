@@ -8,12 +8,12 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas;
+namespace Xperimentx\Atlas;
 /**
  * Atlas pre initialization.
  * @see /Atlas/doc/Initialization.md
  */
- use Atlas;
+ use Xperimentx\Atlas;
 
 
 

@@ -8,22 +8,30 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Atlas;
-
-use Atlas;
+namespace Xperimentx\Atlas;
 
 /**
- * Autoloader, PSR-4 compatible
+ * Autoloader, PSR-4 compatible.
  *
  * @link /Atlas/doc/Autoloader.md
  * @author Roberto González Vázquez
  */
 class Autoloader
 {
+    /** @var string Root path  */
+    static private  $root_path = null;
+
+
+    /** @var string Root path of atlas  */
+    static private  $root_atlas = null;
+
+    /** @var boll Is autoloader registered */
+    static private $is_registered = false;
+
+
     /**
      * Maps namespaces prefixes with their base directories
      * @see add_map()
-     *
      */
     static private $map = [];
 
@@ -38,11 +46,11 @@ class Autoloader
      */
     public static function Load_class($class_name)
     {
-        $translated     = str_replace('\\','/'.$class_name).'.php';
+        $translated     = str_replace('\\','/',$class_name).'.php';
 
         // First Atlas classe default mapping
-        $filename_1st   = 'Atlas\\' === substr($class_name, 0, 6)
-                        ? 'Atlas\\src\\'.substr($translated, 6)
+        $filename_1st   = 'Xperimentx\\Atlas\\' === substr($class_name, 0, 17)
+                        ? self::$root_atlas.substr($translated, 16)
                         : $translated;
 
         // load from include path
@@ -100,17 +108,26 @@ class Autoloader
             else                                            self::$map[$namespace_prefix] = array_merge (self::$map[$namespace_prefix], $base_dir);
         }
 
+
         else
         {
-            $base_dir = rtrim($base_dir, DIRECTORY_SEPARATOR) ;
-            if (DIRECTORY_SEPARATOR!='/')
-                $base_dir = rtrim($base_dir, '/') ;
+            $base_dir = rtrim($base_dir,'\\/') ;
 
-            if     (!isset(self::$map[$namespace_prefix]))               self::$map[$namespace_prefix] = [$base_dir];
-            elseif ($prepend)                              array_unshift(self::$map[$namespace_prefix], $base_dir);
-            else                                           array_push   (self::$map[$namespace_prefix], $base_dir);
+            if (!isset(self::$map[$namespace_prefix]))
+            {
+                self::$map[$namespace_prefix] = [$base_dir];
+            }
+            else
+            {
+                if ($prepend)
+                     array_unshift(self::$map[$namespace_prefix], $base_dir);
+                else array_push   (self::$map[$namespace_prefix], $base_dir);
+            }
         }
     }
+
+
+
 
 
 
@@ -122,22 +139,33 @@ class Autoloader
     static public function Add_to_include_path ($base_dir, $prepend = true)
     {
         if ($prepend)
-              \set_include_path (rtrim($base_dir, '/'). PATH_SEPARATOR . \get_include_path());
+              \set_include_path (rtrim($base_dir, '\\/'). PATH_SEPARATOR . \get_include_path());
         else  \set_include_path (\get_include_path()  . PATH_SEPARATOR .rtrim($base_dir, '/'))  ;
 
     }
 
 
     /**
-     * Add autoloader to spl_autoload_register
+     * Register autoloader in spl_autoload_register.
+     * @see spl_autoload_register
+     * @param $root_path Root of your application for includes, it will be added to include path.
+     * @param int $dir_up_levels Uses path of the Parent directory's path that is $dir_up_leves levels up.
      */
-    static public function Register()
+    static public function Register($root_path=NULL, $dir_up_levels=0)
     {
-        // Add root path to autoload
-        Autoloader::Add_to_include_path(Atlas::$root_path, true);
+        if (self::$is_registered) reuturn;
+        dirname($root_path);
+        self::$is_registered = true;
+        self::$root_atlas    = __DIR__;
+
+        if ($root_path)
+        {
+            self::$root_path= $dir_up_levels ? dirname($root_path, $dir_up_levels): $root_path;
+            self::Add_to_include_path(self::$root_path , true);
+        }
 
         // register
-        spl_autoload_register('Atlas\Autoloader::load_class');
+        spl_autoload_register('Xperimentx\Atlas\Autoloader::load_class');
     }
 }
 
