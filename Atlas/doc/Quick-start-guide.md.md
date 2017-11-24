@@ -4,25 +4,42 @@
 
 # Quick start guide
 
+Atlas only need an autoloader for star to work
+
 ## Using Atlas Autoloader
+
+```
+www
+├── index.php
+│
+└── Xperimentx
+       └── Atlas
+```
+
+### inlude atlas in my index.php 
 ```php
 include 'Xperimentx/php/Autoloader.php';
-Xperimentx\Atlas\Autoloader::Register(__DIR__);
+
+use Xperimentx\Atlas;
+
+Atlas\Autoloader::Register(__DIR__);
 
 echo "Hola! \n";
+
+Atlas:
 ```
-[More info about Atlas Autoloader](Autoloader.md) 
+[More info about Atlas Autoloader](Autoloader.md).
  
 
 
 ## Atlas whit other autoloaders
 
-##  I use other autoloder  with namespace mapping support 
+###  I use other autoloder PSR-4 compatible
 
 You must map the `Xperimentx\Atlas` namespace to the directory `Atlas/php`.
 
 
-## I use other "spl " autoloader without namespacing  mappig 
+### I use other "spl " autoloader without namespacing  mappig 
 
 Atlas use *spl_autoload_register()*.
 You can  register  the Atlas Autoloader for work together with your autoloader

@@ -77,7 +77,7 @@ Atlas\Autoloader::Register(__DIR__);
 
 ```php
 include '../../Xperimentx/php/Autoloader.php';
-Xperimentx\Atlas\Autoloader::Register(__DIR__,2); 
+Xperimentx\Atlas\Autoloader::Register(__DIR__, 2); 
 ```
 
 
