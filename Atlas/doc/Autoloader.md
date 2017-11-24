@@ -4,7 +4,7 @@
 
 * [Autoloader](#Autoloader)
 * [Namespace Maps](#namespace-maps)
-* [Add a directory to include path](#add-a-directory-to-include-path)
+* [Add a directory to include path](#add-a-directory-to-the-include-path)
 * [Include autoloader](#include-autoloader-in-your-indexphp-file)
 * [Composer like project](#composer-like-project-using-atlas-autoloader)
  
@@ -36,7 +36,7 @@ Autoloader::Add_to_map ('Acme\\Special\\'   , [ __DIR__.'/Special', 'vendor/Acme
 ```
 
 
-## Add a directory to include path
+## Add a directory to the include path
 
 You can add a directory to include path with `\set_include_path()`
 or use  `Atlas\Autoloader::Add_to_include_path()` method.
@@ -48,46 +48,64 @@ Xperimentx\Atlas\Autoloader::Add_to_include_path(__DIR__.'/src/path_1' );
 
  
 ## Include autoloader in your index.php file
-* `my_root` is the root directory of your project.
-* Atlas is installed in `my_root/Xperimentx` directory.
+```
+www
+├── index.php
+│
+├── other-apps
+│   └──Api
+│       └── api-main.php
+│
+└── Xperimentx
+       └── Atlas
+```
 
-### My file is `my_root/index.php`.
+* Atlas is installed in    `www/vendor/Xperimentx` directory.
+* My main file is `index.php`. in the root directoy of my application
+* My main file is `api-main.php`. is 2 levels up direrctory than the root diretory.
+
+
+###  www/ index.php
 
 ```php
-include 'Xperimentx\php\Autoloader.php';
+include 'Xperimentx/php/Autoloader.php';
 Atlas\Autoloader::Register(__DIR__);
 ```
 
 
-### My file is `my_root/App/Api/index.php`.
-
-`my_root` is 2 levels  up direrctory than `Api`.
+###  www/other-apps/index.php
 
 ```php
-include 'Xperimentx\php\Autoloader.php';
+include '../../Xperimentx/php/Autoloader.php';
 Xperimentx\Atlas\Autoloader::Register(__DIR__,2); 
 ```
 
 
 ## Composer like project, using Atlas autoloader
 
-* My file is `my_root/index.php`.
-* Atlas is installed in    `my_root/vendor/Xperimentx` directory.
-* Acme library sources in  `my_root/vendor/Acme/scr` directory.
+```
+www
+├── index.php
+│
+├── vendor
+│   ├── Xperimentx
+│   │   └── Atlas/
+│   │
+│   └── Acme
+│       └── src
+```
 
-```
-my_root        
-|-- index.php        ...... my file 
-|-- vendor
-|    |-- Xperimentz
-|    |    + -- Atlas ...... Atlas toolkit
-|    |-- Acme
-          + -- src   ...... Acme library   
-```
+* My main file is `www/index.php`.
+* Atlas is installed in    `www/vendor/Xperimentx` directory.
+* Acme library sources in  `www/vendor/Acme/scr` directory.
+
+
 
 ```php
-use Xperimentx\Atlas\Autoloader;
 include 'vendor/Xperimentx/php/Autoloader.php';
+
+use Xperimentx\Atlas\Autoloader;
+
 Autoloader::Register(__DIR__);
 Autoloader::Add_to_map ('Acme\\', Atlas::$root.'/vendor/Acme/src');
 ```
