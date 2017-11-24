@@ -75,6 +75,15 @@ Xperimentx\Atlas\Autoloader::Register(__DIR__,2);
 * Atlas is installed in    `my_root/vendor/Xperimentx` directory.
 * Acme library sources in  `my_root/vendor/Acme/scr` directory.
 
+```
+my_root        
+|-- index.php        ...... my file 
+|-- vendor
+|    |-- Xperimentz
+|    |    + -- Atlas ...... Atlas toolkit
+|    |-- Acme
+          + -- src   ...... Acme library   
+```
 
 ```php
 use Xperimentx\Atlas\Autoloader;
