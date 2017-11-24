@@ -9,7 +9,7 @@
 * [History](History.md)
 
 ### Basic documentation
-* [How to include Atlas Toolkit in your php main file](Initialization.md).
+* [Quick start guide](Quick-start-guide.md).
 * [Autoloader](Autoloader.md).
 
 ### Database

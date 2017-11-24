@@ -89,7 +89,7 @@ www
 │
 ├── vendor
 │   ├── Xperimentx
-│   │   └── Atlas/
+│   │   └── Atlas
 │   │
 │   └── Acme
 │       └── src
