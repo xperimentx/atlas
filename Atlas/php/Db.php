@@ -380,4 +380,51 @@ class Db
 
         return $ok;
     }
+
+
+    // --------------------------------------------------------------------------- FORGE ----
+
+    /**
+     * Drops a table.
+     * @param string $table
+     * @return int Affected rows
+     */
+    public function Drop_table($table)
+    {
+        return $this->db->Query_ar("DROP TAPLE `$table`;");
+    }
+
+
+    /**
+     * Truncates a table.
+     * @param string $table
+     * @return int Affected rows
+     */
+    public function Truncate_table($table)
+    {
+        return $this->db->Query_ar("TRUNCATE TABLE `$table`;");
+    }
+
+
+    /**
+     * Drops a database.
+     * @param string $database_name
+     * @return int Affected rows
+     */
+    public function Drop_database($database_name)
+    {
+        return $this->db->Query_ar("DROP DATABASE `$database_name`;");
+    }
+
+
+    /**
+     * Creates a new data base.
+     * @param string $database_name
+     * @param string $collate Default collation, false equivalent if not collation
+     * @return int Affected rows
+     */
+    public function Create_database($database_name, $collate='utf8_general_ci')
+    {
+        return $this->db->Query_ar(" CREATE DATABASE `$database_name` ". $collate ? " /*!40100 COLLATE '$collate' */;":';');
+    }
 }

@@ -1,34 +1,76 @@
 [Documentation](README.md) 
 
-
 ![xperimentx atlas](images/atlas.png) 
 
-<p align='center'> 
-    <img alt='yualah atlas' src='images/yualah-atlas.jpg' /> 
-</p>
+* [Accessing your main database from anywhere](#accessing-your-main-database-from-anywhere)
+* [Configure the database connection](#configure-the-database-connection)
+* [Establish the connection](#establish-the-connection)
+* [Database Forge.](Database-forge.md)
 
 
 # Database Reference
+## Accessing your main database from anywhere
 
-- [ ]  Todo
+'Xperimentx\Atlas\Db` is the class useed to manage your databases.
 
-* **2003-2005:** 
-  * My first websites.
-  * Accustomed to the C++ and Delphi world, I prefer PHP 4 and mySQL.
-  * My first freelance works.
-  * There are still stores using 2004 code , the toolkit name was **"yualah TEV virtual shop system"**
+The first created `DB` object will be registered in the static and public property `Db::$db` as the main database.
 
-* **2006-2009**  
-  * I founded with a friend a small company: **yualah**,  specialized in creating custom websites for small and medium businesses. 
-  * Toolkit name **yualah evo** (tev *evo*lution), with PHP 4.4. A Catalog and shopping cart
+This simplifies the development by making this main database easily accessible.
 
-* **2009-2017** 
-  * **yualah atlas**.
-  * Rewritten from scratch, taking advantage of new Web browsers and PHP 5.
-  * Atlas grows year by year. It's used in CMS, booking systems, billing, corporate intranets, back offices, ...
+Atlas Database objects use this main database by default. 
+You can use as many `Db` object as you wish.
 
-* **November 2017** 
-  * **XerimentX Atlas** is born.
-  * The idea is to release new Atlas version but now in open source and PHP 7.
-  * Little by little, in my spare time.
- 
+
+## Configure the database connection
+
+### Option 1, seting the cfg property
+
+Create an object and configure the connection using the `cfg` property.
+
+```php
+use Xperimentx\Atlas\Db;
+
+$db = new Db();
+$db->cfg->user_name = 'atlas_db_user';
+$db->cfg->password  = 'atlas_db_passwd';
+$db->cfg->db_name   = 'atlas_demo_db';
+```
+
+### Option 2, whit a configuration object
+
+Create a database configuration object `Db\Cfg`
+
+And then assign it to a `DB` object using the constructor or assign it to the ``$cfg` property.
+### Using the constructor.
+
+```php
+$db_a = new Db($db_cfg);
+```
+
+### Assigning the configuration to the cfg property
+
+```
+$db_b = new Db();
+$db->cfg = $db_cfg;
+````
+
+
+
+## Establish the connection
+
+```php
+use Xperimentx\Atlas\Db;
+
+$db = new Db($my_database_configuration);
+
+if ($db->Connect())
+{
+     echo "DB connected \n";
+}
+else
+{
+    echo "Error \n";
+    print_r($db->last_error);
+    die (":( \n");
+}
+```
