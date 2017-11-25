@@ -10,7 +10,9 @@
 
 # About atlas
 
-Atlas is a development toolkit for small PHP projects.
+xperiment**X Atlas** is a **development toolkit** for PHP projects.
+
+Atlas is designed to give you freedom in the structure and implementation of your website.
 
 # Features
 
@@ -22,7 +24,7 @@ Atlas is a development toolkit for small PHP projects.
 - [x] Database:
   - [x] MySQL and MariaDB.
   - [x] Common tasks helpers.
-  - [ ] DB migrations.
+  - [x] DB migrations.
   - [x] DB Forge.
 
 
@@ -46,7 +48,9 @@ Atlas is a development toolkit for small PHP projects.
   - [ ] User level security.
   - [ ] Model for user.
 
+- [x] Document the project
 
+- [x] A sample proyect: [Atlas Sample](https://github.com/xperimentx/atlas-sample)  
 
 - [ ] Application foundation.
   - [ ] Routing.
@@ -57,10 +61,14 @@ Atlas is a development toolkit for small PHP projects.
 
 
 
-- [ ] Control panel- back-office  foundation.
+- [ ] Control panel / back-office / Admin site  foundation.
+  - Maybe this will be xperiment**X Control**.
+      
+
 
 - [ ] CRUD:
-  - [ ] Advancef Forms.
+  - Maybe this will be xperiment**X CRUD**.
+  - [ ] Advanced Forms.
   - [ ] Advanced Lists.
   - [ ] Filterin.
   - [ ] Automatic reports and exportation for list.
@@ -96,8 +104,8 @@ Reinventing the wheel is one of the most rewarding ways to learn, understand and
 * Have a god time !!  :smiley:
 * Create a open source project
 * Little by little, in my spare time. Fun :D
-* Based on the my old yualah Atlas code, but now simpler! , cleaner! ... and all those good things.
-* Share with everyone in open source Atlas, dedicated especially to all those who selflessly publish their work on the internet, of which I have learned so much
+* Based on the my old **yualah Atlas** code, but now simpler! , cleaner! ... and all those good things.
+* Share with everyone in open source Atlas, dedicated especially to all those who selflessly publish their work on the Internet, of which I have learned so much.
 
 
 
