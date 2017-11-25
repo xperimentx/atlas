@@ -27,9 +27,10 @@ class Db
     /** @var Error_item[] Errors                                         */  public $errors         = [];
     /** @var Error_item   Last error. Null if last call is successful .  */  public $last_error     = null;
     /** @var string       Last SQL statement.                            */  public $last_sql       = null;
-    /** @var Cfg       Configuration, options.                        */  public $cfg            = null;
+    /** @var Cfg          Configuration, options.                        */  public $cfg            = null;
 
     /** @var Db           First object connected. The main Db object.    */  public static $db      = null;
+    /** @var callable     Function to call if a query error  (Db $this).  */ public $on_error_fn    = null;
 
     const ENGINE_MYISAM = 'MyISAM';
     const ENGINE_INNODB = 'InnoDB';
@@ -111,6 +112,10 @@ class Db
         }
 
         $this->Error($caller_method, $query);
+
+        if ($this->on_error_fn)
+            $this->on_error_fn($this);
+
         return null;
     }
 
@@ -232,10 +237,8 @@ class Db
     */
     public function Vector ($query)
     {
-        $this->last_error = null;
-
         $lista = array();
-        if ($result = @$this->mysqli->query($query)) //:=
+        if ($result = $this->Query($query, __METHOD__))  //:=
         {
             while ($row= $result->fetch_assoc())
                 $lista [$row['index'] ] = $row['value'];
@@ -245,7 +248,7 @@ class Db
             return $lista;
         }
 
-        $this->Error(__METHOD__, $query); return [];
+        return [];
     }
 
 
@@ -315,7 +318,7 @@ class Db
      * @param bool    $do_safe  This values will be processed by Safe().
      * @return int|null         Affected rows or null if error
      */
-    public function  Insert($table, $data, $do_safe = false )
+    public function  Insert($table, $data, $do_safe = true )
     {
         if ($do_safe)
         {
@@ -323,7 +326,7 @@ class Db
                 $data[$k]= $this->Safe($v);
         }
 
-        $sql = "INSERT INTO $table (".join(",\n ",array_keys($data)).') VALUES ('.join(",\n ", $data).')';
+        $sql = "INSERT INTO `$table` (\n`".join(",\n `",array_keys($data)).'`) \nVALUES ( \n'.join(",\n ", $data)."\n) ;";
         return $this->Query_ar($sql);
     }
 
@@ -338,16 +341,16 @@ class Db
      * @param bool    $do_safe  This values will be processed by Safe().
      * @return int|null         Affected rows or null if error
      */
-    public function  Update($table, $data, $where, $do_safe=true )
+    public function  Update($table, $data, $where=null, $do_safe=true )
     {
         $sets = [];
 
         if ($do_safe)
-                foreach ($data as $field=>$value) { $sets [] = $field.' = '.$this->Safe($value); }
-        else    foreach ($data as $field=>$value) { $sets [] = $field.' = '.$value;              }
+                foreach ($data as $field=>$value) { $sets [] = "`field` = ".$this->Safe($value); }
+        else    foreach ($data as $field=>$value) { $sets [] = "`field` = ".$value;              }
 
 
-        $sql = "UPDATE $table SET ".join(', ', $sets)." WHERE $where";
+        $sql = "UPDATE `$table` SET ".join("\n, ", $sets).($where ?"\n WHERE $where ;":' ;');
 
         return $this->Query_ar($sql, __METHOD__);
     }
@@ -355,10 +358,10 @@ class Db
 
 
     /**
-     * Udate a row (key!=null) or Insert a new row  (key value=null)
+     * Update a row (key!=null) or Insert a new row  (key value=null)
      * @param string  $table            Table for update
      * @param array   $data             Data. Index:field name.  Value:field value.
-     * @param string  $key_value        Value of key  to  update. By reference for instetes( key=null) => get insert_id if autonumeric
+     * @param string  $key_value        Value of key  to  update. By reference for inserts ( key=null) => get insert_id if autonumeric
      * @param string  $key_field_name  Name of key field.
      * @param bool    $do_safe         This values will be processed by Safe().
      * @return   int Number of  affected rows.

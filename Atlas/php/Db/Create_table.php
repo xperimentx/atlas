@@ -22,8 +22,8 @@ class Create_table
 {
     /** @var Column[] Columns to add  */  protected $columns      = [];
     /** @var string[] Items           */  protected $items        = [];
+    /** @var Db     Db object         */  protected $db           = null;
 
-    /** @var Db     Db object         */  public $db              = null;
     /** @var string Table name        */  public $table           = null;
     /** @var string Charset.          */  public $charset         = null;
     /** @var string Collation.        */  public $collation       = null;
@@ -119,9 +119,15 @@ class Create_table
      * @return int Affected rows.
      * @param $db Db Instance or Db object, null:for default DB::$db.
      */
-    function Run($db)
+    function Run()
     {
-        return ($db ?? DB::$db)->Query_ar((string)$this);
+        return $this->db->Query_ar((string)$this);
+    }
+
+    function Run_if_not_exists()
+    {
+        //TODO:;
+        return $this->db->Query_ar((string)$this);
     }
 
 }
