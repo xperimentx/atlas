@@ -2,7 +2,9 @@
 
 ![xperimentx atlas](images/atlas.png)
 
+Atlas is designed to give you freedom in the structure and implementation of your website.
 
+[Atlas Sample](https://github.com/xperimentx/atlas-sample) is designed to give you freedom in the structure and implementation of your website.
 
 
 ## Sample structure for a web application using Atlas
@@ -77,13 +79,30 @@ class Database extends \Xperimentx\Atlas\Db\Cfg
 }
 ```
 
-
-
-
-## /index.php
+## Configuration of autoloader /Config/Autoloader.php
 
 ```php
+<?php
+namespace Config;
 
+use Xperimentx\Atlas\Autoloader as X;
+
+class Autoloader
+{
+    static public function Load()
+    {
+        X::Add_namespace ('Xperiment\\Atlas\\Control', 'Xperiment/Control/php');
+        X::Add_namespace ('Xperiment\\Atlas\\Crud'   , 'Xperiment/Crud/php'   );
+    }
+}
+```
+
+
+
+## Use this configurations files in /index.php
+
+```php
+<?php
 include __DIR__.'/Xperiment/Atlas/php/Autoloader.php';
 
 use Xperimentx\Atlas;
@@ -99,26 +118,14 @@ Config\Routes     ::Load();
 $db = new Atlas\Db(new Config\Database());
 
 
-Autoloader::Register(__DIR__);
-Autoloader::Add_namespace ('Acme\\', Atlas::$root.'/vendor/Acme/src');
 
-
-
-/**
- * App sample
- *
- * You need include this file in your php main files.
- */
-class App
+if (!$db->Connect())
 {
-    public static function Initialize ()
-    {
-        $db = new Atlas\Db(new Cfg\Database());
-
-
-    }
+    die ("Database connection error \n");
 }
 
+
+echo "Hola mundo!";
 ```
 
 
