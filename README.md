@@ -7,7 +7,7 @@ xperiment**X** **Atlas is a development toolkit** for PHP projects.
 Atlas is designed to give you freedom in the structure and implementation of your website.
 
 
-Take a look at [Atlas Sample](https://github.com/xperimentx/atlas-sample)  project to see a more realistic example than the documentation.
+Take a look at [xperiment**X Demo**](https://github.com/xperimentx/atlas-sample)  project to see a more realistic example than the documentation.
 
 
 
@@ -16,8 +16,6 @@ Take a look at [Atlas Sample](https://github.com/xperimentx/atlas-sample)  proje
 [:green_book: Quick start guide](Atlas/doc/Quick-start-guide.md)
 
 [:green_book: Database Reference](Atlas/doc/Database-reference.md)
-
-[:green_book: App ideas / sample](Atlas/doc/App-sample.md)
 
 [:green_book: Credits](Atlas/doc/Credits.md)
 

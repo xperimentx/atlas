@@ -17,7 +17,7 @@
 
 * [Quick start guide.](Quick-start-guide.md)
 * [Autoloader.](Autoloader.md)
-* [App sample structure.](App-sample.md)
+* [App example.](App-demo.md)
 
 ---
 
