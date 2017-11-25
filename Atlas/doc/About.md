@@ -76,11 +76,11 @@ Atlas is designed to give you freedom in the structure and implementation of you
   - [ ] Interactive  AJAJ FORM.
 
  - [ ] Reports && table data exportation
-  - [ ] CSV.
-  - [ ] Excel xml data sheet.
-  - [ ] Excel xls.
-  - [ ] Pdf.
-  - [ ] Json.
+   - [ ] CSV.
+   - [ ] Excel xml data sheet.
+   - [ ] Excel xls.
+   - [ ] Pdf.
+   - [ ] Json.
 
 
  - [ ] Composer compatible
