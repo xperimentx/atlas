@@ -2,11 +2,12 @@
 
 # Atlas Php Toolkit
 
-Atlas is a development toolkit for small PHP projects.
+**Atlas is a development toolkit** for PHP projects
 
-[Atlas Sample](https://github.com/xperimentx/atlas-sample) is designed to give you freedom in the structure and implementation of your website.
+Atlas is designed to give you freedom in the structure and implementation of your website.
 
-This project just tries to show how you could use atlas in a realistic example
+
+Take a look at [Atlas Sample](https://github.com/xperimentx/atlas-sample)  project to see a more realistic example than the documentation.
 
 [:blue_book: About atlas,](Atlas/doc/About.md)
 

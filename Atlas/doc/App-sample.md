@@ -2,9 +2,9 @@
 
 ![xperimentx atlas](images/atlas.png)
 
-Atlas is designed to give you freedom in the structure and implementation of your website.
+Atlas is designed to give you freedom, so take this as just an example or suggestion of how you could implement your application
 
-[Atlas Sample](https://github.com/xperimentx/atlas-sample) is designed to give you freedom in the structure and implementation of your website.
+Take a look at [Atlas Sample](https://github.com/xperimentx/atlas-sample)  project to see a more realistic example than this documentation.
 
 
 ## Sample structure for a web application using Atlas
@@ -99,7 +99,7 @@ class Autoloader
 
 
 
-## Use this configurations files in /index.php
+## Use these configurations files in /index.php
 
 ```php
 <?php
