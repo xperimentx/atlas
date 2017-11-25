@@ -17,11 +17,11 @@
 
 * [Quick start guide.](Quick-start-guide.md)
 * [Autoloader.](Autoloader.md)
+* [App sample structure.](App-sample.md)
 
 ---
 
 ### Database Reference
-
 * [Database Reference.](Database-reference.md)
 * [Database Forge.](Database-forge.md)
 

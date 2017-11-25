@@ -22,7 +22,7 @@ Atlas Autoloader is  PSR-4 compatible.
 
 ## Namespace Maps
 
-`Atlas\Autoloader::Add_to_map()` adds a new base directory or an array of base directories.
+` Add_namespace($namespace_prefix, $base_dir, $prepend = false)` adds a new base directory or an array of base directories.
 
 * Base directories must not have trailing `/`.
 * Namespace prefixes must end in `\`.
@@ -30,19 +30,43 @@ Atlas Autoloader is  PSR-4 compatible.
 ```php
 use Xperimentx\Atlas\Autoloader;
 
-Autoloader::Add_to_map ('Namespace_prefix\\', 'My_libraries/Name_space_dir');
-Autoloader::Add_to_map ('Acme\\'            , Atlas::$root.'/vendor/Acme/src');
-Autoloader::Add_to_map ('Acme\\Special\\'   , [ __DIR__.'/Special', 'vendor/Acme/test/Special']');
+Autoloader::Add_namespace ('Namespace_prefix\\', 'My_libraries/Name_space_dir');
+Autoloader::Add_namespace ('Acme\\'            , Atlas::$root.'/vendor/Acme/src');
+Autoloader::Add_namespace ('Acme\\Special\\'   , [ __DIR__.'/Special', 'vendor/Acme/test/Special']');
 ```
+
+## Class Maps
+
+`Add_class($full_qualified_class_name, $filename_with_path)`* Adds a filename for a full qualified class name.
+
+`Add_class_array($class_map)` Add an array with a class map to the current class map.
+
+
+
+`Atlas\Autoloader::Add_class($full)` adds a class mapping
+
+* Base directories must not have trailing `/`.
+* Namespace prefixes must end in `\`.
+
+```php
+use Xperimentx\Atlas\Autoloader;
+
+Autoloader::Add_class ('No_psr4_class', 'Lib/No_psr4_class.php');
+
+Autoloader::Add_class_array (['Class_A' => __DIR__.'/A/Class_A.php', 
+                              'Class_B' =>'vendor/CB/src/cb.php ]);
+
+```
+
 
 
 ## Add a directory to the include path
 
 You can add a directory to include path with `\set_include_path()`
-or use  `Atlas\Autoloader::Add_to_include_path()` method.
+or use  `Add_include_path ($base_dir, $prepend = true)` method.
 
 ```php
-Xperimentx\Atlas\Autoloader::Add_to_include_path(__DIR__.'/src/path_1' );
+Xperimentx\Atlas\Autoloader::Add_include_path(__DIR__.'/src/path_1' );
 ```
 
 
@@ -107,5 +131,5 @@ include 'vendor/Xperimentx/php/Autoloader.php';
 use Xperimentx\Atlas\Autoloader;
 
 Autoloader::Register(__DIR__);
-Autoloader::Add_to_map ('Acme\\', Atlas::$root.'/vendor/Acme/src');
+Autoloader::Add_namespace ('Acme\\', Atlas::$root.'/vendor/Acme/src');
 ```

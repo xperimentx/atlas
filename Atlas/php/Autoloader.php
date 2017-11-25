@@ -22,19 +22,34 @@ class Autoloader
     static private  $root_path = null;
 
 
-    /** @var string Root path of atlas  */
-    static private  $root_atlas = null;
+    /** @var string Root path of Xperimentx  */
+    static private  $root_xperimentx = null;
+
 
     /** @var boll Is autoloader registered */
     static private $is_registered = false;
 
 
     /**
-     * Maps namespaces prefixes with their base directories
-     * @see add_map()
+     * @var string[] Maps namespaces prefixes with their base directories.
+     *
+     * index= namespace prefixes
+     * value= array of base directories
+     * @see Add_namespace()
      */
-    static private $map = [];
+    static private $namespace_map = [];
 
+
+    /**
+     * @var string[]  Maps classes with their file name with path.
+     *
+     * index= full qualified class name
+     * value= file name with path.
+     *
+     * @see Add_class()
+     * @see Add_class_aray()
+     */
+    static private $class_map = [];
 
 
     /**
@@ -46,12 +61,25 @@ class Autoloader
      */
     public static function Load_class($class_name)
     {
+        // Check if is a mapped class
+        if (isset(self::$class_map[$class_name]))
+        {
+            include_once self::$class_map[$class_name];
+            return;
+        }
+
         $translated     = str_replace('\\','/',$class_name).'.php';
 
-        // First Atlas classe default mapping
-        $filename_1st   = 'Xperimentx\\Atlas\\' === substr($class_name, 0, 17)
-                        ? self::$root_atlas.substr($translated, 16)
-                        : $translated;
+        // Xperimentx e default mapping
+        if ('Xperimentx\\' === substr($class_name, 0, 11))
+        {
+            $pos = strpos($class_name, '\\', 12);
+            $filename_1st   = self::$root_xperimentx
+                            . substr($translated, 10, $pos-9) // package
+                            . 'php'
+                            . substr($translated,$pos);
+        }
+        else $filename_1st = $translated;
 
         // load from include path
         if ($filename = stream_resolve_include_path($filename_1st))
@@ -60,9 +88,8 @@ class Autoloader
             return;
         }
 
-
-        // Resolve namespaces ptefixes
-        if (self::$map)
+        // Resolve namespaces prefixes
+        if (self::$namespace_map)
         {
             $prefix = $class_name;
 
@@ -71,9 +98,9 @@ class Autoloader
                 $prefix = substr($prefix, 0 , $pos); // prefix part
                 $sufix  = substr($prefix, 0 , $pos); // sufix part
 
-                if (!isset(self::$map[$prefix.'\\'])) continue;
+                if (!isset(self::$namespace_map[$prefix.'\\'])) continue;
 
-                foreach (self::$map[$prefix] as $base_dir)
+                foreach (self::$namespace_map[$prefix] as $base_dir)
                 {
                     if ($filename = stream_resolve_include_path($base_dir.$sufix)) continue;
                     {
@@ -86,26 +113,25 @@ class Autoloader
     }
 
 
-
     /**
      *  Adds a base directory for a namespace prefix.
      *
-     * @param string      $namespace_prefix Namespace prefix, must end in \\ to avoid conflicts between similar prefixes
+     * @param string          $namespace_prefix Namespace prefix, must end in \\ to avoid conflicts between similar prefixes
      *
-     * @param string|aray $base_dir         A Base directory or a array of directories for namespace prefix class files .
-     *                                      If it is a array there will be no normalization,  base directories must not have trailing /
+     * @param string|string[] $base_dir         A Base directory or a array of directories for namespace prefix class files .
+     *                                          If it is a array there will be no normalization,  base directories must not have trailing /
      *
-     * @param bool        $prepend          If true, will prepend base_dir instead of appending it.
+     * @param bool            $prepend          If true, will prepend base_dir instead of appending it.
      */
-    static public function Add_to_map($namespace_prefix, $base_dir, $prepend = false)
+    static public function Add_namespace($namespace_prefix, $base_dir, $prepend = false)
     {
         $namespace_prefix = trim($namespace_prefix, '\\').'\\' ;
 
         if (is_array($base_dir))
         {
-            if     (!isset(self::$map[$namespace_prefix]))  self::$map[$namespace_prefix] = $base_dir;
-            elseif ($prepend)                               self::$map[$namespace_prefix] = array_merge ($base_dir, self::$map[$namespace_prefix]);
-            else                                            self::$map[$namespace_prefix] = array_merge (self::$map[$namespace_prefix], $base_dir);
+            if     (!isset(self::$namespace_map[$namespace_prefix]))  self::$namespace_map[$namespace_prefix] = $base_dir;
+            elseif ($prepend)                               self::$namespace_map[$namespace_prefix] = array_merge ($base_dir, self::$namespace_map[$namespace_prefix]);
+            else                                            self::$namespace_map[$namespace_prefix] = array_merge (self::$namespace_map[$namespace_prefix], $base_dir);
         }
 
 
@@ -113,22 +139,39 @@ class Autoloader
         {
             $base_dir = rtrim($base_dir,'\\/') ;
 
-            if (!isset(self::$map[$namespace_prefix]))
+            if (!isset(self::$namespace_map[$namespace_prefix]))
             {
-                self::$map[$namespace_prefix] = [$base_dir];
+                self::$namespace_map[$namespace_prefix] = [$base_dir];
             }
             else
             {
                 if ($prepend)
-                     array_unshift(self::$map[$namespace_prefix], $base_dir);
-                else array_push   (self::$map[$namespace_prefix], $base_dir);
+                     array_unshift(self::$namespace_map[$namespace_prefix], $base_dir);
+                else array_push   (self::$namespace_map[$namespace_prefix], $base_dir);
             }
         }
     }
 
 
+     /**
+     * Adds a filename for a full qualified class name.
+     *
+     * @param string      $full_qualified_class_name Full qualified class name.
+     * @param string|aray $filename_with_path        File name with path.
+     */
+    static public function Add_class($full_qualified_class_name, $filename_with_path)
+    {
+        self::$class_map[$full_qualified_class_name]=$filename_with_path;
+    }
 
-
+    /**
+     * Add an array with a class map to the current class map.
+     * @param string[]      $items index: full qualified class name, value: File name with path.
+     */
+    static public function Add_class_array($items)
+    {
+        self::$class_map = array_merge(self::$class_map, $items);
+    }
 
 
     /**
@@ -136,7 +179,7 @@ class Autoloader
      * @param string $base_dir         A base directory to include
      * @param bool   $prepend          If true, will prepend basedir instead of appending it.
      */
-    static public function Add_to_include_path ($base_dir, $prepend = true)
+    static public function Add_include_path ($base_dir, $prepend = true)
     {
         if ($prepend)
               \set_include_path (rtrim($base_dir, '\\/'). PATH_SEPARATOR . \get_include_path());
@@ -154,19 +197,17 @@ class Autoloader
     static public function Register($root_path=NULL, $dir_up_levels=0)
     {
         if (self::$is_registered) reuturn;
-        dirname($root_path);
-        self::$is_registered = true;
-        self::$root_atlas    = __DIR__;
+
+        self::$is_registered   = true;
+        self::$root_xperimentx = dirname(__DIR__, 2);
 
         if ($root_path)
         {
             self::$root_path= $dir_up_levels ? dirname($root_path, $dir_up_levels): $root_path;
-            self::Add_to_include_path(self::$root_path , true);
+            self::Add_include_path(self::$root_path , true);
         }
 
         // register
         spl_autoload_register('Xperimentx\Atlas\Autoloader::load_class');
     }
 }
-
-

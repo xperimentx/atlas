@@ -11,6 +11,7 @@ Atlas is a development toolkit for small PHP projects.
 [:green_book: Quick start guide](Atlas/doc/Quick-start-guide.md)
 
 [:green_book: Database Reference](Atlas/doc/Database-reference.md)
+[:green_book: App sample](Atlas/doc/App-sample.md)
 
 [:green_book: Credits](Atlas/doc/Credits.md)
 
