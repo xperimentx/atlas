@@ -3,6 +3,11 @@
 
 ![xperimentx atlas](images/atlas.png) 
 
+* [Create a table](#create-a-table)
+* [Alter a table](#alter-a-table)
+* [Forge methods from Db object](#forge-methods-from-db-object)
+
+
 # Database forge
 
 ## Create a table
@@ -44,7 +49,7 @@ else echo "Success \n";
 ```
 
 
-## Forge methods form Db object
+## Forge methods from Db object
 
 | Method                                    | Description             |
 |:------------------------------------------|:------------------------|    

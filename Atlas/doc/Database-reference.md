@@ -5,7 +5,7 @@
 * [Accessing your main database from anywhere](#accessing-your-main-database-from-anywhere)
 * [Configure the database connection](#configure-the-database-connection)
 * [Establish the connection](#establish-the-connection)
-* [Database Forge.](Database-forge.md)
+* [Database Forge](Database-forge.md)
 
 
 # Database Reference
