@@ -50,7 +50,7 @@ Atlas is designed to give you freedom in the structure and implementation of you
 
 - [x] Document the project
 
-- [x] A sample proyect: [Atlas Sample](https://github.com/xperimentx/atlas-sample)  
+- [x] A [Demo proyect.](https://github.com/xperimentx/demo)  
 
 - [ ] Application foundation.
   - [ ] Routing.
@@ -75,7 +75,8 @@ Atlas is designed to give you freedom in the structure and implementation of you
   - [ ] Interactive  AJAJ lists.
   - [ ] Interactive  AJAJ FORM.
 
- - [ ] Reports && table data exportation
+
+- [ ] Reports && table data exportation
    - [ ] CSV.
    - [ ] Excel xml data sheet.
    - [ ] Excel xls.

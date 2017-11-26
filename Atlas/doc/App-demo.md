@@ -4,10 +4,10 @@
 
 Atlas is designed to give you freedom, so take this as just an example or suggestion of how you could implement your application
 
-Take a look at [Atlas Sample](https://github.com/xperimentx/atlas-sample)  project to see a more realistic example than this documentation.
+Take a look at [xperiment**X Demo**](https://github.com/xperimentx/demo)  project to see a more realistic example than this documentation.
 
 
-## Sample structure for a web application using Atlas
+## Proposal for web application structure
 ```
 www
 ├── index.php        ....... Main php
@@ -28,16 +28,6 @@ www
 │   ├── Views
 │   └── Templates
 |
-├── Web              ....... Public web
-│   ├── Common_class.php ... Auxiliary classes
-│   ├── Tools.php
-│   ├── ...
-│   ├── Models       ....... The hard work 
-│   ├── Controllers  
-│   ├── Views
-│   └── Templates|
-|
-|
 ├── migration.php    ....... Migration tool
 ├── Migrations
 │   ├── 001-Create_catalog_table.php
@@ -45,7 +35,6 @@ www
 │   ├── ...
 │   ├── View
 │   └── 013-Alter_users_add_gps_position.php
-│
 │
 ├── media
 │   └── images
@@ -68,7 +57,7 @@ www
 <?php
 namespace Config;
 
-class Database extends \Xperimentx\Atlas\Db\Cfg
+class Database extends \Xperimentx\Atlas\Db\Db_cfg
 {
     function __construct()
     {
