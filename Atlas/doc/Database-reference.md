@@ -38,7 +38,7 @@ $db->cfg->db_name   = 'atlas_demo_db';
 
 ### Option 2, whit a configuration object
 
-Create a database configuration object `Db\Cfg`
+Create a database configuration object `Db_cfg`
 
 And then assign it to a `DB` object using the constructor or assign it to the ``$cfg` property.
 ### Using the constructor.

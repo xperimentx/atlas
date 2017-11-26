@@ -12,7 +12,7 @@
 namespace Xperimentx\Atlas;
 
 use mysqli;
-use Xperimentx\Atlas\Db\Cfg;
+use Xperimentx\Atlas\Db\Db_cfg;
 use Xperimentx\Atlas\Db\Error_item;
 
 
@@ -27,10 +27,10 @@ class Db
     /** @var Error_item[] Errors                                         */  public $errors         = [];
     /** @var Error_item   Last error. Null if last call is successful .  */  public $last_error     = null;
     /** @var string       Last SQL statement.                            */  public $last_sql       = null;
-    /** @var Cfg          Configuration, options.                        */  public $cfg            = null;
+    /** @var Db_cfg       Configuration, options.                        */  public $cfg            = null;
 
     /** @var Db           First object connected. The main Db object.    */  public static $db      = null;
-    /** @var callable     Function to call if a query error  (Db $this).  */ public $on_error_fn    = null;
+    /** @var callable     Function to call if a query error  (Db $this). */ public $on_error_fn    = null;
 
     const ENGINE_MYISAM = 'MyISAM';
     const ENGINE_INNODB = 'InnoDB';
@@ -38,20 +38,20 @@ class Db
 
 
     /**
-     * @param Cfg $cfg Configuration, options for create mysqli connection.
+     * @param Db_cfg $cfg Configuration, options for create mysqli connection.
      */
     function __construct($cfg=null)
     {
         if (!self::$db)
             self::$db = $this;
 
-        $this->cfg = $cfg ?? new Cfg();
+        $this->cfg = $cfg ?? new Db_cfg();
     }
 
 
     /**
      * Creates a new mysqli object and connects it to the MySQL server.
-     * @param Cfg Configuration.
+     * @param Db_cfg Configuration.
      * @return bool  Is connection successful.
      */
     public function Connect ()

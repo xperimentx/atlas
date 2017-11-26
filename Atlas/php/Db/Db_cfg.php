@@ -16,7 +16,7 @@ namespace Xperimentx\Atlas\Db;
  * @author Roberto González Vázquez
  */
 
-class Cfg
+class Db_cfg
 {
     /** @var string User name.                                        */ public $user_name      = null;
 
