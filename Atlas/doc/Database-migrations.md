@@ -20,3 +20,71 @@ The challenge to achieve the objective of migrations has begun. :smiley:
 ### Migrator CLi - migrations list
 
 ![xperimentx atlas](images/db/migrator-list.png) 
+
+### Use of migrators
+
+```php
+<?php
+
+use Xperimentx\Atlas\Autoloader;
+use Xperimentx\Atlas\Db;
+use Xperimentx\Atlas\Db\Migrations;
+
+// Autoloader
+// ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
+include __DIR__.'/Xperimentx/Atlas/php/Autoloader.php';
+Autoloader::Register(__DIR__);
+
+
+// Loading config
+// ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
+Config\Autoloader ::Load();
+Config\Routes     ::Load();
+
+
+// Connect database
+// ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
+$db = new Db(new Config\Database());
+
+if (!$db->Connect())
+{
+    die ("Database connection error \n");
+}
+
+
+// Main migrator part
+// ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
+class  My_migrator_cfg extends Migrations\Migrator_cfg
+{
+    function __construct()
+    {
+        $this->root       = __DIR__.'/Migrations';
+        $this->namespace  = 'Migrations';
+        $this->use_colors = true;
+    }
+}
+
+$migrator= new Migrations\Migrator_cli(new My_migrator_cfg());
+$migrator->Run();
+```
+
+
+## Migrations files
+```
+www
+├── Config           
+│   ├── Autoload.php
+│   └── Database.php
+│
+│
+├── migrator.php    
+└── Migrations
+    ├── 001-Create_catalog_table.php
+    ├── 002-Create_users_table.php
+    ├── ...
+    ├── 3-Create_users_table.php
+    ├── 4-Create_users_table.php
+    ├── ...
+    ├── 201701130015-Create_users_table.php
+    └── 201711051758-Create_users_table.php
+```

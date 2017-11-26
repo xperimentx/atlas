@@ -33,7 +33,7 @@ class Create_table
 
 
     /**
-     * @param string $table Table name
+     * @param string $table Table name. `` are added.
      */
     public function __construct($table, $db_object = null)
     {
@@ -81,7 +81,7 @@ class Create_table
      *          CHAR(50), VARCHAR(50)
      *          DATE, TIME, DATETIME ...
      *
-     * @param string $field_name
+     * @param string $field_name Field name.  `` are added.
      * @param scalar $default_value
      * @param bool  $is_null_allowed
      *
@@ -92,6 +92,33 @@ class Create_table
         $this->columns[] = $col = new Column($field_type, $field_name, $default_value, $is_null_allowed);
         return $col;
     }
+
+
+    const INDEX_NORMAL   = '';
+    const INDEX_UNIQUE   = 'UNIQUE';
+    const INDEX_SPATIAL  = 'SPATIAL';
+    const INDEX_FULLTEXT = 'FULLTEXT';
+    /**
+     * Adds an index
+     * @param string  $index_name Index name. `` are added.
+     * @param string  $fields Comas separated field names.
+     * @param string  $type Index type: normal, UNIQUE, FULLTEXT, SPATIAL
+     */
+    public function Add_index($index_name, $fields ,$type=self::INDEX_NORMAL)
+    {
+        $this->ittems[]="$type INDEX `$index_name` ($fields)";
+    }
+
+    /**
+     * Adds the primary key
+     * @param string  $fields Comas separated field names.
+     * @param string  $type Index type: normal, UNIQUE, FULLTEXT, SPATIAL
+     */
+    public function Add_primary_key ($fields)
+    {
+        $this->ittems[]="PRIMARY KEY ($fields)";
+    }
+
 
 
     /**

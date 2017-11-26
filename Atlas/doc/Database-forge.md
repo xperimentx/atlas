@@ -37,7 +37,7 @@ $alter = new Db\Alter_table('table_name');
 $alter->Change_column ('VARCHAR(250)', 'name');
 $alter->Add_column    ('TEXT'        , 'notes');
 $alter->Drop_column   ('delete_me');
-$alter->Set_engine(Db::ENGINE_INNODB);
+$alter->Set_engine    (Db::ENGINE_INNODB);
 
 $maker->Run(); 
 

@@ -31,7 +31,7 @@ class Alter_table
 
 
     /**
-     * @param string $table Table name
+     * @param string $table Table name. `` are added.
      * @param Db     Instance or Db object, null:for default Db
      */
     public function __construct($table, $db_object = null)
@@ -43,7 +43,7 @@ class Alter_table
 
     /**
      * Drops a column or a set of columns from the table
-     * @param string $field Field name of column
+     * @param string $field Field name of column. `` are added.
      * @return $this
      */
     public function  Drop_column ($field)
@@ -53,9 +53,22 @@ class Alter_table
     }
 
 
+     /**
+     * Drops an index
+     * @param string $index_name Index name. `` are added.
+     * @return $this
+     */
+    public function  Drop_index ($index_name)
+    {
+        $this->changes[] ="DROP INDEX `$index_name`";
+        return $this;
+    }
+
+
+
     /**
      * Renames the table
-     * @param string $new_table_name
+     * @param string $new_table_name. `` are added.
      * @return $this
      */
     public function Rename ($new_table_name)
