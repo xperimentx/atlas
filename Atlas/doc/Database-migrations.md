@@ -13,16 +13,33 @@ The challenge to achieve the objective of migrations has begun. :smiley:
 
 ## Migrator CLi
 
-### Migrator CLi - help
-
 ![xperimentx atlas](images/db/migrator-help.png) 
-
-### Migrator CLi - migrations list
 
 ![xperimentx atlas](images/db/migrator-list.png) 
 
-### Use of migrators
+## Usage of migrators
 
+## Example structure
+```
+www
+├── Config           
+│   ├── Autoload.php
+│   └── Database.php
+│
+│
+├── migrator.php    
+└── Migrations
+    ├── 001-Create_catalog_table.php
+    ├── 002-Create_users_table.php
+    ├── ...
+    ├── 3-Create_users_table.php
+    ├── 4-Create_users_table.php
+    ├── ...
+    ├── 201701130015-Create_users_table.php
+    └── 201711051758-Create_users_table.php
+```
+
+### Main file: migrator.php
 ```php
 <?php
 
@@ -69,22 +86,28 @@ $migrator->Run();
 ```
 
 
-## Migrations files
-```
-www
-├── Config           
-│   ├── Autoload.php
-│   └── Database.php
-│
-│
-├── migrator.php    
-└── Migrations
-    ├── 001-Create_catalog_table.php
-    ├── 002-Create_users_table.php
-    ├── ...
-    ├── 3-Create_users_table.php
-    ├── 4-Create_users_table.php
-    ├── ...
-    ├── 201701130015-Create_users_table.php
-    └── 201711051758-Create_users_table.php
+### Example Step: 001-Create_catalog_table.php
+
+```php
+<?php
+namespace Migrations;
+use Xperimentx\Atlas\Db;
+
+class Create_catalog_table extends Db\Migrations\Step
+{
+    public function Up()
+    {
+        $maker = new Db\Create_table('catalog');
+        $maker->Add_column ('INT'        , 'id'  )->Set_auto_increment();
+        $maker->Add_column ('VARCHAR(50)', 'name');
+        $maker->Add_index  ('auto_id', 'id');
+        $maker->Run();
+
+    }
+
+    public function Down()
+    {
+        Db::$db->Drop_table('catalog');
+    }
+}
 ```
