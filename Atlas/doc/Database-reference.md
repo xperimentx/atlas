@@ -6,6 +6,7 @@
 * [Configure the database connection](#configure-the-database-connection)
 * [Establish the connection](#establish-the-connection)
 * [Database Forge](Database-forge.md)
+* [Migrations](Database-migrations.md)
 
 
 # Database Reference
