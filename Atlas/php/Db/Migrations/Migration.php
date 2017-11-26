@@ -6,6 +6,7 @@
  * @link  https://xperimentX.com
  *
  * @copyright 2017 Roberto González Vázquez
+ * @license MIT
  */
 
 namespace Xperimentx\Atlas\Db;
@@ -19,7 +20,7 @@ use Xperimentx\Atlas\Db;
  *
  * @author Roberto González Vázquez
  */
-abstract class Migration
+abstract class Migrations_draft
 {
     /** @var string Directory of migration files */ public $migration_root;
 

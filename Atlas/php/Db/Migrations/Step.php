@@ -8,11 +8,10 @@
  * @copyright 2017 Roberto González Vázquez
  */
 
-namespace Xperimentx\Atlas\Db\Migration;
-
+namespace Xperimentx\Atlas\Db\Migrations;
 
 /**
- * Migration step
+ * Migration step base.
  *
  * @author Roberto González Vázquez
  */
