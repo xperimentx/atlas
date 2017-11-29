@@ -1,12 +1,14 @@
 <?php
 /**
- *  Atlas Toolkit
+ * xperimentX Atlas Toolkit
  *
- * @link  https://github.com/xperimentx/atlas
- * @link  https://xperimentX.com
+ * @link      https://github.com/xperimentx/atlas
+ * @link      https://xperimentX.com
  *
+ * @author    Roberto González Vázquez, https://github.com/xperimentx
  * @copyright 2017 Roberto González Vázquez
- * @license MIT
+ *
+ * @license   MIT
  */
 
 namespace Xperimentx\Atlas;
@@ -53,6 +55,7 @@ class Cli
     /** @var string foreground light purple            */   public $fg_light_purple = "\033[1;35m";
     /** @var string foreground light cyan              */   public $fg_light_cyan   = "\033[1;36m";
     /** @var string foreground white                   */   public $fg_white        = "\033[1;37m";
+
     /** @var string background black                   */   public $bg_black        = "\033[40m";
     /** @var string background red                     */   public $bg_red          = "\033[41m";
     /** @var string background green                   */   public $bg_green        = "\033[42m";
@@ -122,6 +125,7 @@ class Cli
         }
     }
 
+
     /**
      * Returns colored string
      *
@@ -153,17 +157,11 @@ class Cli
 
     /**
      * Ensures that the environment is cliD.
-     * Dies the program if not is cli.
+     * Dies the program if not is cli whit 403.
      */
     public function  Require_cli_environment ()
     {
         global  $argv;
-
-        if (!isset($argv[0]))
-        {
-            header("HTTP/1.0 404 Not Found");
-            header("Status: 404 Not Found");
-            die();
-        }
+        $argv[0] ?? header(($_SERVER["SERVER_PROTOCOL"]??'HTTP/1.1').' 403 Forbidden') & exit();
     }
 }

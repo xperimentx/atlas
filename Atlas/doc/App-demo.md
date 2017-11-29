@@ -2,9 +2,11 @@
 
 ![xperimentx atlas](images/atlas.png)
 
-Atlas is designed to give you freedom, so take this as just an example or suggestion of how you could implement your application
+Atlas is designed to give you freedom, so take this as just an example 
+or suggestion of how you could implement your application
 
-Take a look at [xperiment**X Demo**](https://github.com/xperimentx/demo)  project to see a more realistic example than this documentation.
+Take a look at [xperiment**X Demo**](https://github.com/xperimentx/demo)  
+project to see a more realistic example than this documentation.
 
 
 ## Proposal for web application structure

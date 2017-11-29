@@ -12,9 +12,10 @@
 # Database Reference
 ## Accessing your main database from anywhere
 
-'Xperimentx\Atlas\Db` is the class useed to manage your databases.
+'Xperimentx\Atlas\Db` is the class used to manage your databases.
 
-The first created `DB` object will be registered in the static and public property `Db::$db` as the main database.
+The first created `DB` object will be registered in the static and public 
+property `Db::$db` as the main database.
 
 This simplifies the development by making this main database easily accessible.
 
@@ -24,7 +25,7 @@ You can use as many `Db` object as you wish.
 
 ## Configure the database connection
 
-### Option 1, seting the cfg property
+### Option 1, setting the cfg property
 
 Create an object and configure the connection using the `cfg` property.
 
@@ -41,7 +42,10 @@ $db->cfg->db_name   = 'atlas_demo_db';
 
 Create a database configuration object `Db_cfg`
 
-And then assign it to a `DB` object using the constructor or assign it to the ``$cfg` property.
+And then assign it to a `DB` object using the constructor 
+or assign it to the ``$cfg` property.
+
+
 ### Using the constructor.
 
 ```php

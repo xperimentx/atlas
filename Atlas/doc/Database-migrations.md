@@ -26,7 +26,6 @@ www
 │   ├── Autoload.php
 │   └── Database.php
 │
-│
 ├── migrator.php    
 └── Migrations
     ├── 001-Create_catalog_table.php
@@ -56,7 +55,6 @@ Autoloader::Register(__DIR__);
 // Loading config
 // ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
 Config\Autoloader ::Load();
-Config\Routes     ::Load();
 
 
 // Connect database

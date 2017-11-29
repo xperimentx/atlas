@@ -1,11 +1,14 @@
 <?php
 /**
- *  Atlas Toolkit
+ * xperimentX Atlas Toolkit
  *
- * @link  https://github.com/xperimentx/atlas
- * @link  https://xperimentX.com
+ * @link      https://github.com/xperimentx/atlas
+ * @link      https://xperimentX.com
  *
+ * @author    Roberto González Vázquez, https://github.com/xperimentx
  * @copyright 2017 Roberto González Vázquez
+ * 
+ * @license   MIT
  */
 
 namespace Xperimentx\Atlas;
