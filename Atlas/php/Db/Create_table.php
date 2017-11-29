@@ -1,11 +1,14 @@
 <?php
 /**
- * Atlas Toolkit
+ * xperimentX Atlas Toolkit
  *
- * @link  https://github.com/xperimentx/atlas
- * @link  https://xperimentX.com
+ * @link      https://github.com/xperimentx/atlas
+ * @link      https://xperimentX.com
  *
+ * @author    Roberto González Vázquez, https://github.com/xperimentx
  * @copyright 2017 Roberto González Vázquez
+ *
+ * @license   MIT
  */
 
 namespace Xperimentx\Atlas\Db;
@@ -20,16 +23,17 @@ use Xperimentx\Atlas\Db;
  */
 class Create_table
 {
-    /** @var Column[] Columns to add  */  protected $columns      = [];
-    /** @var string[] Items           */  protected $items        = [];
-    /** @var Db     Db object         */  protected $db           = null;
+    /** @var Column[] Columns to add                 */  protected $columns      = [];
+    /** @var string[] Items                          */  protected $items        = [];
+    /** @var Db     Db object                        */  protected $db           = null;
 
-    /** @var string Table name        */  public $table           = null;
-    /** @var string Charset.          */  public $charset         = null;
-    /** @var string Collation.        */  public $collation       = null;
-    /** @var string Engine            */  public $engine          = null;
-    /** @var string Autoincrement     */  public $autoincrement   = null;
-    /** @var string Comment           */  public $comment         = null;
+    /** @var string Table name                       */  public $table           = null;
+    /** @var string Charset.                         */  public $charset         = null;
+    /** @var string Collation.                       */  public $collation       = null;
+    /** @var string Engine                           */  public $engine          = null;
+    /** @var string Autoincrement.                   */  public $autoincrement   = null;
+    /** @var string Comment.                         */  public $comment         = null;
+    /** @var bool   Only creates table if not exists.*/  public $if_not_exists   = null;
 
 
     /**
@@ -98,6 +102,8 @@ class Create_table
     const INDEX_UNIQUE   = 'UNIQUE';
     const INDEX_SPATIAL  = 'SPATIAL';
     const INDEX_FULLTEXT = 'FULLTEXT';
+
+
     /**
      * Adds an index
      * @param string  $index_name Index name. `` are added.
@@ -120,14 +126,17 @@ class Create_table
     }
 
 
-
     /**
      * Returns SQL for CREATE TABLE query
      * @return int Affected rows.
      */
     function __toString ()
     {
-        $sql = "CREATE TABLE `$this->table` ("
+        $sql = ($this->if_not_exist)
+                ? 'CREATE TABLE '
+                : 'CREATE TABLE IF NOT EXISTS ';
+
+        $sql .= "`$this->table` ("
              . implode (",\n" , array_merge($this->columns, $this->items))
              . ') '   ;
 
@@ -142,7 +151,7 @@ class Create_table
 
 
     /**
-     * Run alter table query
+     * Run create table query
      * @return int Affected rows.
      * @param $db Db Instance or Db object, null:for default DB::$db.
      */
@@ -151,13 +160,15 @@ class Create_table
         return $this->db->Query_ar((string)$this);
     }
 
+
+    /**
+     * Run create table if not exist query
+     * @return int Affected rows.
+     * @param $db Db Instance or Db object, null:for default DB::$db.
+     */
     function Run_if_not_exists()
     {
-        //TODO:;
+        $this->if_not_exists = true;
         return $this->db->Query_ar((string)$this);
     }
-
 }
-
-
-
