@@ -1,18 +1,19 @@
 <?php
-
 /**
- *  Atlas Toolkit
+ * xperimentX Atlas Toolkit
  *
- * @link  https://github.com/xperimentx/atlas
- * @link  https://xperimentX.com
+ * @link      https://github.com/xperimentx/atlas
+ * @link      https://xperimentX.com
  *
+ * @author    Roberto González Vázquez, https://github.com/xperimentx
  * @copyright 2017 Roberto González Vázquez
- * @license MIT
+ *
+ * @license   MIT
  */
 
 namespace Xperimentx\Atlas\Db\Migrations;
 
-use Xperimentx\Atlas\Cli;
+
 use Xperimentx\Atlas\Db;
 
 /**
@@ -24,7 +25,15 @@ use Xperimentx\Atlas\Db;
  */
 class Migrator_cli extends Migrator
 {
-    /** @var Cli Cli tools */ protected $cli;
+    /** @var Migrator_cli_views               */ protected $views;
+    /** @var string|null  Command.            */ protected $command;
+    /** @var int|false    Optional n argument.*/ protected $number;
+
+
+    /** @var int  Current step                */ protected $current_step=0;
+
+
+
 
     /**
      * @param Migrator_cfg $cfg
@@ -32,127 +41,126 @@ class Migrator_cli extends Migrator
      */
     function __construct($cfg, $db=null)
     {
+        $this->views = new Migrator_cli_views();
         parent::__construct($cfg,$db);
-
-        $this->cli = new Cli();
-
-        if (!$cfg->use_colors)
-            $this->cli->Deactivate_colors ();
     }
 
-    function Run()
+    /**
+     * Runs the migrator.
+     */
+    public function Run()
+    {
+        $this->Parse_arguments_ans_set_color_usage();
+
+        $this->views->Show_title();
+
+        $this->Init_configurator();
+
+
+        $this->Get_migration_files();
+
+
+        $method_name = 'On_'.$this->command;
+        if (method_exists($this, $method_name))
+        {
+            $this->$method_name();
+        }
+        else
+        {
+            if ($this->command)
+                $this->views->Show_error ('Incorrect command');
+
+            $this->On_status();
+            $this->On_help();
+        }
+    }
+
+
+    /**
+     * Shows an error running Init().
+     * @var string $msg
+     */
+    protected function Show_init_error($msg)
+    {
+        $this->views->Show_error ('Incorrect command');
+    }
+
+
+    /**
+     * Shows a notice running Init().
+     * @var string $msg
+     */
+    protected function  Show_init_notice ($msg)
+    {
+         $this->views->Show_notice ('Incorrect command');
+    }
+
+
+    protected function Parse_arguments_ans_set_color_usage()
     {
         global  $argv;
 
-        // Only cli is allowed
-        $this->cli->Require_cli_environment();
+        $this->command = $argv[1] ?? null;
 
-        // Parse arguments
-        $command = $argv[1] ?? null;
-
-        if ($command==='nocolor')
+        if ($this->command==='nocolor')
         {
-            $this->cli->Deactivate_colors();
-            $command = $argv[2] ?? null;
+            $this->views->Deactivate_colors();
+
+            $this->command = $argv[2] ?? null;
             $number  = filter_var($argv[3] ?? null, FILTER_VALIDATE_INT, ["options" => ["min_range"=>0]]) ;
         }
         else
         {
+            if (!$this->cfg->use_colors)
+                $this->views->Deactivate_colors();
+
             $number  = filter_var($argv[2] ?? null, FILTER_VALIDATE_INT, ["options" => ["min_range"=>0]]) ;
         }
-
-        $this->Show_title();
-
-        $this->Route($command, $number);
     }
 
 
-    /**
-     * Routes the order to the responsible method.
-     * @param string|null $command Command.
-     * @param int|false   $number  Optional second argument .
-     */
-    protected function Route ($command, $number)
+    protected function On_list ()
     {
-        $cli = $this->cli;
+        $this->views->List_files($this->number, $this->file_titles);
+    }
 
-        switch ("$command")
+
+    protected function On_listnew ()
+    {
+        $this->views->List_files(2, $this->file_titles);
+    }
+
+
+    protected function On_status()
+    {
+        $current_title = 'No current migration step';
+
+        if ($this->current_step)
+            $current_title = $this->file_titles[$this->current_step] ?? '???';
+
+        $cu=$last=0;
+
+        foreach ($this->file_titles as $idx=>$value)
         {
-            case '':
-            case 'help': $this->Show_help();           break;
-
-            case 'list': $this->List_files($number);  break;
-
-            default: $this->Show_help( "{$cli->fg_light_red}Incorrect command \n\n{$cli->reset}");
-
-        }
-    }
-
-
-    protected function Show_title()
-    {
-        $cli = $this->cli;
-
-        echo "{$cli->fg_yellow}\nxperiment{$cli->fg_light_red}X {$cli->fg_light_purple}Atlas {$cli->fg_white}Migration Tool\n\n{$cli->reset}";
-    }
-
-
-    /**
-     * Shows help
-     * @param string $message Optional message
-     */
-    protected function Show_help ($message='')
-    {
-        global  $argv;
-        $cli = $this->cli;
-
-        $executable = 'php '.$argv[0];
-        echo "{$message}{$cli->fg_light_cyan}Usage:            {$cli->fg_yellow}
-        $executable  [nocolor] <command> [n: optional int value]
-{$cli->fg_white}{$cli->bold}
-        nocolor    {$cli->reset}{$cli->fg_blue}|{$cli->fg_gray} Deactivates color output  {$cli->fg_white}
-
-        force  <n> {$cli->reset}{$cli->fg_blue}|{$cli->fg_gray} Sets migration step without execute any migration.{$cli->fg_white}
-        help       {$cli->reset}{$cli->fg_blue}|{$cli->fg_gray} Shows this help.                            {$cli->fg_white}
-        list       {$cli->reset}{$cli->fg_blue}|{$cli->fg_gray} Lists all avaliable migrations              {$cli->fg_white}
-        list   <n> {$cli->reset}{$cli->fg_blue}|{$cli->fg_gray} Lists migrations fron n                     {$cli->fg_white}
-        log    <n> {$cli->reset}{$cli->fg_blue}|{$cli->fg_gray} Shows the last n logs.                      {$cli->fg_white}
-        status     {$cli->reset}{$cli->fg_blue}|{$cli->fg_gray} Shows the curren estatus of migrations.     {$cli->fg_white}
-        update <n> {$cli->reset}{$cli->fg_blue}|{$cli->fg_gray} Upgrades or downgrades migration to n step. {$cli->fg_white}
-
-{$cli->fg_light_cyan}
-Examples:                     {$cli->fg_gray}
-        $executable status
-        $executable update 15
-        $executable nocolor update 16
-        {$cli->reset}\n";
-    }
-
-
-    protected function List_files ($number)
-    {
-        $this->Get_migration_files();
-
-        $cli = $this->cli;
-
-        $num_files = 0;
-        $out       = '';
-
-        if ($this->files)
-        {
-            foreach ($this->file_titles as $num=>$value)
-                if ($num>=$number)
-                {
-                    $num_files++;
-                    $out.=sprintf("{$cli->fg_light_cyan}%15d {$cli->fg_gray}%s\n", $num, $value);
-                }
+            $last = $idx;
+            if ($idx>$this->current_step) $cu++;
         }
 
 
+        $this->views->Show_status
+            (
+                $this->current_step,
+                $current_title,
+                $cu,
+                $last,
+                $this->file_titles[$last] ?? '???'
+            );
+    }
 
-        $out .= sprintf("\n{$cli->fg_yellow}%15d migration files found.\n", $num_files);
 
-        echo $out;
+    protected function On_help()
+    {
+        $this->views->Show_help();
     }
 }
 
