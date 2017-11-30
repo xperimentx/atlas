@@ -46,30 +46,57 @@ class Migrator_cli_views
         echo "{$cli->fg_yellow}\n  xperiment{$cli->fg_light_red}X {$cli->fg_light_purple}atlas {$cli->fg_blue}- {$cli->fg_white}Migrator CLi Tool\n\n{$cli->reset}";
     }
 
-
-    public function Show_error($text)
+    /**
+     * @var string $title   Error title
+     * @var string|null $details Details
+     */
+    public function Show_error($title, $details)
     {
         $cli = $this->cli;
 
-        echo "{$cli->fg_white}{$cli->bg_red}  $text  {$cli->reset}\n\n";
+        echo "{$cli->fg_white}{$cli->bg_red}  $title {$cli->reset}\n";
+
+        if ($details)
+            echo "{$cli->fg_light_red}sdsdf  {$details}\n";
+
+        echo "{$cli->reset}\n";
+
     }
 
 
-    public function Show_notice($text)
+    /**
+     * @var string $title   Error title
+     * @var string|null $details Details
+     */
+    public function Show_notice($title, $details)
     {
         $cli = $this->cli;
 
-        echo "{$cli->fg_light_blue}  $text  {$cli->reset}\n\n";
+        echo "{$cli->fg_light_blue}  $title  {$cli->reset}\n";
+
+        if ($details)
+            echo "{$cli->fg_light_gray}  {$details}\n";
+
+        echo "{$cli->reset}\n";
     }
 
 
-    public function Show_status ($current_idx, $current_title, $num_pending, $last_idx, $last_title )
+    /**
+     *
+     * @param Status_row $status
+     * @param int $num_pending
+     * @param int $last_step
+     * @param string $last_title
+     */
+    public function Show_status ($status, $num_pending, $last_step, $last_title )
     {
         $cli = $this->cli;
-            echo "{$cli->fg_gray}  Current step :{$cli->fg_light_cyan} $current_idx {$cli->fg_white}- $current_title\n";
+        echo "{$cli->fg_gray}  Current step :{$cli->fg_light_cyan} $status->step"
+             ."{$cli->fg_blue}  -{$cli->fg_white}  $status->title"
+             ."{$cli->fg_blue}  -{$cli->fg_light_blue}  $status->date_modified\n";
 
-        if ($last_idx)
-            echo "{$cli->fg_gray}  Last step    :{$cli->fg_light_cyan} $last_idx {$cli->fg_white}- $last_title \n";
+        if ($last_step)
+            echo "{$cli->fg_gray}  Last step    :{$cli->fg_light_cyan} $last_step {$cli->fg_white}- $last_title \n";
 
         if ($num_pending>0)
             echo "{$cli->fg_gray}  Pending steps:{$cli->fg_white} $num_pending steps\n";
@@ -92,20 +119,22 @@ class Migrator_cli_views
         $cmd        = "{$cli->fg_white}  ";
         $executable = 'php '.$argv[0];
         $n          = "{$cli->fg_green}n{$cli->fg_gray}";
-        $n_opt      = "{$cli->fg_green}[n]";
-        $n_req      = "{$cli->fg_green}<n>";
+        $green      = "{$cli->fg_green}";
 
         echo "
-{$cli->fg_light_cyan}  Usage:{$cli->fg_yellow}  $executable  [nocolor] <command> [n: optional int value]
+{$cli->fg_light_cyan}  Usage:{$cli->fg_yellow}  $executable  [nocolor] <command> [opcional-value]
 
-{$cmd}nocolor    $vbar Deactivates color output
-{$cmd}           $vbar
-{$cmd}list $n_opt   $vbar Lists avaliable migrations steps. If $n, from $n step.
-{$cmd}listnew    $vbar Lists pending steps, greater than current step.
-{$cmd}update $n_req $vbar Upgrades or downgrades migration to $n step.
-{$cmd}           $vbar
-{$cmd}log $n_opt    $vbar Shows the last $n logs. If not $n, last 10 logs.
-{$cmd}logdelete  $vbar Delete log entries.           {$cli->reset}\n";
+{$cmd}nocolor       $vbar Deactivates color output
+{$cmd}              $vbar
+{$cmd}list   {$green}       $vbar Lists avaliable migrations steps.
+{$cmd}list   {$green}new    $vbar Lists pending steps.
+{$cmd}list   {$green}<n>    $vbar Lists migrations steps greater than $n.
+{$cmd}              $vbar
+{$cmd}update {$green}<n>    $vbar Upgrades or downgrades migration to $n step.
+{$cmd}update {$green}last   $vbar Upgrades to the last stepd.
+{$cmd}              $vbar
+{$cmd}log    {$green}<n>    $vbar Shows the $n last logs.
+{$cmd}log    {$green}delete $vbar Delete log entries.  {$cli->reset}\n";
     }
 
 
@@ -119,7 +148,7 @@ class Migrator_cli_views
         if ($file_titles)
         {
             foreach ($file_titles as $num=>$value)
-                if ($num>=$number)
+                if ($num>$number)
                 {
                     $num_files++;
                     $out.=sprintf("{$cli->fg_light_cyan}%15d {$cli->fg_gray}%s\n", $num, $value);

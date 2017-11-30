@@ -25,14 +25,17 @@ use Xperimentx\Atlas\Db;
  */
 class Migrator_cli extends Migrator
 {
-    /** @var Migrator_cli_views               */ protected $views;
-    /** @var string|null  Command.            */ protected $command;
-    /** @var int|false    Optional n argument.*/ protected $number;
+    /** @var Migrator_cli_views               */
+    protected $views;
 
+    /** @var string|null  Command.            */
+    protected $command;
 
-    /** @var int  Current step                */ protected $current_step=0;
+    /** @var int|false    Optional n argument as int.   */
+    protected $number;
 
-
+    /** @var string  e    Optional n argument as string.*/
+    protected $opt;
 
 
     /**
@@ -54,10 +57,7 @@ class Migrator_cli extends Migrator
 
         $this->views->Show_title();
 
-        $this->Init_configurator();
-
-
-        $this->Get_migration_files();
+        $this-> Init_migrator();
 
 
         $method_name = 'On_'.$this->command;
@@ -78,21 +78,23 @@ class Migrator_cli extends Migrator
 
     /**
      * Shows an error running Init().
-     * @var string $msg
+     * @var string $title   Error title
+     * @var string|null $details Details
      */
-    protected function Show_init_error($msg)
+    protected function Show_init_error($title, $details=null)
     {
-        $this->views->Show_error ('Incorrect command');
+        $this->views->Show_error ($title, $details);
     }
 
 
     /**
      * Shows a notice running Init().
-     * @var string $msg
+     * @var string $title   Error title
+     * @var string|null $details Details
      */
-    protected function  Show_init_notice ($msg)
+    protected function  Show_init_notice ($title, $details=null)
     {
-         $this->views->Show_notice ('Incorrect command');
+         $this->views->Show_notice ($title, $details);
     }
 
 
@@ -106,61 +108,96 @@ class Migrator_cli extends Migrator
         {
             $this->views->Deactivate_colors();
 
-            $this->command = $argv[2] ?? null;
-            $number  = filter_var($argv[3] ?? null, FILTER_VALIDATE_INT, ["options" => ["min_range"=>0]]) ;
+            $this->command = $argv[2]??null;
+            $this->opt     = $argv[3]??null;
         }
         else
         {
             if (!$this->cfg->use_colors)
                 $this->views->Deactivate_colors();
 
-            $number  = filter_var($argv[2] ?? null, FILTER_VALIDATE_INT, ["options" => ["min_range"=>0]]) ;
+            $this->opt = $argv[2]??null;
         }
-    }
 
-
-    protected function On_list ()
-    {
-        $this->views->List_files($this->number, $this->file_titles);
-    }
-
-
-    protected function On_listnew ()
-    {
-        $this->views->List_files(2, $this->file_titles);
+        $this->number =  filter_var($this->opt ?? null, FILTER_VALIDATE_INT, ["options" => ["min_range"=>0]]) ;
     }
 
 
     protected function On_status()
     {
-        $current_title = 'No current migration step';
+        $pend = 0;
+        $last = 0;
 
-        if ($this->current_step)
-            $current_title = $this->file_titles[$this->current_step] ?? '???';
-
-        $cu=$last=0;
-
-        foreach ($this->file_titles as $idx=>$value)
+        if ($this->file_titles)
         {
-            $last = $idx;
-            if ($idx>$this->current_step) $cu++;
+            foreach ($this->file_titles as $idx=>$title)
+            {
+                if ($idx>$this->current->step)
+                {
+                    $last = $idx;
+                    $pend++;
+                }
+            }
         }
 
-
         $this->views->Show_status
-            (
-                $this->current_step,
-                $current_title,
-                $cu,
-                $last,
-                $this->file_titles[$last] ?? '???'
-            );
+        (
+            $this->current,
+            $pend,
+            $last,
+            $this->file_titles[$last] ?? '???'
+        );
     }
 
 
     protected function On_help()
     {
         $this->views->Show_help();
+    }
+
+
+    protected function On_list ()
+    {
+        $n=0;
+
+        if     ('new'===$this->opt   ) $n=$this->current->step;
+        elseif (false!==$this->number) $n=(int)$this->number;
+        elseif ($this->opt)            $this->views->Show_error ('Incorrect step number', null);
+
+        $this->views->List_files($n, $this->file_titles);
+    }
+
+
+    protected function On_update ()
+    {
+        if (!$this->file_titles)
+        {
+            $this->views->Show_notice ('No step migrations found', null);
+            return;
+        }
+
+        if ($this->number === (int)$this->current->step)
+        {
+            $this->views->Show_notice ("The current migration step is already $this->number", null);
+            return;
+        }
+
+        if     ('last'===$this->opt   )
+        {
+            end($this->file_titles);
+            $this->number = key($this->file_titles);
+        }
+
+        if (!isset($this->file_titles[$this->number]) && $this->number !==0)
+        {
+            $this->views->Show_error ('Incorrect step number', null);
+
+        }
+
+
+  
+
+        //todo:
     }
 }
 

@@ -22,10 +22,20 @@ use Xperimentx\Atlas\Db;
  */
 abstract class Migrator
 {
-    /** @var Db            Migration main Db object. */ protected $db  = null;
-    /** @var string[]      Migration files           */ protected $files = [];
-    /** @var string[]      Migration files title     */ protected $file_titles = [];
-    /** @var Migrator_cfg  Configuration             */ protected $cfg;
+    /** @var Db  Migration main Db object.   */
+    protected $db  = null;
+
+    /** @var string[]  Migration files       */
+    protected $files = [];
+
+    /** @var string[]  Migration files title */
+    protected $file_titles = [];
+
+    /** @var Migrator_cfg  Configuration     */
+    protected $cfg;
+
+    /** @var Status_row Current status       */
+    protected $current = null;
 
 
     /**
@@ -45,7 +55,7 @@ abstract class Migrator
      * - Gets the current step an migration files.
      * - Create if needed the migration tables in the database
      */
-    protected function Init()
+    protected function Init_migrator()
     {
         $this->Init_db();
         $this->Get_migration_files();
@@ -73,36 +83,69 @@ abstract class Migrator
     }
 
 
-    protected function Init_db()
+    private function Init_db()
     {
-        $migration_tables_prefix= 'xx-migrator-';
-        $n = new Create_table($this->table_step, self::$db);
-        $n->Add_column('VARCHAR(250)', 'step');
-        $n->Run_if_not_exists();
+        $this->db->throw_exceptions = true;
+
+        $ko_txt       = '';
+        $table_status = $table = $this->cfg->db_prefix.'status';;
+        $table_log    = $table = $this->cfg->db_prefix.'log';
+
+        try
+        {
+            // Create table status if not exists
+        
+            $ko_txt = 'Error creating the status table for migrations';
+
+            if (Status_row::Create_table_if_not_exists($table_status, $this->db))
+                $this->Show_init_notice ('Status table for migrations created');
 
 
-        $n = new Create_table($this->table_log, self::$db);
-        $n->Add_column("DATETIME"    , 'date');
-        $n->Add_column('VARCHAR(250)', 'step');
-        $n->Add_column('TEXT'        , 'msg' );
-        $n->Add_column("ENUM('ERROR' , 'BEGIN', 'SUCCES', 'INFO')", 'status');
-        $n->Add_index ('date', 'date');
-        $n->Run_if_not_exists();
+            // Create table log if not exists
+
+            $ko_txt = 'Error creating the status table for migrations';
+
+            if (Log_row::Create_table_if_not_exists($table_log, $this->db))
+                $this->Show_init_notice ('Log table for migrations created');
+
+
+            // Load current status
+            $ko_txt='Unable to load status row';
+
+            $this->current = Status_row::Load($table_status, $this->db);
+        }
+
+        catch (Db\Db_exception $ex)
+        {
+             $this->Show_init_error($ko_txt, $ex->Get_error_item());
+             die();
+        }
+
+        // We must have the status at this point
+        if (!$this->current)
+            die();
+
     }
+
+
+
+
 
 
     /**
      * Shows an error running Init().
-     * @var string $msg
+     * @var string $title   Error title
+     * @var string|null $details Details
      */
-    abstract protected function Show_init_error($msg);
+    abstract protected function Show_init_error($title, $details=null);
 
 
     /**
      * Shows a notice running Init().
-     * @var string $msg
+     * @var string $title   Error title
+     * @var string|null $details Details
      */
-    abstract protected function  Show_init_notice ($msg);
+    abstract protected function  Show_init_notice ($title, $details=null);
 
 
 

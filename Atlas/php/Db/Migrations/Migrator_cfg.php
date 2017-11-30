@@ -23,5 +23,5 @@ class Migrator_cfg
     /** @var string Directory of migration files */ public $root       = null;
     /** @var string Namespace                    */ public $namespace  = null;
     /** @var bool   Use colors                   */ public $use_colors = true;
-    /** @var bool   Use colors                   */ public $migration_tables_prefix= 'xx-migrator-';
+    /** @var bool   Migration db tables prefix   */ public $db_prefix  = 'xx-migrator-';
 }
