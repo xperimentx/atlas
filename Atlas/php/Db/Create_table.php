@@ -115,6 +115,7 @@ class Create_table
         $this->ittems[]="$type INDEX `$index_name` ($fields)";
     }
 
+
     /**
      * Adds the primary key
      * @param string  $fields Comas separated field names.
