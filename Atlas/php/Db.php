@@ -7,7 +7,7 @@
  *
  * @author    Roberto González Vázquez, https://github.com/xperimentx
  * @copyright 2017 Roberto González Vázquez
- * 
+ *
  * @license   MIT
  */
 
@@ -25,14 +25,14 @@ use Xperimentx\Atlas\Db\Error_item;
  */
 class Db
 {
-    /** @var mysqli       MySQLi Handler                                 */  public $mysqli         = null;
-    /** @var Error_item[] Errors                                         */  public $errors         = [];
-    /** @var Error_item   Last error. Null if last call is successful .  */  public $last_error     = null;
-    /** @var string       Last SQL statement.                            */  public $last_sql       = null;
-    /** @var Db_cfg       Configuration, options.                        */  public $cfg            = null;
+    /** @var mysqli       MySQLi Handler                                 */  public $mysqli           = null;
+    /** @var Error_item[] Errors                                         */  public $errors           = [];
+    /** @var Error_item   Last error. Null if last call is successful .  */  public $last_error       = null;
+    /** @var string       Last SQL statement.                            */  public $last_sql         = null;
+    /** @var Db_cfg       Configuration, options.                        */  public $cfg              = null;
+    /** @var bool         Throw exceptions on mysqli errors.             */  public $throw_exceptions = false;
+    /** @var Db           First object connected. The main Db object.    */  public static $db        = null;
 
-    /** @var Db           First object connected. The main Db object.    */  public static $db      = null;
-    /** @var callable     Function to call if a query error  (Db $this). */ public $on_error_fn    = null;
 
     const ENGINE_MYISAM = 'MyISAM';
     const ENGINE_INNODB = 'InnoDB';
@@ -48,6 +48,8 @@ class Db
             self::$db = $this;
 
         $this->cfg = $cfg ?? new Db_cfg();
+
+        $this->throw_exceptions = $this->cfg->throw_exceptions;
     }
 
 
@@ -74,7 +76,7 @@ class Db
             $this->errors[] = $this->last_error = new Error_item(  __METHOD__,
                                                                     $this->mysqli->connect_errno,
                                                                     $this->mysqli->connect_error );
-
+            if ($this->throw_exceptions)
             return false;
         }
 
