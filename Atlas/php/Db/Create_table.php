@@ -31,7 +31,7 @@ class Create_table
     /** @var string Charset.                         */  public $charset         = null;
     /** @var string Collation.                       */  public $collation       = null;
     /** @var string Engine                           */  public $engine          = null;
-    /** @var string Autoincrement.                   */  public $autoincrement   = null;
+    /** @var string Auto increment.                  */  public $auto_increment  = null;
     /** @var string Comment.                         */  public $comment         = null;
     /** @var bool   Only creates table if not exists.*/  public $if_not_exists   = null;
 
@@ -66,11 +66,11 @@ class Create_table
              . implode (',' , array_merge($cols,$this->items))
              . ')'   ;
 
-        if (null!==$this->autoincrement)   $sql .= ' AUTO_INCREMENT='.$this->autoincrement;
-        if (null!==$this->comment      )   $sql .= ' COMMENT \''.addslashes($this->comment).'\'';
-        if (null!==$this->charset      )   $sql .= ' CHARSET=' .$this->charset;
-        if (null!==$this->collation    )   $sql .= ' COLLATE=' .$this->collation;
-        if (null!==$this->engine       )   $sql .= ' ENGINE='  .$this->engine;
+        if (null!==$this->auto_increment)   $sql .= ' AUTO_INCREMENT='.$this->auto_increment;
+        if (null!==$this->comment       )   $sql .= ' COMMENT \''.addslashes($this->comment).'\'';
+        if (null!==$this->charset       )   $sql .= ' CHARSET=' .$this->charset;
+        if (null!==$this->collation     )   $sql .= ' COLLATE=' .$this->collation;
+        if (null!==$this->engine        )   $sql .= ' ENGINE='  .$this->engine;
 
         return $sql;
     }
@@ -98,6 +98,30 @@ class Create_table
     }
 
 
+    /**
+     * Adds column auto increment  pirmary key.
+     * @param bool $is_auto_increment
+     * @param string $field_name
+     * @return Column Added column
+     */
+    public function Add_column_id ($field_name='id')
+    {
+        $col = new Column('int', $field_name);
+        $col->is_unsigned       = true;
+        $col->is_auto_increment = true;
+        $col->is_null_allowed   = false;
+
+        $this->columns[] = $col;
+
+        $this->Add_primary_key($field_name);
+
+        return $col;
+    }
+
+
+
+
+
     const INDEX_NORMAL   = '';
     const INDEX_UNIQUE   = 'UNIQUE';
     const INDEX_SPATIAL  = 'SPATIAL';
@@ -112,7 +136,7 @@ class Create_table
      */
     public function Add_index($index_name, $fields ,$type=self::INDEX_NORMAL)
     {
-        $this->ittems[]="$type INDEX `$index_name` ($fields)";
+        $this->items[]="$type INDEX `$index_name` ($fields)";
     }
 
 
@@ -123,7 +147,7 @@ class Create_table
      */
     public function Add_primary_key ($fields)
     {
-        $this->ittems[]="PRIMARY KEY ($fields)";
+        $this->items[]="PRIMARY KEY ($fields)";
     }
 
 
@@ -131,21 +155,21 @@ class Create_table
      * Returns SQL for CREATE TABLE query
      * @return int Affected rows.
      */
-    function __toString ()
+    public function __toString ()
     {
-        $sql = ($this->if_not_exist)
-                ? 'CREATE TABLE '
-                : 'CREATE TABLE IF NOT EXISTS ';
+        $sql = $this->if_not_exists
+                ? 'CREATE TABLE IF NOT EXISTS '
+                : 'CREATE TABLE ';
 
         $sql .= "`$this->table` ("
              . implode (",\n" , array_merge($this->columns, $this->items))
              . ') '   ;
 
-        if (null!==$this->autoincrement)   $sql .= ' AUTO_INCREMENT='.$this->autoincrement;
-        if (null!==$this->comment      )   $sql .= ' COMMENT \''.addslashes($this->comment).'\'';
-        if (null!==$this->charset      )   $sql .= ' CHARSET=' .$this->charset;
-        if (null!==$this->collation    )   $sql .= ' COLLATE=' .$this->collation;
-        if (null!==$this->engine       )   $sql .= ' ENGINE='  .$this->engine;
+        if (null!==$this->auto_increment)   $sql .= ' AUTO_INCREMENT='.$this->autoincrement;
+        if (null!==$this->comment       )   $sql .= ' COMMENT \''.addslashes($this->comment).'\'';
+        if (null!==$this->charset       )   $sql .= ' CHARSET=' .$this->charset;
+        if (null!==$this->collation     )   $sql .= ' COLLATE=' .$this->collation;
+        if (null!==$this->engine        )   $sql .= ' ENGINE='  .$this->engine;
 
         return $sql.";\n\n";
     }
