@@ -7,7 +7,7 @@
  *
  * @author    Roberto González Vázquez, https://github.com/xperimentx
  * @copyright 2017 Roberto González Vázquez
- * 
+ *
  * @license   MIT
  */
 
@@ -32,5 +32,11 @@ class Error_item
         $this->code         = $code        ;
         $this->description  = $description ;
         $this->query        = $query       ;
+    }
+
+    public function __toString()
+    {
+        return "DB Error - Code: $this->code - Method: $this->method\n".
+               "$this->description\nQuery:\n$this->query\n";
     }
 }

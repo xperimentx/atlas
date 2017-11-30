@@ -33,7 +33,6 @@ class Db
     /** @var bool         Throw exceptions on mysqli errors.             */  public $throw_exceptions = false;
     /** @var Db           First object connected. The main Db object.    */  public static $db        = null;
 
-
     const ENGINE_MYISAM = 'MyISAM';
     const ENGINE_INNODB = 'InnoDB';
     const ENGINE_ARIA   = 'Aria';
@@ -77,7 +76,7 @@ class Db
                                                                     $this->mysqli->connect_errno,
                                                                     $this->mysqli->connect_error );
             if ($this->throw_exceptions)
-            return false;
+                throw new Db\Db_exception($this->last_error);
         }
 
 
@@ -91,7 +90,7 @@ class Db
 
     protected function Error($method, $query)
     {
-        $this->errors[] = $this->last_error = new Db_error( $method,
+        $this->errors[] = $this->last_error = new Error_item ( $method,
                                                                $this->mysqli->errno,
                                                                $this->mysqli->error,
                                                                $query);
@@ -117,8 +116,8 @@ class Db
 
         $this->Error($caller_method, $query);
 
-        if ($this->on_error_fn)
-            $this->on_error_fn($this);
+        if ($this->throw_exceptions)
+            throw new Db\Db_exception($this->last_error);
 
         return null;
     }
@@ -330,7 +329,7 @@ class Db
                 $data[$k]= $this->Safe($v);
         }
 
-        $sql = "INSERT INTO `$table` (\n`".join(",\n `",array_keys($data)).'`) \nVALUES ( \n'.join(",\n ", $data)."\n) ;";
+        $sql = "INSERT INTO `$table` (\n`".join("`,\n `",array_keys($data))."`) \nVALUES ( \n".join(",\n ", $data)."\n) ;";
         return $this->Query_ar($sql);
     }
 
@@ -353,8 +352,9 @@ class Db
                 foreach ($data as $field=>$value) { $sets [] = "`field` = ".$this->Safe($value); }
         else    foreach ($data as $field=>$value) { $sets [] = "`field` = ".$value;              }
 
+        $where_sql = $where  ? "WHERE $where ":'';
 
-        $sql = "UPDATE `$table` SET ".join("\n, ", $sets).($where ?"\n WHERE $where ;":' ;');
+        $sql = "UPDATE `$table` SET ".join("\n, ", $sets).($where ?"\n $where_sql ;":' ;');
 
         return $this->Query_ar($sql, __METHOD__);
     }
