@@ -170,34 +170,7 @@ class Migrator_cli extends Migrator
 
     protected function On_update ()
     {
-        if (!$this->file_titles)
-        {
-            $this->views->Show_notice ('No step migrations found', null);
-            return;
-        }
-
-        if ($this->number === (int)$this->current->step)
-        {
-            $this->views->Show_notice ("The current migration step is already $this->number", null);
-            return;
-        }
-
-        if     ('last'===$this->opt   )
-        {
-            end($this->file_titles);
-            $this->number = key($this->file_titles);
-        }
-
-        if (!isset($this->file_titles[$this->number]) && $this->number !==0)
-        {
-            $this->views->Show_error ('Incorrect step number', null);
-
-        }
-
-
-  
-
-        //todo:
+        $this->Update_to($this->opt) ;
     }
 }
 

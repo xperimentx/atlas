@@ -94,7 +94,7 @@ abstract class Migrator
         try
         {
             // Create table status if not exists
-        
+
             $ko_txt = 'Error creating the status table for migrations';
 
             if (Status_row::Create_table_if_not_exists($table_status, $this->db))
@@ -148,9 +148,79 @@ abstract class Migrator
     abstract protected function  Show_init_notice ($title, $details=null);
 
 
-
-    protected function Update_to($number)
+    /**
+     *
+     * @param int|string $option Number or 'last'
+     * @return int|null
+     */
+    private function Update_to_check($option)
     {
+        $number = filter_var($option ?? null, FILTER_VALIDATE_INT, ["options" => ["min_range"=>0]]) ;
 
+        if (!$this->file_titles)
+        {
+            $this->Show_init_notice ('No step migrations found' );
+            return null;
+        }
+
+        if ('last'===$option)
+        {
+            end($this->file_titles);
+            return  key($this->file_titles);
+        }
+
+        if (!isset($this->file_titles[$number]) && $number !==0)
+        {
+            $this->Show_init_error ('Incorrect step number', null);
+            return null;
+        }
+
+        if ($number === (int)$this->current->step)
+        {
+            $this->Show_init_notice  ("The current migration step is already $number");
+            return null;
+        }
+
+        return $number;
+    }
+
+
+    protected function Update_to($number_or_last)
+    {
+        $this->current->step = 3;
+        $number = $this->Update_to_check($number_or_last);
+
+        if (null===$number) return;
+
+        // desc - down
+        if ($number<$this->current->step)
+        {
+
+            $this->file_titles = array_reverse (array_merge(['Zero migration'],$this->file_titles), true);
+            $this->files       = array_reverse ($this->files, true);
+            print_r($this->file_titles);
+
+            foreach ($this->file_titles as $step=>$title)
+            {
+                if ($number==$step) break;
+                if  ($step>$this->current->step) continue;
+
+                $this->Show_init_notice("Step down $step : $title");
+            }
+
+        }
+
+        // asc - up
+        else
+        {
+            foreach ($this->file_titles as $step=>$title)
+            {
+                if ($step<=$this->current->step) continue;
+
+                $this->Show_init_notice("Step up $step : $title");
+
+                if ($number==$step) break;
+            }
+        }
     }
 }
