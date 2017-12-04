@@ -88,7 +88,7 @@ abstract class Migrator
         $this->db->throw_exceptions = true;
 
         $ko_txt       = '';
-        $table_status = $table = $this->cfg->db_prefix.'status';;
+        $table_status = $table = $this->cfg->db_prefix.'status';
         $table_log    = $table = $this->cfg->db_prefix.'log';
 
         try
@@ -166,7 +166,14 @@ abstract class Migrator
         if ('last'===$option)
         {
             end($this->file_titles);
-            return  key($this->file_titles);
+            $last=key($this->file_titles);
+            
+            if ($last === (int)$this->current->step)
+            {
+                $this->Show_init_notice  ("The current migration step is already the last: $last");
+                return null;
+            }
+            return $last;
         }
 
         if (!isset($this->file_titles[$number]) && $number !==0)
@@ -187,40 +194,83 @@ abstract class Migrator
 
     protected function Update_to($number_or_last)
     {
-        $this->current->step = 3;
         $number = $this->Update_to_check($number_or_last);
 
         if (null===$number) return;
-
-        // desc - down
-        if ($number<$this->current->step)
+        
+        $step            = 0;
+        $log_status      = 'ERROR';
+        $error_details   = null;
+        $error_exception = null;
+        
+        try 
         {
+            // desc - down
+            if ($number<$this->current->step)
+            {   
+                $log_status = 'DOWN_ERROR';
+                $file_titles = array_reverse (['Zero migration']+$this->file_titles, true);               
 
-            $this->file_titles = array_reverse (array_merge(['Zero migration'],$this->file_titles), true);
-            $this->files       = array_reverse ($this->files, true);
-            print_r($this->file_titles);
-
-            foreach ($this->file_titles as $step=>$title)
-            {
-                if ($number==$step) break;
-                if  ($step>$this->current->step) continue;
-
-                $this->Show_init_notice("Step down $step : $title");
+                foreach ($file_titles as $step=>$title)
+                {
+                    if  ($step>$this->current->step) continue;
+                    
+                    Status_row::Save ($this->cfg->db_prefix.'status', $this->db, $step, $title);
+                    
+                    if ($number==$step) break;
+                    $microseconds =1;
+                    
+                    Log_row::Add     ($this->cfg->db_prefix.'log'   , $this->db, $step, 'DOWN', $microseconds);
+                    $this->Show_init_notice("Step down $step : $title");
+                }
             }
 
+            // asc - up
+            else
+            {
+                $log_status = 'UP_ERROR';
+                
+                foreach ($this->file_titles as $step=>$title)
+                {
+                    if ($step<=$this->current->step) continue;
+                    $microseconds =1;
+
+                    $this->Show_init_notice("Step up $step : $title");
+                    
+                    Log_row::Add     ($this->cfg->db_prefix.'log'   , $this->db, $step, 'UP', $microseconds);
+                    Status_row::Save ($this->cfg->db_prefix.'status', $this->db, $step, $title);
+                    
+                    if ($number==$step) break;
+                }
+            }            
         }
-
-        // asc - up
-        else
+        
+        catch (Db\Db_exception $ex)
         {
-            foreach ($this->file_titles as $step=>$title)
-            {
-                if ($step<=$this->current->step) continue;
-
-                $this->Show_init_notice("Step up $step : $title");
-
-                if ($number==$step) break;
-            }
+            $error_details   = (string)$ex->Get_error_item();
+            $error_exception = print_r($ex,true);           
+        }
+        
+        catch (Exception $ex)
+        {
+            $error_details   = (string)$ex->getMessage();
+            $error_exception = print_r($ex,true);  
+        }  
+        
+        
+        if ($error_details)
+        {
+            $this->Show_init_error($log_status, $error_details.'\n\n'. $error_exception);
+            Log_row::Add     
+            (
+                $this->cfg->db_prefix.'log'   , 
+                $this->db, 
+                $step, 
+                $log_status, 
+                1, 
+                $error_details,  
+                print_r($ex,true)
+            );
         }
     }
 }

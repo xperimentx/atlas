@@ -166,6 +166,34 @@ class Migrator_cli extends Migrator
 
         $this->views->List_files($n, $this->file_titles);
     }
+    
+    protected function On_log ()
+    {
+        if ('delete'===$this->opt) 
+        {
+            $num = Log_row::Add ( $this->cfg->db_prefix.'log', $this->db);
+            $this->views->Show_notice("$num rows of log deleted", null);            
+        }
+        elseif (!$this->opt) 
+        {
+            $this->views->Show_notice("Last log", null); 
+            print_r($this->db->Row ("SELECT date, step, status, microseconds, details, exception
+                                    FROM `{$this->cfg->db_prefix}log` 
+                                    ORDER BY id DESC LIMIT 1"));          
+        }
+        elseif (false!==$this->number) 
+        {
+            $this->views->Show_notice("Last $this->number logs", null); 
+            print_r($this->db->Rows ("SELECT date, step, status, microseconds 
+                                     FROM `{$this->cfg->db_prefix}log` 
+                                     ORDER BY id DESC LIMIT $this->number"));
+        }   
+        else 
+        {
+            $this->views->Show_error ('Incorrect option', null);
+        }
+    }
+
 
 
     protected function On_update ()

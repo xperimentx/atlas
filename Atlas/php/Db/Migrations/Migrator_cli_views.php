@@ -133,6 +133,7 @@ class Migrator_cli_views
 {$cmd}update {$green}<n>    $vbar Upgrades or downgrades migration to $n step.
 {$cmd}update {$green}last   $vbar Upgrades to the last stepd.
 {$cmd}              $vbar
+{$cmd}log    {$green}       $vbar Shows the last log.
 {$cmd}log    {$green}<n>    $vbar Shows the $n last logs.
 {$cmd}log    {$green}delete $vbar Delete log entries.  {$cli->reset}\n";
     }

@@ -32,7 +32,7 @@ class Status_row
     static public  function Create_table_if_not_exists($table, $db)
     {
         $n = new Db\Create_table($table, $db);
-        $n->Add_column('INT'          , 'step'         , 0)->Set_unsigned();
+        $n->Add_column('BIGINT'       , 'step'         , 0)->Set_unsigned();
         $n->Add_column('VARCHAR(250)' , 'title'        , NULL);
         $n->Add_column('DATETIME'     , 'date_created' , date('Y-m-d H:i:s'));
         $n->Add_column('DATETIME'     , 'date_modified', date('Y-m-d H:i:s'));
@@ -59,6 +59,7 @@ class Status_row
         return $db->Insert  ($table, (array)$obj) ? $obj : null;
     }
 
+    
     /**
      *
      * @param string $table
