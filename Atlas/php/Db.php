@@ -139,9 +139,6 @@ class Db
     }
 
 
-
-
-
     /**
      * Returns first column of first row of a query result.
      *
@@ -163,7 +160,6 @@ class Db
     }
 
 
-
     /**
      * Return first row for a query as an object.
      * @param string  $query       Select query statement.
@@ -183,7 +179,6 @@ class Db
     }
 
 
-
     /**
      * Return array of objects for a query statement
      * @param string  $query       Select query statement.
@@ -200,13 +195,12 @@ class Db
                 $lista[]= $obj;
 
             $result->close();
+            return $lista;
         }
 
         return [];
     }
-
-
-
+    
 
     /**
      * Returns a the first column of a query as array
@@ -228,9 +222,7 @@ class Db
         return $lista;
     }
 
-
-
-
+    
     /**
      * Returns a simple array index=>scalar_value from a query.
      * Query must have a 'id' column for index and  a 'name' column or values.
@@ -349,8 +341,8 @@ class Db
         $sets = [];
 
         if ($do_safe)
-                foreach ($data as $field=>$value) { $sets [] = "`field` = ".$this->Safe($value); }
-        else    foreach ($data as $field=>$value) { $sets [] = "`field` = ".$value;              }
+                foreach ($data as $field=>$value) { $sets [] = "`$field` = ".$this->Safe($value); }
+        else    foreach ($data as $field=>$value) { $sets [] = "`$field` = ".$value;              }
 
         $where_sql = $where  ? "WHERE $where ":'';
 
