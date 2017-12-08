@@ -34,8 +34,8 @@ abstract class Migrator
     /** @var Migrator_cfg  Configuration     */
     protected $cfg;
 
-    /** @var Status_row Current status       */
-    protected $current = null;
+    /** @var Status Current status       */
+    protected $status = null;
 
 
     /**
@@ -88,8 +88,6 @@ abstract class Migrator
         $this->db->throw_exceptions = true;
 
         $ko_txt       = '';
-        $table_status = $table = $this->cfg->db_prefix.'status';
-        $table_log    = $table = $this->cfg->db_prefix.'log';
 
         try
         {
@@ -97,39 +95,34 @@ abstract class Migrator
 
             $ko_txt = 'Error creating the status table for migrations';
 
-            if (Status_row::Create_table_if_not_exists($table_status, $this->db))
-                $this->Show_init_notice ('Status table for migrations created');
+            if (Status::Create_table_if_not_exists($this->cfg->db_prefix, $this->db))
+                $this->Show_notice ('Status table for migrations created');
 
 
             // Create table log if not exists
 
             $ko_txt = 'Error creating the status table for migrations';
 
-            if (Log_row::Create_table_if_not_exists($table_log, $this->db))
-                $this->Show_init_notice ('Log table for migrations created');
+            if (Log::Create_table_if_not_exists($this->cfg->db_prefix, $this->db))
+                $this->Show_notice ('Log table for migrations created');
 
 
             // Load current status
             $ko_txt='Unable to load status row';
 
-            $this->current = Status_row::Load($table_status, $this->db);
+            $this->status = Status::Load($this->cfg->db_prefix, $this->db);
         }
 
         catch (Db\Db_exception $ex)
         {
-             $this->Show_init_error($ko_txt, $ex->Get_error_item());
+             $this->Show_error($ko_txt, $ex->Get_error_item());
              die();
         }
 
         // We must have the status at this point
-        if (!$this->current)
+        if (!$this->status)
             die();
-
     }
-
-
-
-
 
 
     /**
@@ -137,7 +130,7 @@ abstract class Migrator
      * @var string $title   Error title
      * @var string|null $details Details
      */
-    abstract protected function Show_init_error($title, $details=null);
+    abstract protected function Show_error($title, $details=null);
 
 
     /**
@@ -145,7 +138,7 @@ abstract class Migrator
      * @var string $title   Error title
      * @var string|null $details Details
      */
-    abstract protected function  Show_init_notice ($title, $details=null);
+    abstract protected function  Show_notice($title, $details=null);
 
 
     /**
@@ -159,7 +152,7 @@ abstract class Migrator
 
         if (!$this->file_titles)
         {
-            $this->Show_init_notice ('No step migrations found' );
+            $this->Show_notice ('No step migrations found' );
             return null;
         }
 
@@ -168,9 +161,9 @@ abstract class Migrator
             end($this->file_titles);
             $last=key($this->file_titles);
             
-            if ($last === (int)$this->current->step)
+            if ($last === (int)$this->status->step)
             {
-                $this->Show_init_notice  ("The current migration step is already the last: $last");
+                $this->Show_notice  ("The current migration step is already the last: $last");
                 return null;
             }
             return $last;
@@ -178,13 +171,13 @@ abstract class Migrator
 
         if (!isset($this->file_titles[$number]) && $number !==0)
         {
-            $this->Show_init_error ('Incorrect step number', null);
+            $this->Show_error ('Incorrect step number', null);
             return null;
         }
 
-        if ($number === (int)$this->current->step)
+        if ($number === (int)$this->status->step)
         {
-            $this->Show_init_notice  ("The current migration step is already $number");
+            $this->Show_notice  ("The current migration step is already $number");
             return null;
         }
 
@@ -195,53 +188,56 @@ abstract class Migrator
     protected function Update_to($number_or_last)
     {
         $number = $this->Update_to_check($number_or_last);
-
         if (null===$number) return;
         
+        $name_space      = trim ($this->cfg->namespace,'\\' ).'\\';  
         $step            = 0;
-        $log_status      = 'ERROR';
+        
         $error_details   = null;
         $error_exception = null;
         
+                    
+        if ($number<$this->status->step)
+        {   
+            $desc        = true;
+            $file_titles = array_reverse (['Zero migration']+$this->file_titles, true); 
+            $direction   = 'DOWN';
+        }
+        else
+        {
+            $desc        = false;
+            $file_titles = $this->file_titles;
+            $direction   = 'UP';
+        }
+        
         try 
         {
-            // desc - down
-            if ($number<$this->current->step)
-            {   
-                $log_status = 'DOWN_ERROR';
-                $file_titles = array_reverse (['Zero migration']+$this->file_titles, true);               
-
-                foreach ($file_titles as $step=>$title)
-                {
-                    if  ($step>$this->current->step) continue;
-                    
-                    Status_row::Save ($this->cfg->db_prefix.'status', $this->db, $step, $title);
-                    
-                    if ($number==$step) break;
-                    $microseconds =1;
-                    
-                    Log_row::Add     ($this->cfg->db_prefix.'log'   , $this->db, $step, 'DOWN', $microseconds);
-                    $this->Show_init_notice("Step down $step : $title");
-                }
-            }
-
-            // asc - up
-            else
+            foreach ($file_titles as $step=>$title)
             {
-                $log_status = 'UP_ERROR';
-                
-                foreach ($this->file_titles as $step=>$title)
-                {
-                    if ($step<=$this->current->step) continue;
-                    $microseconds =1;
+                if  ( $desc && ($step > $this->status->step)) continue;
+                if  (!$desc && ($step <=$this->status->step)) continue;
 
-                    $this->Show_init_notice("Step up $step : $title");
+                $ms = microtime(true);
+                
+                if ($step>0) 
+                {
+                    include_once $this->files[$step];
+                    $step_class = $name_space. $title;
+                    $step_obj   = new $step_class();
                     
-                    Log_row::Add     ($this->cfg->db_prefix.'log'   , $this->db, $step, 'UP', $microseconds);
-                    Status_row::Save ($this->cfg->db_prefix.'status', $this->db, $step, $title);
-                    
-                    if ($number==$step) break;
+                    if ($desc)
+                         $step_obj->Down();
+                    else $step_obj->Up();
                 }
+                
+                $ms = round(microtime(true)-$ms,6);
+
+                Status::Save ($this->cfg->db_prefix, $this->db, $step, $title);
+                Log::Add     ($this->cfg->db_prefix, $this->db, $step, $direction, $ms);
+               
+                $this->Show_notice(sprintf("Step %3d %s - %.6f s: %s", $step, $direction, $ms, $title));
+
+                if ($number==$step) break;  
             }            
         }
         
@@ -260,13 +256,14 @@ abstract class Migrator
         
         if ($error_details)
         {
-            $this->Show_init_error($log_status, $error_details.'\n\n'. $error_exception);
-            Log_row::Add     
+            $this->Show_error("ERROR step $step $direction", $error_details.'\n\n'. $error_exception);
+            
+            Log::Add     
             (
-                $this->cfg->db_prefix.'log'   , 
+                $this->cfg->db_prefix  , 
                 $this->db, 
                 $step, 
-                $log_status, 
+                $direction.'_ERROR', 
                 1, 
                 $error_details,  
                 print_r($ex,true)

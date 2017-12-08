@@ -17,7 +17,7 @@ use Xperimentx\Atlas\Db;
 /**
  * @author    Roberto González Vázquez
  */
-class Status_row
+class Status
 {
     /**@var  int    */ public $step;
     /**@var  string */ public $title;
@@ -26,12 +26,12 @@ class Status_row
 
 
     /**
-     * @param string $table
+     * @param string $table_prefix
      * @param Db $db
      */
-    static public  function Create_table_if_not_exists($table, $db)
+    static public  function Create_table_if_not_exists($table_prefix, $db)
     {
-        $n = new Db\Create_table($table, $db);
+        $n = new Db\Create_table($table_prefix.'status', $db);
         $n->Add_column('BIGINT'       , 'step'         , 0)->Set_unsigned();
         $n->Add_column('VARCHAR(250)' , 'title'        , NULL);
         $n->Add_column('DATETIME'     , 'date_created' , date('Y-m-d H:i:s'));
@@ -42,12 +42,12 @@ class Status_row
 
 
     /**
-     * @param string $table
+     * @param string $table_prefix
      * @param Db $db
      */
-    static public function Load($table, $db)
+    static public function Load($table_prefix, $db)
     {
-        if ($obj = $db->Row("SELECT * FROM `$table`", __CLASS__)) //:=
+        if ($obj = $db->Row("SELECT * FROM `{$table_prefix}status`", __CLASS__)) //:=
             return $obj;
 
         $obj = new static;
@@ -56,23 +56,23 @@ class Status_row
         $obj->date_created  = date('Y-m-d H:i:s');
         $obj->date_modified = $obj->date_created;
 
-        return $db->Insert  ($table, (array)$obj) ? $obj : null;
+        return $db->Insert  ($table_prefix.'status', (array)$obj) ? $obj : null;
     }
 
     
     /**
      *
-     * @param string $table
+     * @param string $table_prefix
      * @param Db $db
      * @param int $step
      * @param string $title
      * @return type
      */
-    static function Save ($table, $db, $step, $title)
+    static function Save ($table_prefix, $db, $step, $title)
     {
         return $db->Update
         (
-            $table,
+            $table_prefix.'status',
             [
                 'step'          => $step,
                 'title'         => $title,

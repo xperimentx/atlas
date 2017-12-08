@@ -19,7 +19,7 @@ use Xperimentx\Atlas\Db\Create_table;
 /**
  * @author    Roberto González Vázquez
  */
-class Log_row
+class Log
 {
     /**@var  int    Id       */ public $id;
     /**@var  string Date     */ public $date;
@@ -29,19 +29,19 @@ class Log_row
 
 
     /**
-     * @param string $table
+     * @param string $table_prefix
      * @param Db $db
      */
-    static public  function Create_table_if_not_exists($table, $db)
+    static public  function Create_table_if_not_exists($table_prefix, $db)
     {
-        $l = new Create_table($table, $db);
+        $l = new Create_table($table_prefix.'log', $db);
         $l->Add_column_id();
-        $l->Add_column('BIGINT'      , 'step'  )->Set_unsigned();
-        $l->Add_column('DATETIME'    , 'date');
-        $l->Add_column("ENUM"        , 'status')->type.="('UP', 'DOWN', 'UP_ERROR', 'DOWN_ERROR', 'ERROR', 'INFO')";
-        $l->Add_column('INT'         , 'microseconds');
-        $l->Add_column('TEXT'        , 'details');
-        $l->Add_column('TEXT'        , 'exception');
+        $l->Add_column('BIGINT'       , 'step'     )->Set_unsigned();
+        $l->Add_column('DATETIME'     , 'date'     );
+        $l->Add_column("ENUM"         , 'status'   )->type.="('UP', 'DOWN', 'UP_ERROR', 'DOWN_ERROR', 'ERROR', 'INFO')";
+        $l->Add_column('DECIMAL(12,6)', 'seconds'  );
+        $l->Add_column('TEXT'         , 'details'  );
+        $l->Add_column('TEXT'         , 'exception');
 
         return $l->Run_if_not_exists();
     }
@@ -49,23 +49,24 @@ class Log_row
           
     /**
      *
-     * @param string $table
+     * @param string $table_prefix
      * @param Db $db
      * @param int $step     
      * @param string $status 'UP', 'DOWN', 'UP_ERROR', 'DOWN_ERROR' , 'ERROR', 'INFO'
-     * @param int $microseconds
+     * @param float  $seconds
      * @param string|null $details
+     * @param string|null $exception Exception details
      */
-    static function Add($table, $db, $step, $status, $microseconds, $details=null, $exception=null)
+    static function Add($table_prefix, $db, $step, $status, $seconds, $details=null, $exception=null)
     {
         return $db->Insert
         (
-            $table,
+            $table_prefix.'log',
             [
                 'step'         => $step,
                 'status'       => $status,
                 'date'         => date('Y-m-d H:i:s'),
-                'microseconds' => $microseconds,
+                'seconds'      => $seconds,
                 'details'      => $details,
                 'exception'    => $exception,
             ],
@@ -76,16 +77,16 @@ class Log_row
     
     /**
      *
-     * @param string $table
+     * @param string $table_prefix
      * @param Db $db
      * @param int $step     
      * @param string $status 'UP', 'DOWN', 'UP_ERROR', 'DOWN_ERROR' , 'ERROR', 'INFO'
      * @param int $microseconds
      * @param string|null $details
      */
-    static function Clean($table, $db)
+    static function Clean($table_prefix, $db)
     {
-        return $db->Truncate_table($table);
+        return $db->Truncate_table($table_prefix.'log');
     }   
 }
 

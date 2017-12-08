@@ -68,7 +68,7 @@ class Migrator_cli extends Migrator
         else
         {
             if ($this->command)
-                $this->views->Show_error ('Incorrect command');
+                $this->views->Show_error ('Incorrect command',null);
 
             $this->On_status();
             $this->On_help();
@@ -81,7 +81,7 @@ class Migrator_cli extends Migrator
      * @var string $title   Error title
      * @var string|null $details Details
      */
-    protected function Show_init_error($title, $details=null)
+    protected function Show_error($title, $details=null)
     {
         $this->views->Show_error ($title, $details);
     }
@@ -92,7 +92,7 @@ class Migrator_cli extends Migrator
      * @var string $title   Error title
      * @var string|null $details Details
      */
-    protected function  Show_init_notice ($title, $details=null)
+    protected function  Show_notice ($title, $details=null)
     {
          $this->views->Show_notice ($title, $details);
     }
@@ -132,7 +132,7 @@ class Migrator_cli extends Migrator
         {
             foreach ($this->file_titles as $idx=>$title)
             {
-                if ($idx>$this->current->step)
+                if ($idx>$this->status->step)
                 {
                     $last = $idx;
                     $pend++;
@@ -142,7 +142,7 @@ class Migrator_cli extends Migrator
 
         $this->views->Show_status
         (
-            $this->current,
+            $this->status,
             $pend,
             $last,
             $this->file_titles[$last] ?? '???'
@@ -160,7 +160,7 @@ class Migrator_cli extends Migrator
     {
         $n=0;
 
-        if     ('new'===$this->opt   ) $n=$this->current->step;
+        if     ('new'===$this->opt   ) $n=$this->status->step;
         elseif (false!==$this->number) $n=(int)$this->number;
         elseif ($this->opt)            $this->views->Show_error ('Incorrect step number', null);
 

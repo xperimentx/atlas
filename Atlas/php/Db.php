@@ -390,7 +390,7 @@ class Db
      */
     public function Drop_table($table)
     {
-        return $this->db->Query_ar("DROP TAPLE `$table`;");
+        return $this->Query_ar("DROP TABLE `$table`;");
     }
 
 
@@ -401,7 +401,7 @@ class Db
      */
     public function Truncate_table($table)
     {
-        return $this->db->Query_ar("TRUNCATE TABLE `$table`;");
+        return $this->Query_ar("TRUNCATE TABLE `$table`;");
     }
 
 
@@ -412,7 +412,7 @@ class Db
      */
     public function Drop_database($database_name)
     {
-        return $this->db->Query_ar("DROP DATABASE `$database_name`;");
+        return $this->Query_ar("DROP DATABASE `$database_name`;");
     }
 
 
@@ -424,6 +424,6 @@ class Db
      */
     public function Create_database($database_name, $collate='utf8_general_ci')
     {
-        return $this->db->Query_ar(" CREATE DATABASE `$database_name` ". $collate ? " /*!40100 COLLATE '$collate' */;":';');
+        return $this->Query_ar(" CREATE DATABASE `$database_name` ". $collate ? " /*!40100 COLLATE '$collate' */;":';');
     }
 }
