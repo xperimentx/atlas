@@ -263,11 +263,10 @@ class Active_record
     }
 
 
-
-     /**
+    /**
      * Vector id=>name
      * SELECT id, $field_name name FROM `$_table` $sql_extra ORDER BY $order_by
-      *
+     *
      * @return array
      */
     public function Vector($field_name=null, $sql_extra=NULL, $order_by='2')
@@ -420,7 +419,6 @@ class Active_record
      * @param bool    $do_safe  This values will be processed by Safe().
      * @return int|null         Affected rows or null if error
      */
-
     static public function Update_query($data, $where, $do_safe)
     {
         return static::$_db->Update(static::$_table, $data, $where, $do_safe);
