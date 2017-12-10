@@ -298,9 +298,9 @@ class Db
     public function Is_unique($table_name, $field_value , $field_name, $key_value_to_ignore=null, $key_field_name='id')
     {
         $value_db = $this->Safe($field_value);
-        $ignore   = $key_value_to_ignore !==NULL ? "AND `$key_field_name`!=". $this->Safe($key_value_to_ignore) : '' ;
+        $ignore_key   = $key_value_to_ignore !==NULL ? " AND `$key_field_name`!=". $this->Safe($key_value_to_ignore) : '' ;
 
-        return $this->Scalar("SELECT COUNT(*) FROM `$table_name` WHERE `$field_name` = $value_db $ignore" )<1;
+        return $this->Scalar("SELECT COUNT(*) FROM `$table_name` WHERE `$field_name` = $value_db $ignore_key" )<1;
     }
 
 
@@ -442,4 +442,11 @@ class Db
     {
         return $this->Query_ar('CREATE DATABASE '.($if_not_exists?'IF NOTEXISTS ':'')."`$database_name` ". ($collate ? " /*!40100 COLLATE '$collate' */;\n":";\n"));
     }
+
+    public function Show_columns ($table)
+    {
+        return $columns = $this->Column("SHOW COLUMNS FROM `$table`");
+    }
+
+
 }
