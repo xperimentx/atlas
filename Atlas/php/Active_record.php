@@ -289,15 +289,15 @@ class Active_record
     }
 
 
-    static public function Scalar_where($id,$where_sql)
+    static public function Scalar_where($field_name,$where_sql)
     {
-        return static::$_db->Scalar("SELECT $field_name FROM `$aux->_table` WHERE $where_sql");
+        return static::$_db->Scalar("SELECT $field_name FROM `".static::$_table."` WHERE $where_sql");
     }
 
 
-    static public function Scalar_from_id($id ,$field)
+    static public function Scalar_from_id($field_name)
     {
-        return static::Scalar_where('id='.(int)$id);
+        return static::Scalar_where($field_name, 'id='.(int)$this->id);
     }
 
 
@@ -373,7 +373,7 @@ class Active_record
 
 
     /**
-     * Update only the selected field names.
+     * Updates only the selected field names.
      * Do not call On_save();
      * @param string[] $fields_names
      * @param bool $update_mdate_modified
@@ -399,7 +399,7 @@ class Active_record
 
 
     /**
-     * Update a field of the current record and saves only this field in db
+     * Updates a field of the current record and saves only this field in db
      * @param string $field_name
      * @param misc   $value
      * @return boolean
@@ -429,8 +429,8 @@ class Active_record
 
     /**
      * Checks if the value of the field is unique in the table.
-     * @param string $field_value          Value to check.
-     * @param string $field_name           Name of column to check.
+     * @param string $field_name   Name of column to check.
+     * @param string $value        Value to check.
      * @return bool
      */
     public function Is_unique_field($field_name, $value)
