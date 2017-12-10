@@ -330,13 +330,14 @@ class Active_record
     }
 
 
-
     /**
-     * Guardar los datos
+     * Saves data
      *
-     * Si $id !== NULL Update
-     * Si $id === NULL Insert, el id se actualizará
+     * If $id !== NULL Update
+     * IF $id === NULL Insert, id will be update whit the new insert id
      * @return bool
+     * @see Update_query()
+     * @see Update_field()
      */
     public function Save()
     {
@@ -368,6 +369,46 @@ class Active_record
         }
 
         return false;
+    }
+
+
+    /**
+     * Update only the selected field names.
+     * Do not call On_save();
+     * @param string[] $fields_names
+     * @param bool $update_mdate_modified
+     * @return boolean
+     */
+    public function Save_field_set($fields_names, $update_mdate_modified=true)
+    {
+        if ($this->id === null) return false;
+
+        $data = [];
+
+        foreach ($fields_names as  $index)
+        {
+            if  ($index[0]==='_') continue;
+            elseif (property_exists($this, $index))         $data[$index] =$this->$index;
+        }
+
+        if (!$update_mdate_modified && property_exists($this, 'date_modified'))
+            $data['date_modified'] = date('Y-m-d H:i:s');
+
+        return static::Update_query($data,'id='.(int)$this->id, true);
+    }
+
+
+    /**
+     * Update a field of the current record and saves only this field in db
+     * @param string $field_name
+     * @param misc   $value
+     * @return boolean
+     */
+    public function Update_field($field_name,$value)
+    {
+        $this->$field_name = $value;
+        return static::Update_query([$field_name=>$value],'id='.(int)$$this->id,true);
+
     }
 
 
@@ -406,14 +447,15 @@ class Active_record
      */
     public function Can_delete()
     {
-        // el id NULL, por no existir el registro y 0 por ser un id reservado no se puede eliminar
+        // Default, you can´t delete id=null (new record) or id=0.
+        // Id=0 is reserved
 
         return (bool)$this->id;
     }
 
 
     /**
-     *
+     * Called when Delete() was successful.
      */
     protected function On_delete()
     {
@@ -422,7 +464,8 @@ class Active_record
 
 
     /**
-     * Es llamada cuando se realiza una llamada a "load", "load_by_field" o "load_by_where_sql" con éxito.
+     * Called when Load_from() was successful.
+     * Constructor and Obj_*() use Load_*().
      */
     protected function On_load()
     {
@@ -431,9 +474,8 @@ class Active_record
 
 
     /**
-     * Es llamada cuando se realiza una llamada a "save" con éxito.
-     * El id ya está actualizado al ser llamda esta función en el caso de nuevos registros
-     * @param type $is_new TRUE:nuevo registro, crear; FALSe: update, actualizar
+     * Called when Save() was successful.
+     * @param type $is_new TRUE: new record, create; FALSE: update
      */
     protected function On_save($is_new)
     {
@@ -442,10 +484,11 @@ class Active_record
 
 
     /**
-     * Es llamada cuando se realiza al prencipio de una llamada"save", antes de procesar los datos.
-     * Aborta la ejecución del save si retorna FALSE
-     * @param type $is_new TRUE:nuevo registro, crear; FALSe: update, actualizar
-     * @return bool TRUE: se puede continuar con el save. FALSE: se debe abortar el guardado
+     * Called when it is performed at the beginning of a "save" call, before processing the data.     
+     *
+     * Abort the execution of the save if it returns false.     
+     * @param type $is_new TRUE: new record, create; FALSE: update     
+     * @return bool TRUE: you can continue with the save. FALSE: the save must be aborted.
      */
     protected function On_save_preparation($is_new)
     {
@@ -453,5 +496,5 @@ class Active_record
     }
 }
 
-//Initialize db 
+//Initialize db
 Active_record::$_db = DB::$db;
