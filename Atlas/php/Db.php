@@ -200,7 +200,7 @@ class Db
 
         return [];
     }
-    
+
 
     /**
      * Returns a the first column of a query as array
@@ -222,7 +222,7 @@ class Db
         return $lista;
     }
 
-    
+
     /**
      * Returns a simple array index=>scalar_value from a query.
      * Query must have a 'id' column for index and  a 'name' column or values.
@@ -386,33 +386,48 @@ class Db
     /**
      * Drops a table.
      * @param string $table
+     * @param bool $if_exists
      * @return int Affected rows
      */
-    public function Drop_table($table)
+    public function Drop_table($table, $if_exists=true)
     {
-        return $this->Query_ar("DROP TABLE `$table`;");
+        return $this->Query_ar('DROP TABLE '.($if_exists?'IF EXISTS ':'')."`$table`;\n");
     }
 
 
     /**
      * Truncates a table.
      * @param string $table
+     * @param bool $if_exists
      * @return int Affected rows
      */
     public function Truncate_table($table)
     {
-        return $this->Query_ar("TRUNCATE TABLE `$table`;");
+        return $this->Query_ar("TRUNCATE TABLE `$table`;\n");
     }
 
 
     /**
      * Drops a database.
      * @param string $database_name
+     * @param bool $if_exists
      * @return int Affected rows
      */
-    public function Drop_database($database_name)
+    public function Drop_database($database_name, $if_exists=true)
     {
-        return $this->Query_ar("DROP DATABASE `$database_name`;");
+        return $this->Query_ar('DROP DATABASE '.($if_exists?'IF EXISTS ':'')."`$database_name`;\n");
+    }
+
+
+    /**
+     * Drops a view.
+     * @param string $view_name
+     * @param bool $if_exists
+     * @return int Affected rows
+     */
+    public function Drop_view($view_name, $if_exists=true)
+    {
+        return $this->Query_ar('DROP VIEW '.($if_exists?'IF EXISTS ':'')."`$view_name`;\n");
     }
 
 
@@ -420,10 +435,11 @@ class Db
      * Creates a new data base.
      * @param string $database_name
      * @param string $collate Default collation, false equivalent if not collation
+     * @param bool $if_not_exists
      * @return int Affected rows
      */
-    public function Create_database($database_name, $collate='utf8_general_ci')
+    public function Create_database($database_name, $collate='utf8_general_ci', $if_not_exists=true)
     {
-        return $this->Query_ar(" CREATE DATABASE `$database_name` ". $collate ? " /*!40100 COLLATE '$collate' */;":';');
+        return $this->Query_ar('CREATE DATABASE '.($if_not_exists?'IF NOTEXISTS ':'')."`$database_name` ". ($collate ? " /*!40100 COLLATE '$collate' */;\n":";\n"));
     }
 }
