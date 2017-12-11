@@ -15,17 +15,16 @@ namespace Atlas\Html;
 /**
  * @author    Roberto González Vázquez
  */
-class Meta_tags
+class Metatags
 {
-
-    public $big_image      = '';
-    public $canonical      = '' ;
-    public $description    = '' ;
-    public $robots_follow  = true;
-    public $robots_index   = true;
-    public $site_name      = '';
-    public $title          = '' ;
-    public $lang           = '';
+    /**@var string */ public $big_image      = null ;
+    /**@var string */ public $canonical      = null ;
+    /**@var string Page description */ public $description    = null ;
+    /**@var string Robots can follow links   */ public $robots_follow  = true ;
+    /**@var string Robots can index this page */ public $robots_index   = true ;
+    /**@var string */ public $site_name      = null ;
+    /**@var string */ public $title          = null ;
+    /**@var string */ public $lang           = null ;
 
 
     /**
@@ -37,26 +36,26 @@ class Meta_tags
 
     public function Assign ( $data, $prefix='mt_', $sufix='' )
 	{
-        $mt = $prefix.'big_image'    .$sufix; if (isset($data[$mt])) $this->big_image     = $data[$mt];
-        $mt = $prefix.'canonical'    .$sufix; if (isset($data[$mt])) $this->canonical     = $data[$mt];
-        $mt = $prefix.'description'  .$sufix; if (isset($data[$mt])) $this->description   = $data[$mt];
-        $mt = $prefix.'robots_follow'.$sufix; if (isset($data[$mt])) $this->robots_follow = $data[$mt];
-        $mt = $prefix.'robots_index' .$sufix; if (isset($data[$mt])) $this->robots_index  = $data[$mt];
-        $mt = $prefix.'site_name'    .$sufix; if (isset($data[$mt])) $this->site_name     = $data[$mt];
-        $mt = $prefix.'title'        .$sufix; if (isset($data[$mt])) $this->title         = $data[$mt];
+        $mt = $prefix.'big_image'    .$sufix; if (!empty($data[$mt])) $this->big_image     = $data[$mt];
+        $mt = $prefix.'canonical'    .$sufix; if (!empty($data[$mt])) $this->canonical     = $data[$mt];
+        $mt = $prefix.'description'  .$sufix; if (!empty($data[$mt])) $this->description   = $data[$mt];
+        $mt = $prefix.'robots_follow'.$sufix; if (!empty($data[$mt])) $this->robots_follow = $data[$mt];
+        $mt = $prefix.'robots_index' .$sufix; if (!empty($data[$mt])) $this->robots_index  = $data[$mt];
+        $mt = $prefix.'site_name'    .$sufix; if (!empty($data[$mt])) $this->site_name     = $data[$mt];
+        $mt = $prefix.'title'        .$sufix; if (!empty($data[$mt])) $this->title         = $data[$mt];
 	}
 
 
     /** Return Html code of metatags
      * @return string HTML
      */
-    protected function Calculate_metatags()
+    public function Html()
     {
-        $mt_big_image    ? htmlspecialchars($this->big_image     , ENT_QUOTES):'';
-        $mt_canonical    ? htmlspecialchars($this->canonical     , ENT_QUOTES):'';
-        $mt_description  ? htmlspecialchars($this->description   , ENT_QUOTES):'';
-        $mt_site_name    ? htmlspecialchars($this->site_name     , ENT_QUOTES):'';
-        $mt_title        ? htmlspecialchars($this->title         , ENT_QUOTES):'';
+        $mt_big_image    = $this->big_image     ? htmlspecialchars($this->big_image     , ENT_QUOTES):'';
+        $mt_canonical    = $this->canonical     ? htmlspecialchars($this->canonical     , ENT_QUOTES):'';
+        $mt_description  = $this->description   ? htmlspecialchars($this->description   , ENT_QUOTES):'';
+        $mt_site_name    = $this->site_name     ? htmlspecialchars($this->site_name     , ENT_QUOTES):'';
+        $mt_title        = $this->title         ? htmlspecialchars($this->title         , ENT_QUOTES):'';
 
 
         if ($mt_title)         $out .="<title>$mt_title</title>\n"
