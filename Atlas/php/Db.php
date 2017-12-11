@@ -529,7 +529,7 @@ class Db
     {
         $from     = $database_name ? " FROM `$database_name` ":'';
         $like_sql = $like          ? " LIKE '$like'":'' ;
-        $this->Column("SHOW TABLES $from  $like_sql;");
+        return $this->Column("SHOW TABLES $from  $like_sql;");
     }
 
 
@@ -544,7 +544,7 @@ class Db
      */
     public function Describe ($query)
     {
-        return $this->Rows("Describe $query");
+        return $this->Rows("DESCRIBE $query ;");
     }
 
 
@@ -556,6 +556,8 @@ class Db
     public function Describe_html_table ($query)
     {
         $data = $this->Describe($query);
+
+        if(!$data) return null;
 
         $out="<table class='xx-atlas-db-describe'>
             <tr><th style='text-align:right'>Id</th>
@@ -571,7 +573,7 @@ class Db
                 <th style='text-align:right'>Filtered</th>
                 <th style='text-align:left'>Extra</th></tr>";
 
-        foreach($data as $d)
+        foreach((array)$data as $d)
             $out.= "<tr><td style='text-align:right'>$d->id</td>
                 <td style='text-align:left'>$d->select_type</td>
                 <td style='text-align:left'>$d->table</td>
@@ -610,6 +612,7 @@ class Db
 
         return $out.'</table>';
     }
+    
 
     /**
      * Returns a report with query description as html.
