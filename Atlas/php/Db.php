@@ -188,7 +188,7 @@ class Db
 
 
     /**
-     * Return first row for a query as an object.
+     * Returns first row for a query as an object.
      * @param string  $query       Select query statement.
      * @param string  $class_name  Class Name of object.
      * @return object|null Row data, null if no data or error.
@@ -207,7 +207,7 @@ class Db
 
 
     /**
-     * Return array of objects for a query statement
+     * Returns array of objects for a query statement.
      * @param string  $query       Select query statement.
      * @param string  $class_name  Class name of objects.
      * @return array
@@ -230,7 +230,7 @@ class Db
 
 
     /**
-     * Returns a the first column of a query as array
+     * Returns a the first column of a query as array.
      * @param string  $query Select query statement.
      * @return array
      */
@@ -292,7 +292,7 @@ class Db
 
 
     /**
-     * Return a safe value from a scalar for an SQL statement.
+     * Returns a safe value from a scalar for an SQL statement.
      * @param string|int|float|bool|null $value Scalar value to process.
      * @see Str()
      */
@@ -334,7 +334,7 @@ class Db
 
 
     /**
-     * Insert into statement
+     * Insert into statement.
      * @param string  $table    Table for update
      * @param array   $data     Data. Index:field name.  Value:field value.
      * @param bool    $do_safe  This values will be processed by Safe().
@@ -356,7 +356,7 @@ class Db
 
 
     /**
-     * Update statement
+     * Update statement.
      * @param string  $table    Table for update
      * @param array   $data     Data. Index:field name.  Value:field value.
      * @param string  $where    WHERE conditions
@@ -381,7 +381,7 @@ class Db
 
 
     /**
-     * Update a row (key!=null) or Insert a new row  (key value=null)
+     * Update a row (key!=null) or Insert a new row  (key value=null).
      * @param string  $table            Table for update
      * @param array   $data             Data. Index:field name.  Value:field value.
      * @param string  $key_value        Value of key  to  update. By reference for inserts ( key=null) => get insert_id if autonumeric
@@ -470,23 +470,48 @@ class Db
         return $this->Query_ar('CREATE DATABASE '.($if_not_exists?'IF NOT EXISTS ':'')."`$database_name` ". ($collate ? " /*!40100 COLLATE '$collate' */;\n":";\n"));
     }
 
-
+    /**
+     * Show columns info form a table.
+     * @param string $table
+     * @return object[] {Field, Type, Null, Key, Default, Extra}
+     */
     public function Show_columns ($table)
     {
-        return $columns = $this->Column("SHOW COLUMNS FROM `$table`");
+        return $this->Rows("SHOW COLUMNS FROM `$table`");
+    }
+
+    /**
+     * Shows columns names form a table.
+     * @param string $table
+     * @return string[]
+     */
+    public function Show_column_names ($table)
+    {
+        return $this->Column("SHOW COLUMNS FROM `$table`");
     }
 
 
+    /**
+     * Shows CREATE TABLE for a table.
+     * @param string $table
+     * @return string|null
+     */
     public function Show_create_table($table)
     {
-        return $columns = $this->Column("SHOW CREATE TABLE `$table`");
+        $x = $this->Row("SHOW CREATE TABLE `$table`");
+        return $x->{"Create Table"}??null;
     }
 
 
+    /**
+     * Shows CREATE DATABASE for a database.
+     * @param string $database_name
+     * @param bool $if_not_exists
+     * @return string|null
+     */
     public function Show_create_database($database_name, $if_not_exists=true)
     {
-        return $this->Query_ar('SHOW CREATE DATABASE '.($if_not_exists?'IF NOT EXISTS ':'')."`$database_name` ". ($collate ? " /*!40100 COLLATE '$collate' */;\n":";\n"));
+        $x = $this->Row('SHOW CREATE DATABASE '.($if_not_exists?'IF NOT EXISTS ':'')."`$database_name` ");
+        return $x->{"Create Database"}??null;
     }
-
-
 }
