@@ -115,7 +115,7 @@ abstract class Migrator
 
         catch (Db\Db_exception $ex)
         {
-             $this->Show_error($ko_txt, $ex->Get_error_item());
+             $this->Show_error($ko_txt, $ex->Get_profile());
              die();
         }
 
@@ -243,7 +243,7 @@ abstract class Migrator
         
         catch (Db\Db_exception $ex)
         {
-            $error_details   = (string)$ex->Get_error_item();
+            $error_details   = (string)$ex->Get_profile();
             $error_exception = print_r($ex,true);           
         }
         

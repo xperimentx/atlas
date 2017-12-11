@@ -15,7 +15,7 @@ namespace Xperimentx\Atlas;
 
 use mysqli;
 use Xperimentx\Atlas\Db\Db_cfg;
-use Xperimentx\Atlas\Db\Error_item;
+use Xperimentx\Atlas\Db\Profile_item;
 
 
 /**
@@ -25,13 +25,14 @@ use Xperimentx\Atlas\Db\Error_item;
  */
 class Db
 {
-    /** @var mysqli       MySQLi Handler                                 */  public $mysqli           = null;
-    /** @var Error_item[] Errors                                         */  public $errors           = [];
-    /** @var Error_item   Last error. Null if last call is successful .  */  public $last_error       = null;
-    /** @var string       Last SQL statement.                            */  public $last_sql         = null;
-    /** @var Db_cfg       Configuration, options.                        */  public $cfg              = null;
-    /** @var bool         Throw exceptions on mysqli errors.             */  public $throw_exceptions = false;
-    /** @var Db           First object connected. The main Db object.    */  public static $db        = null;
+    /** @var mysqli         MySQLi Handler                                 */  public $mysqli           = null;
+    /** @var Profile_item[] Profiles or successful calls, benchmarking.    */  public $profiles           = [];
+    /** @var Profile_item[] Errors                                         */  public $errors           = [];
+    /** @var Profile_item   Last error. Null if last call is successful.   */  public $last_error       = null;
+    /** @var Profile_item   Last profile. Null if error in last call       */  public $last_profile     = null;
+    /** @var Db_cfg         Configuration, options.                        */  public $cfg              = null;
+    /** @var bool           Throw exceptions on mysqli errors.             */  public $throw_exceptions = false;
+    /** @var Db             First object connected. The main Db object.    */  public static $db        = null;
 
     const ENGINE_MYISAM = 'MyISAM';
     const ENGINE_INNODB = 'InnoDB';
@@ -59,41 +60,47 @@ class Db
      */
     public function Connect ()
     {
-        $cfg = $this->cfg;
+        $cfg    = $this->cfg;
+        $m_time = microtime(true);
 
-        $this->last_error = null;
-        $this->mysqli     = @new mysqli($cfg->server   ,
-                                        $cfg->user_name,
-                                        $cfg->password ,
-                                        $cfg->db_name  ,
-                                        $cfg->port     ,
-                                        $cfg->socket   );
+        $this->last_error   = null;
+        $this->last_profile = null;
 
+        $this->mysqli     = @new mysqli
+                            (
+                                $cfg->server   ,
+                                $cfg->user_name,
+                                $cfg->password ,
+                                $cfg->db_name  ,
+                                $cfg->port     ,
+                                $cfg->socket
+                            );
 
         if ($this->mysqli->connect_error)            //error de conexión
         {
-            $this->errors[] = $this->last_error = new Error_item(  __METHOD__,
-                                                                    $this->mysqli->connect_errno,
-                                                                    $this->mysqli->connect_error );
+            $this->errors[] =
+                $this->last_error =
+                    new Profile_item
+                    (
+                        __METHOD__,
+                        null,
+                        $m_time,
+                        $this->mysqli->connect_errno,
+                        $this->mysqli->connect_error
+                    );
+
             if ($this->throw_exceptions)
                 throw new Db\Db_exception($this->last_error);
+
+            return false;
         }
 
+        $this->profiles[] = $this->last_profile = new Profile_item(__METHOD__, null, $m_time);
 
         if ($cfg->charset)
             $this->mysqli->set_charset($cfg->charset);
 
         return true;
-    }
-
-
-
-    protected function Error($method, $query)
-    {
-        $this->errors[] = $this->last_error = new Error_item ( $method,
-                                                               $this->mysqli->errno,
-                                                               $this->mysqli->error,
-                                                               $query);
     }
 
 
@@ -106,15 +113,35 @@ class Db
      */
     protected function Query ($query, $caller_method=null)
     {
-        $this->last_error = null;
-        $this->last__sql  = $query;
+        $m_time = microtime(true);
+
+        $this->last_error   = null;
+        $this->last_profile = null;
 
         if ($result = @$this->mysqli->query($query)) //:=
         {
+            $this->profiles[] = $this->last_profile =
+                    new Profile_item
+                    (
+                        $caller_method ??__METHOD__,
+                        $query,
+                        $m_time
+                    );
+
             return $result ;
         }
 
-        $this->Error($caller_method, $query);
+        $this->errors[] =
+                $this->last_error =
+                    new Profile_item
+                    (
+                        $caller_method ?:__METHOD__,
+                        $query,
+                        $m_time,
+                        $this->mysqli->errno,
+                        $this->mysqli->error
+                    );
+
 
         if ($this->throw_exceptions)
             throw new Db\Db_exception($this->last_error);
@@ -133,7 +160,7 @@ class Db
      */
     public function Query_ar ($query, $caller_method=null)
     {
-        return  $this->Query($query, $caller_method)
+        return  $this->Query($query, $caller_method?:__METHOD__)
                 ? $this->mysqli->affected_rows
                 : null;
     }
@@ -440,12 +467,25 @@ class Db
      */
     public function Create_database($database_name, $collate='utf8_general_ci', $if_not_exists=true)
     {
-        return $this->Query_ar('CREATE DATABASE '.($if_not_exists?'IF NOTEXISTS ':'')."`$database_name` ". ($collate ? " /*!40100 COLLATE '$collate' */;\n":";\n"));
+        return $this->Query_ar('CREATE DATABASE '.($if_not_exists?'IF NOT EXISTS ':'')."`$database_name` ". ($collate ? " /*!40100 COLLATE '$collate' */;\n":";\n"));
     }
+
 
     public function Show_columns ($table)
     {
         return $columns = $this->Column("SHOW COLUMNS FROM `$table`");
+    }
+
+
+    public function Show_create_table($table)
+    {
+        return $columns = $this->Column("SHOW CREATE TABLE `$table`");
+    }
+
+
+    public function Show_create_database($database_name, $if_not_exists=true)
+    {
+        return $this->Query_ar('SHOW CREATE DATABASE '.($if_not_exists?'IF NOT EXISTS ':'')."`$database_name` ". ($collate ? " /*!40100 COLLATE '$collate' */;\n":";\n"));
     }
 
 
