@@ -51,25 +51,15 @@ else echo "Success \n";
 
 ## Forge methods from Db object
 
-| Method                                    | Description             |
-|:------------------------------------------|:------------------------|    
-| Create_database($database_name, $collate) | Creates a new data base |
-| Drop_database($database_name)             | Drops a database        |
-| Drop_table($table)                        | Drops s table           |
-| Truncate_table($table)                    | Truncates a table       |
-
-
-##Db Forge methods
-
 |Method   |Info   |
 |:--------|:------| 
-|**Create_database** ($database_name, $collate, $if_not_exists) :int|Creates a new data base|    
+|**Create_database** ($database_name, $collate, $if_not_exists) :int |Creates a new data base|    
 |**Drop_database**  ($database_name, $if_exists) :int|Drops a database.|    
 |**Drop_table**     ($table, $if_exists) :int|Drops a table.|    
 |**Drop_view**      ($view_name, $if_exists) :int|Drops a view.|    
 |**Show_columns**   ($table) :object[]|Shows columns info form a table|    
 |**Show_column_names**   ($table) :string[]|Shows columns names form a table.|    
-|**Show_create_database** ($database_name, $if_not_exists=true) :string|||    
+|**Show_create_database** ($database_name, $if_not_exists=true) :string| 
 |**Show_create_table** ($table)|Shows CREATE TABLE for a table|
 |**Truncate_table** ($table) :int|Truncates a table.|    
 
