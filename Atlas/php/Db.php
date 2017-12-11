@@ -470,6 +470,7 @@ class Db
         return $this->Query_ar('CREATE DATABASE '.($if_not_exists?'IF NOT EXISTS ':'')."`$database_name` ". ($collate ? " /*!40100 COLLATE '$collate' */;\n":";\n"));
     }
 
+
     /**
      * Show columns info form a table.
      * @param string $table
@@ -479,6 +480,7 @@ class Db
     {
         return $this->Rows("SHOW COLUMNS FROM `$table`");
     }
+
 
     /**
      * Shows columns names form a table.
@@ -513,5 +515,98 @@ class Db
     {
         $x = $this->Row('SHOW CREATE DATABASE '.($if_not_exists?'IF NOT EXISTS ':'')."`$database_name` ");
         return $x->{"Create Database"}??null;
+    }
+
+
+    // BENCHMARKING
+    // ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
+
+
+    /**
+     * Describes a query
+     * @param string $query
+     * @return object[] {id, select_type, table, partitions,type,posible_keys,key_len,ref,rows. filtered, Extra}
+     */
+    public function Describe ($query)
+    {
+        return $this->Rows("Describe $query");
+    }
+
+    /**
+     * Describes a query
+     * @param string $query
+     * @return string html Return an htm tlable
+     */
+    public function Describe_html_table ($query)
+    {
+        $data = $this->Describe($query);
+
+        $out="<table class='xx-atlas-db-describe'>
+            <tr><th style='text-align:right'>Id</th>
+                <th style='text-align:left'>Select type</th>
+                <th style='text-align:left'>Table</th>
+                <th style='text-align:left'>Partitions</th>
+                <th style='text-align:left'>Type</th>
+                <th style='text-align:left'>Possible keys</th>
+                <th style='text-align:left'>Key</th>
+                <th style='text-align:right'>Key len</th>
+                <th style='text-align:left'>Ref</th>
+                <th style='text-align:right'>Rows</th>
+                <th style='text-align:right'>Filtered</th>
+                <th style='text-align:left'>Extra</th></tr>";
+
+        foreach($data as $d)
+            $out.= "<tr><td style='text-align:right'>$d->id</td>
+                <td style='text-align:left'>$d->select_type</td>
+                <td style='text-align:left'>$d->table</td>
+                <td style='text-align:left'>$d->partitions</td>
+                <td style='text-align:left'>$d->type</td>
+                <td style='text-align:left'>$d->possible_keys</td>
+                <td style='text-align:left'>$d->key</td>
+                <td style='text-align:right'>$d->key_len</td>
+                <td style='text-align:left'>$d->ref</td>
+                <td style='text-align:right'>$d->rows</td>
+                <td style='text-align:right'>$d->filtered</td>
+                <td style='text-align:left'>$d->Extra</td></tr>";
+
+        return $out.'</table>';
+    }
+
+
+    /**
+     * Returns a basic report of profiles as a html table
+     * @return string Html table
+     */
+    public function Pofiles_html_table ()
+    {
+        $out="<table class='xx-atlas-db-profiles'>
+            <tr><th style='text-align:right'>Seconds</th>
+                <th style='text-align:left'>Method</th>
+                <th style='text-align:left'>Query</th></tr>";
+
+        foreach ($this->profiles as $pro)
+            $out.= sprintf("<tr><td style='text-align:right'>%.6f s</td>
+                            <td style='text-align:left'>%s</td>
+                            <td style='text-align:left'>%s</td></tr>\n",
+                                $pro->seconds,
+                                $pro->method,
+                                nl2br(htmlspecialchars($pro->query)));
+
+        return $out.'</table>';
+    }
+
+    
+    public function Pofiles_describe_html ()
+    {
+        $out ='';
+        foreach ($this->profiles as $pro)
+        {
+            if (!$pro->query) continue;
+
+            $out.= nl2br(htmlspecialchars((string)$pro)).
+                $this->Describe_html_table($pro->query).
+                '<hr/>';
+        }
+        return $out;
     }
 }
