@@ -156,7 +156,7 @@ class Cli
 
 
     /**
-     * Ensures that the environment is cliD.
+     * Ensures that the environment is cli.
      * Dies the program if not is cli whit 403.
      */
     public function  Require_cli_environment ()
