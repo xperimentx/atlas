@@ -25,13 +25,13 @@ use Xperimentx\Atlas\Db\Profile_item;
  */
 class Db
 {
-    /** @var mysqli         MySQLi Handler                                 */  public $mysqli           = null;
+    /** @var mysqli         MySQLi Handler.                                */  public $mysqli           = null;
     /** @var Profile_item[] Profiles or successful calls, benchmarking.    */  public $profiles           = [];
-    /** @var Profile_item[] Errors                                         */  public $errors           = [];
+    /** @var Profile_item[] Errors.                                        */  public $errors           = [];
     /** @var Profile_item   Last error. Null if last call is successful.   */  public $last_error       = null;
     /** @var Profile_item   Last profile. Null if error in last call       */  public $last_profile     = null;
     /** @var Db_cfg         Configuration, options.                        */  public $cfg              = null;
-    /** @var bool           Throw exceptions on mysqli errors.             */  public $throw_exceptions = false;
+    /** @var bool           Throw Db_exception exceptions on mysqli errors.*/  public $throw_exceptions = false;
     /** @var Db             First object connected. The main Db object.    */  public static $db        = null;
 
     const ENGINE_MYISAM = 'MyISAM';
@@ -517,13 +517,28 @@ class Db
         return $x->{"Create Database"}??null;
     }
 
+    /**
+     * Show table names from a database
+     *
+     * SHOW TABLES FROM `$database_name` LIKE '$like';
+     *
+     * @param string $like Like pattern, optional.
+     * @param string|null $database_name Null=current database;
+     */
+    public function Show_tables ($like=null, $database_name=null)
+    {
+        $from     = $database_name ? " FROM `$database_name` ":'';
+        $like_sql = $like          ? " LIKE '$like'":'' ;
+        $this->Column("SHOW TABLES $from  $like_sql;");
+    }
+
 
     // BENCHMARKING
     // ¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨¨
 
 
     /**
-     * Describes a query
+     * Describes a query.
      * @param string $query
      * @return object[] {id, select_type, table, partitions,type,posible_keys,key_len,ref,rows. filtered, Extra}
      */
@@ -532,8 +547,9 @@ class Db
         return $this->Rows("Describe $query");
     }
 
+
     /**
-     * Describes a query
+     * Describes a query in a html table.
      * @param string $query
      * @return string html Return an htm tlable
      */
@@ -574,7 +590,7 @@ class Db
 
 
     /**
-     * Returns a basic report of profiles as a html table
+     * Returns a basic report of profiles as a html table.
      * @return string Html table
      */
     public function Pofiles_html_table ()
@@ -595,7 +611,10 @@ class Db
         return $out.'</table>';
     }
 
-    
+    /**
+     * Returns a report with query description as html.
+     * @return string Html report
+     */
     public function Pofiles_describe_html ()
     {
         $out ='';
