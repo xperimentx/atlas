@@ -160,6 +160,9 @@ else
 
 
 ### Database Info
+
+|Method   |Info   |
+|:--------|:------|
 |**Show_columns**   ($table) :object[]|Shows columns info form a table.|    
 |**Show_column_names**   ($table) :string[]|Shows columns names form a table.|    
 |**Show_create_database** ($database_name, $if_not_exists=true) :string| Creates a database.|
@@ -168,6 +171,8 @@ else
 
 ### Benchmarking, query metrics
 
+|Method   |Info   |
+|:--------|:------|
 |**Describe** ($query) :object[]  | Describes a query.|
 |**Describe_html_table** ($query) :string | Describes a query in a html table.|
 |**Pofiles_html_table** :string|Returns a basic report of profiles as a html table.|
