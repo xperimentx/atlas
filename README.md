@@ -17,7 +17,10 @@ Take a look at [xperiment**X Demo**](https://github.com/xperimentx/atlas-sample)
 
 [:green_book: Database Reference](Atlas/doc/Database-reference.md)
 
+[:green_book: Database Forge](Atlas/doc/Database-forge.md)
+
 [:green_book: Migrations](Atlas/doc/Database-migrations.md)
+
 
 [:green_book: Credits](Atlas/doc/Credits.md)
 
