@@ -7,7 +7,7 @@
  *
  * @author    Roberto González Vázquez, https://github.com/xperimentx
  * @copyright 2017 Roberto González Vázquez
- * 
+ *
  * @license   MIT
  */
 
@@ -166,6 +166,7 @@ class Autoloader
     {
         self::$class_map[$full_qualified_class_name]=$filename_with_path;
     }
+
 
     /**
      * Add an array with a class map to the current class map.
