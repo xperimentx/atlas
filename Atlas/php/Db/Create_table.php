@@ -119,9 +119,6 @@ class Create_table
     }
 
 
-
-
-
     const INDEX_NORMAL   = '';
     const INDEX_UNIQUE   = 'UNIQUE';
     const INDEX_SPATIAL  = 'SPATIAL';
@@ -131,7 +128,7 @@ class Create_table
     /**
      * Adds an index
      * @param string  $index_name Index name. `` are added.
-     * @param string  $fields Comas separated field names.
+     * @param string  $fields Coma separated field names.
      * @param string  $type Index type: normal, UNIQUE, FULLTEXT, SPATIAL
      */
     public function Add_index($index_name, $fields ,$type=self::INDEX_NORMAL)
@@ -143,7 +140,6 @@ class Create_table
     /**
      * Adds the primary key
      * @param string  $fields Comas separated field names.
-     * @param string  $type Index type: normal, UNIQUE, FULLTEXT, SPATIAL
      */
     public function Add_primary_key ($fields)
     {
@@ -151,6 +147,30 @@ class Create_table
     }
 
 
+    const FOREIGN_KEY_RESTRICT    = 'RESTRICT'   ;
+    const FOREIGN_KEY_CASCADE     = 'CASCADE'    ;
+    const FOREIGN_KEY_SET_NULL    = 'SET NULL'   ;
+    const FOREIGN_KEY_SET_DEFAULT = 'SET DEFAULT';
+
+
+    /**
+     * Adds a foreign key
+     * @param string|null $symbol Key name. `` are added.
+     * @param string $fields Coma separated field names.
+     * @param string $foreign_table Foreign table.`` are added.
+     * @param string $foreign_fields Coma separated foreign  field names.
+     * @param string $on_delete Reference option
+     * @param string $on_update Reference option
+     */
+    public function Add_foreign_key ($symbol, $fields, $foreign_table, $foreign_fields,
+                                     $on_delete=self::FOREIGN_KEY_NO_RESTRICT, $on_update=self::FOREIGN_KEY_RESTRICT)
+    {
+        $cs= $symbol? "CONSTRAINT `$symbol`":'';
+        $this->items[]="$cs FOREIGN KEY ($fields) REFERENCES `$foreign_table'(`$foreign_fields`)".
+                       "ON DELETE $on_delete ON_UPDATE $on_update";
+    }
+
+    
     /**
      * Returns SQL for CREATE TABLE query
      * @return int Affected rows.

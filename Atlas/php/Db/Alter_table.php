@@ -7,7 +7,7 @@
  *
  * @author    Roberto González Vázquez, https://github.com/xperimentx
  * @copyright 2017 Roberto González Vázquez
- * 
+ *
  * @license   MIT
  */
 
@@ -41,31 +41,6 @@ class Alter_table
         $this->table = $table            ;
         $this->db    = $db_object ?? Db::$db;
     }
-
-
-    /**
-     * Drops a column or a set of columns from the table
-     * @param string $field Field name of column. `` are added.
-     * @return $this
-     */
-    public function  Drop_column ($field)
-    {
-        $this->changes[] ="DROP COLUMN `$field`";
-        return $this;
-    }
-
-
-     /**
-     * Drops an index
-     * @param string $index_name Index name. `` are added.
-     * @return $this
-     */
-    public function  Drop_index ($index_name)
-    {
-        $this->changes[] ="DROP INDEX `$index_name`";
-        return $this;
-    }
-
 
 
     /**
@@ -150,17 +125,105 @@ class Alter_table
     }
 
 
+    /**
+     * Drops a column or a set of columns from the table
+     * @param string $field Field name of column. `` are added.
+     * @return $this
+     */
+    public function  Drop_column ($field)
+    {
+        $this->changes[] ="DROP COLUMN `$field`";
+        return $this;
+    }
+
+    
+    const INDEX_NORMAL   = '';
+    const INDEX_UNIQUE   = 'UNIQUE';
+    const INDEX_SPATIAL  = 'SPATIAL';
+    const INDEX_FULLTEXT = 'FULLTEXT';
 
 
+    /**
+     * Adds an index
+     * @param string  $index_name Index name. `` are added.
+     * @param string  $fields Coma separated field names.
+     * @param string  $type Index type: normal, UNIQUE, FULLTEXT, SPATIAL
+     */
+    public function Add_index($index_name, $fields ,$type=self::INDEX_NORMAL)
+    {
+        $this->items[]="$type INDEX `$index_name` ($fields)";
+    }
 
 
-    /*
-     Add_column
-    Add_key('id',TRUE);
-    function Drop_index()
-    function Add_index()*/
+    /**
+     * Drops an index
+     * @param string $index_name Index name. `` are added.
+     * @return $this
+     */
+    public function  Drop_index ($index_name)
+    {
+        $this->changes[] ="DROP INDEX `$index_name`";
+        return $this;
+    }
 
 
+    /**
+     * Adds the primary key
+     * @param string  $fields Comas separated field names.
+     */
+    public function Add_primary_key ($fields)
+    {
+        $this->changes[]="ADD PRIMARY KEY ($fields)";
+    }
+
+
+    /**
+     * Drops the primary key
+     * @return $this
+     */
+    public function  Drop_primary_key ($index_name)
+    {
+        $this->changes[] ="DROP PRIMARY KEY";
+        return $this;
+    }
+
+
+    const FOREIGN_KEY_RESTRICT    = 'RESTRICT'   ;
+    const FOREIGN_KEY_CASCADE     = 'CASCADE'    ;
+    const FOREIGN_KEY_SET_NULL    = 'SET NULL'   ;
+    const FOREIGN_KEY_SET_DEFAULT = 'SET DEFAULT';
+
+
+    /**
+     * Adds a foreign key
+     * @param string|null $symbol Key name. `` are added.
+     * @param string $fields Coma separated field names.
+     * @param string $foreign_table Foreign table.`` are added.
+     * @param string $foreign_fields Coma separated foreign  field names.
+     * @param string $on_delete Reference option
+     * @param string $on_update Reference option
+     * @return $this
+     */
+    public function Add_foreign_key ($symbol, $fields, $foreign_table, $foreign_fields,
+                                     $on_delete=self::FOREIGN_KEY_NO_RESTRICT, $on_update=self::FOREIGN_KEY_RESTRICT)
+    {
+        $cs= $symbol? "CONSTRAINT `$symbol`":'';
+        $this->changes[]="ADD $cs FOREIGN KEY ($fields) REFERENCES `$foreign_table'(`$foreign_fields`)".
+                       "ON DELETE $on_delete ON_UPDATE $on_update";
+        return $this;
+    }
+
+
+    /**
+     * Drops a foreign key
+     * @param string $symbol  Constraint symbol
+     * @return $this
+     */
+    public function Drop_foreign_key ($symbol)
+    {
+        $this->changes[]="DROP FOREIGN KEY `$symbol` ";
+        return $this;
+    }
 }
 
 
