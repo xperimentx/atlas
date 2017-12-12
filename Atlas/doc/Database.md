@@ -248,8 +248,8 @@ use Xperimentx\Atlas\Db;
 
 $maker = new Db\Create_table('table_name');
 
-$maker->Add_column ('INT'        , 'id'  )->Set_auto_increment()->Set_comment('asdasdasda');
-$maker->Add_column ('VARCHAR(50)', 'name');
+$maker->Add_column_id ();
+$maker->Add_column ('VARCHAR(50)', 'name')->Set_comment('Lore ipsum');
 $maker->Add_column ('DATETIME'   , 'creation_date');
 $maker->Add_column ('TINYINT'    , 'delete_me');
 $maker->engine = Db::ENGINE_MYISAM;
@@ -262,15 +262,7 @@ else print_r(Db::$db->last_error);
 
 
 
-
-
-
-
-
-##CREATE TABLE helper
-
-class Create_table
-| Create_table   |       | properties                       |
+| Db\Create_table   |       | Properties                       |
 |:---------------|:------|:---------------------------------|
 |$table          |string | Table name                       |
 |$charset        |string | Charset.                         |
@@ -280,54 +272,18 @@ class Create_table
 |$comment        |string | Comment.                         |
 |$if_not_exists  |bool   | Only creates table if not exists.|
 
-
-```php
-
-public function __construct($table, $db_object = null);
-
-/** Add a column field.  Create a column field sql helper
-  * @return Column Added column.*/
-public function Add_column ($field_type, $field_name, $default_value=NULL, $is_null_allowed=true);
-
-
-/** Adds column auto increment  pirmary key.     
-  * @return Column Added column */
-public function Add_column_id ($field_name='id');
-
-
-/** Adds an index */
-public function Add_index($index_name, $fields ,$type=self::INDEX_NORMAL);
-
-
-/** Adds the primary key */
-public function Add_primary_key ($fields);
-
-
-/** Adds a foreign key */
-public function Add_foreign_key ($symbol, $fields, $foreign_table, $foreign_fields,
-                                 $on_delete=self::FOREIGN_KEY_NO_RESTRICT,
-                                 $on_update=self::FOREIGN_KEY_RESTRICT);
-
-/** Returns SQL for CREATE TABLE query
-  * @return int Affected rows. */
-public function __toString ();
-
-
-/** Run create table query
-  * @return int Affected rows.  */
-function Run();
-
-/** Run create table if not exist query
-  * @return int Affected rows.  */
-function Run_if_not_exists();
-    
-``` 
-
-
-
-
-
-
+| Db\Create_table   |Methods                     |
+|:---------------|:------|:---------------------------------|
+| __construct($table, $db_object = null);||
+| Add_column ($field_type, $field_name, $default_value=NULL, $is_null_allowed=true); |Add a column field.  Create a column field sql helper |
+| Add_column_id ($field_name='id') :Column | Adds column auto increment  pirmary key.     | 
+| Add_index($index_name, $fields ,$type=self::INDEX_NORMAL);| Adds an index |
+| Add_primary_key ($fields) | Adds the primary key | 
+| Add_foreign_key ($symbol, $fields, $foreign_table, $foreign_fields,$on_delete,$on_update): int|| Adds a foreign key |
+| __toString () :string | Returns SQL for CREATE TABLE query
+| Run () ;int| Run create table query
+| Run_if_not_exists() :int |Run create table if not exist query |
+  
 
 
 ### Alter a table
