@@ -1,6 +1,6 @@
 ![xperimentx atlas](Atlas/doc/images/atlas.png) 
 
-# Atlas Php Toolkit
+# xperimentX Atlas Php Toolkit
 
 **xperimentX Atlas** is a development toolkit** for PHP projects.
 
