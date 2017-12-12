@@ -115,7 +115,7 @@ else
 
 
 
-### Generic queries
+## Generic queries
 
 |Db method   |Info   |
 |:-----------|:------|
@@ -123,7 +123,7 @@ else
 |**Query_ar** ($query, $caller_method=null) :int,null| Performs a query on the database en returns the number of affected rows.|
 
 
-### Get Data
+## Get Data
 
 |Db method   |Info   |
 |:-----------|:------|
@@ -133,14 +133,14 @@ else
 |**Column** ($query)              :array | Returns a the first column of a query as array.|
 |**Vector** ($query)              :array | Returns a simple array index=>scalar_value from a query.|    
 
-### Safe sql
+## Safe sql
 
 |Db method   |Info   |
 |:-----------|:------|
 |**Str**       ($scalar) :string|Escapes special characters in a string for use in an SQL statement, between single quotes '.|    
 |**Safe**      ($value) :string| Returns a safe value from a scalar for an SQL statement.|    
 
-### Create and update rows.
+## Create and update rows.
 
 |Db method   |Info   |
 |:-----------|:------|
@@ -174,8 +174,9 @@ else
 
 
 
+---
 
-# Database forge.
+## Database forge.
 
 ### Create a table.
 
@@ -196,7 +197,7 @@ if ($maker->Run())
 else print_r(Db::$db->last_error);
 ```
 
-## Alter a table
+### Alter a table
 ```php
 use Xperimentx\Atlas\Db;
 
@@ -225,7 +226,7 @@ else echo "Success \n";
 |**Drop_view**      ($view_name, $if_exists) :int|Drops a view.|    
 |**Truncate_table** ($table) :int|Truncates a table.| 
 
-
+---
 
 ## Benchmarking, query metrics
 

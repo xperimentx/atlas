@@ -22,9 +22,12 @@
 ---
 
 ### Database Reference
-* [Database Reference.](Database-reference.md)
-* [Database Forge.](Database-forge.md)
+* [Database Reference.](Database.md)
+* [Database Forge.](Database.md#database-forge)
+* [Migrations.](Database-migrations)
 
 ---
+
+* [Active Record](Atlas/doc/Active-record.md)
 
 * [Credits.](Credits.md)

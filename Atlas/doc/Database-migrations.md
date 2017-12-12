@@ -4,7 +4,7 @@
 ![xperimentx atlas](images/atlas.png) 
 
 * [Migrator CLi](#migrator-cli)
-* [Database Forge](Database-forge.md)
+* [Database Forge](Database.md#database-forge)
 
 
 # Database migrations

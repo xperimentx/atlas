@@ -15,11 +15,13 @@ Take a look at [xperiment**X Demo**](https://github.com/xperimentx/atlas-sample)
 
 [:green_book: Quick start guide](Atlas/doc/Quick-start-guide.md)
 
-[:green_book: Database Reference](Atlas/doc/Database-reference.md)
+[:green_book: Database Reference](Atlas/doc/Database.md)
 
-[:green_book: Database Forge](Atlas/doc/Database-forge.md)
+[:green_book: Database Forge](Atlas/doc/Database.md#database-forge)
 
 [:green_book: Migrations](Atlas/doc/Database-migrations.md)
+
+[:green_book: Active Record](Atlas/doc/Active-record.md)
 
 
 [:green_book: Credits](Atlas/doc/Credits.md)
