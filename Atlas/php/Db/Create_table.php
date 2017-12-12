@@ -54,28 +54,6 @@ class Create_table
     }
 
 
-    function Render_sql()
-    {
-        $cols= [];
-
-        foreach($this->columns as $col)
-            $cols[]=$col->Render_sql();
-
-
-        $sql = "CREATE TABLE `$this->table` ("
-             . implode (',' , array_merge($cols,$this->items))
-             . ')'   ;
-
-        if (null!==$this->auto_increment)   $sql .= ' AUTO_INCREMENT='.$this->auto_increment;
-        if (null!==$this->comment       )   $sql .= ' COMMENT \''.addslashes($this->comment).'\'';
-        if (null!==$this->charset       )   $sql .= ' CHARSET=' .$this->charset;
-        if (null!==$this->collation     )   $sql .= ' COLLATE=' .$this->collation;
-        if (null!==$this->engine        )   $sql .= ' ENGINE='  .$this->engine;
-
-        return $sql;
-    }
-
-
     /**
      * Add a column field.
      * Create a column field sql helper
@@ -170,10 +148,9 @@ class Create_table
                        "ON DELETE $on_delete ON_UPDATE $on_update";
     }
 
-    
+
     /**
      * Returns SQL for CREATE TABLE query
-     * @return int Affected rows.
      */
     public function __toString ()
     {
@@ -194,7 +171,7 @@ class Create_table
         return $sql.";\n\n";
     }
 
-
+    
     /**
      * Run create table query
      * @return int Affected rows.

@@ -22,9 +22,9 @@
 * [Database Info](#database-info)
 
 * [Database Forge](#database-forge)
+  * [Forge methods from Db object](#forge-db-methods)
   * [Create a table](#create-a-table)
   * [Alter a table](#alter-a-table)
-  * [Forge methods from Db object](#forge-db-methods)
 
 * [Migrations](Database-migrations.md)
 * [Benchmarking, query metrics](#benchmarking--query-metrics) 
@@ -199,7 +199,7 @@ $bd->mysqli = My_mysqli_object;
 ---
 
 
-### Other tools
+## Other tools
 
 |Db method   |Info   |
 |:-----------|:------|
@@ -229,6 +229,18 @@ $bd->mysqli = My_mysqli_object;
 
 ## Database forge.
 
+### Forge Db methods
+
+|Db method   |Info   |
+|:-----------|:------| 
+|**Create_database** ($database_name, $collate, $if_not_exists) :int |Creates a new data base|    
+|**Drop_database**  ($database_name, $if_exists) :int|Drops a database.|    
+|**Drop_table**     ($table, $if_exists) :int|Drops a table.|    
+|**Drop_view**      ($view_name, $if_exists) :int|Drops a view.|    
+|**Truncate_table** ($table) :int|Truncates a table.| 
+
+
+
 ### Create a table.
 
 ```php
@@ -247,6 +259,154 @@ if ($maker->Run())
 
 else print_r(Db::$db->last_error);
 ```
+
+
+
+
+
+
+
+
+##CREATE TABLE helper
+
+class Create_table
+| Create_table   |       | properties                       |
+|:---------------|:------|:---------------------------------|
+|$table          |string | Table name                       |
+|$charset        |string | Charset.                         |
+|$collation      |string | Collation.                       |
+|$engine         |string | Engine                           |
+|$auto_increment |string | Auto increment.                  |
+|$comment        |string | Comment.                         |
+|$if_not_exists  |bool   | Only creates table if not exists.|
+
+```php
+    /**
+     * @param string $table Table name. `` will be added.
+     */
+    public function __construct($table, $db_object = null);
+ 
+    /**
+     * Add a column field.
+     * Create a column field sql helper
+     * @param string $field_type
+     *          Type of column:
+     *          TINIYINT, INT, BIGINT , DECIMAL(10,2),
+     *          CHAR(50), VARCHAR(50)
+     *          DATE, TIME, DATETIME ...
+     *
+     * @param string $field_name Field name.  `` will be added.
+     * @param scalar $default_value
+     * @param bool  $is_null_allowed
+     *
+     * @return Column Added column.
+     */
+    public function Add_column ($field_type, $field_name, $default_value=NULL, $is_null_allowed=true);
+ 
+
+
+    /**
+     * Adds column auto increment  pirmary key.
+     * @param bool $is_auto_increment
+     * @param string $field_name
+     * @return Column Added column
+     */
+    public function Add_column_id ($field_name='id');
+ 
+
+
+    const INDEX_NORMAL   = '';
+    const INDEX_UNIQUE   = 'UNIQUE';
+    const INDEX_SPATIAL  = 'SPATIAL';
+    const INDEX_FULLTEXT = 'FULLTEXT';
+
+
+    /**
+     * Adds an index
+     * @param string  $index_name Index name. `` will be added.
+     * @param string  $fields Coma separated field names.
+     * @param string  $type Index type: normal, UNIQUE, FULLTEXT, SPATIAL
+     */
+    public function Add_index($index_name, $fields ,$type=self::INDEX_NORMAL);
+
+
+    /**
+     * Adds the primary key
+     * @param string  $fields Comas separated field names.
+     */
+    public function Add_primary_key ($fields);
+
+    /**
+     * Adds a foreign key
+     * @param string|null $symbol Key name. `` will be added.
+     * @param string $fields Coma separated field names.
+     * @param string $foreign_table Foreign table.`` will be added.
+     * @param string $foreign_fields Coma separated foreign  field names.
+     * @param string $on_delete Reference option
+     * @param string $on_update Reference option
+     */
+    public function Add_foreign_key ($symbol, $fields, $foreign_table, $foreign_fields,
+                                     $on_delete=self::FOREIGN_KEY_NO_RESTRICT, $on_update=self::FOREIGN_KEY_RESTRICT);
+    
+    /**
+     * Returns SQL for CREATE TABLE query
+     * @return int Affected rows.
+     */
+    public function __toString ();
+
+
+    /**
+     * Run create table query
+     * @return int Affected rows.
+     * @param $db Db Instance or Db object, null:for default DB::$db.
+     */
+    function Run();
+
+    /**
+     * Run create table if not exist query
+     * @return int Affected rows.
+     * @param $db Db Instance or Db object, null:for default DB::$db.
+     */
+    function Run_if_not_exists();
+    
+``` 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### Alter a table
 ```php
@@ -267,15 +427,6 @@ else echo "Success \n";
 
 ```
 
-### Forge Db methods
-
-|Db method   |Info   |
-|:-----------|:------| 
-|**Create_database** ($database_name, $collate, $if_not_exists) :int |Creates a new data base|    
-|**Drop_database**  ($database_name, $if_exists) :int|Drops a database.|    
-|**Drop_table**     ($table, $if_exists) :int|Drops a table.|    
-|**Drop_view**      ($view_name, $if_exists) :int|Drops a view.|    
-|**Truncate_table** ($table) :int|Truncates a table.| 
 
 ---
 
