@@ -20,6 +20,8 @@
 * [Create and update rows](#create-and-update-rows)
 * [Other tools](#other-tools) 
 * [Database Info](#database-info)
+* [Benchmarking, query metrics](#benchmarking--query-metrics) 
+
 
 * [Database Forge](#database-forge)
   * [Forge methods from Db object](#forge-db-methods)
@@ -27,7 +29,6 @@
   * [Alter a table](#alter-a-table)
 
 * [Migrations](Database-migrations.md)
-* [Benchmarking, query metrics](#benchmarking--query-metrics) 
 
 
 # Database Reference
@@ -224,6 +225,17 @@ $bd->mysqli = My_mysqli_object;
 
 
 
+---
+
+## Benchmarking, query metrics
+
+|Db method   |Info   |
+|:-----------|:------|
+|**Describe**            ($query) :object[] | Describes a query.|
+|**Describe_html_table** ($query) :string   | Describes a query in a html table.|
+|**Pofiles_html_table**    () :string| Returns a basic report of profiles as a html table.|
+|**Pofiles_describe_html** () :string| Returns a report with query description as html.|
+ 
 
 ---
 
@@ -289,7 +301,6 @@ else echo "Success \n";
 |$engine         |string | Engine                           |
 |$auto_increment |string | Auto increment.                  |
 |$comment        |string | Comment.                         |
-|$if_not_exists  |bool   | Only creates table if not exists.|
 
 | Db\Create_table |Methods                     |
 |:----------------|:---------------------------------------|
@@ -310,7 +321,7 @@ else echo "Success \n";
 |$collation         | null  | **Set_collation**      ($value)      :$this |      
 |$comment           | null  | **Set_comment**        ($value)      :$this |          
 |$default_value     | null  | **Set_default_value**  ($value)      :$this |   
-|$default_raw       | null  |                                      :$this |         
+|$default_raw       | null  | **Set_default_raw**    ($value)      :$this |   
 |$field_name        | null  | **Set_field_name**     ($value)      :$this | 
 |$is_auto_increment | null  | **Set_auto_increment** ($value=true) :$this |
 |$is_null_allowed   | true  | **Set_nullable**       ($value=true) :$this |
@@ -319,7 +330,7 @@ else echo "Success \n";
 |$type              | null  | **Set_type**           ($value)      :$this | 
 |*                  |       | **Set** ($attribute_name,$value=true) :$this|
  
-````php
+```php
 
     /**
      * Create a column field sql helper
@@ -339,15 +350,5 @@ else echo "Success \n";
 ```
 
 
----
 
-## Benchmarking, query metrics
-
-|Db method   |Info   |
-|:-----------|:------|
-|**Describe**            ($query) :object[] | Describes a query.|
-|**Describe_html_table** ($query) :string   | Describes a query in a html table.|
-|**Pofiles_html_table**    () :string| Returns a basic report of profiles as a html table.|
-|**Pofiles_describe_html** () :string| Returns a report with query description as html.|
- 
 
