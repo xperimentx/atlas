@@ -227,9 +227,9 @@ $bd->mysqli = My_mysqli_object;
 
 ---
 
-## Database forge.
+# Database forge.
 
-### Forge Db methods
+## Forge Db methods
 
 |Db method   |Info   |
 |:-----------|:------| 
@@ -241,7 +241,7 @@ $bd->mysqli = My_mysqli_object;
 
 
 
-### Create a table.
+## Create a table.
 
 ```php
 use Xperimentx\Atlas\Db;
@@ -260,7 +260,7 @@ if ($maker->Run())
 else print_r(Db::$db->last_error);
 ```
 
-### Alter a table
+## Alter a table
 ```php
 use Xperimentx\Atlas\Db;
 
@@ -279,7 +279,7 @@ else echo "Success \n";
 
 ```
 
-### Db\Create_table
+## Db\Create_table
 
 | Db\Create_table   |       | Properties                       |
 |:---------------|:------|:---------------------------------|
@@ -303,7 +303,7 @@ else echo "Success \n";
 |**Run** () ;int| Run create table query
 |**Run_if_not_exists** () :int |Run create table if not exist query |
   
-### Db\Column
+## Db\Column
 
 |Db\Column property| Default | Related Method  |          
 |:------------------|:--------|:---------|
