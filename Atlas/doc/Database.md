@@ -266,29 +266,21 @@ $maker->Add_column ('DATETIME'   , 'creation_date');
 $maker->Add_column ('TINYINT'    , 'delete_me');
 $maker->engine = Db::ENGINE_MYISAM;
 
-if ($maker->Run())
-     echo "Databas created";
-
-else print_r(Db::$db->last_error);
+$maker->Run();     
 ```
 
 ## Alter a table
 ```php
 use Xperimentx\Atlas\Db;
+use Xperimentx\Atlas\Db\Column;
 
 $alter = new Db\Alter_table('table_name');
-$alter->Change_column ('VARCHAR(250)', 'name');
-$alter->Add_column    ('TEXT'        , 'notes');
+$alter->Change_column ('name_2' , new Column('VARCHAR(250)', 'last_name'));
+$alter->Add_column    (new Column ('TEXT', 'notes'));
 $alter->Drop_column   ('delete_me');
 $alter->Set_engine    (Db::ENGINE_INNODB);
 
-$maker->Run(); 
-
-if (Db::$db->last_error)
-    print_r(Db::$db->last_error);
-
-else echo "Success \n";
-
+$alter->Run(); 
 ```
 
 ## Db\Create_table
@@ -354,7 +346,7 @@ else echo "Success \n";
 
 
 
-### Db::\Column::__construct
+### Db::\Column::__construct (...)
 ($field_type, $field_name, $default_value=null, $is_null_allowed=true)
 
 |Type   |Param            |       |
