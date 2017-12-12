@@ -82,7 +82,7 @@ class Alter_table
 
     /**
      * Returns SQL for ALTER TABLE query
-     * @return int Affected rows.
+     * @return string
      */
     function __toString ()
     {
@@ -109,7 +109,7 @@ class Alter_table
 
 
     /**
-     * Add a field
+     * Adds a field / column.
      * @param Column $column
      */
     public function Add_column ($column)
@@ -118,6 +118,12 @@ class Alter_table
         return $this;
     }
 
+    /**
+     * Changes a column
+     * @param string $old_column_name
+     * @param Column $column
+     * @return $this
+     */
     public function Change_column ($old_column_name, $column)
     {
         $this->changes[] ="CHANGE COLUMN `$old_column_name` ". $column->Render_sql();
@@ -136,7 +142,7 @@ class Alter_table
         return $this;
     }
 
-    
+
     const INDEX_NORMAL   = '';
     const INDEX_UNIQUE   = 'UNIQUE';
     const INDEX_SPATIAL  = 'SPATIAL';
@@ -148,10 +154,12 @@ class Alter_table
      * @param string  $index_name Index name. `` will be added.
      * @param string  $fields Coma separated field names.
      * @param string  $type Index type: normal, UNIQUE, FULLTEXT, SPATIAL
+     * @return $this
      */
     public function Add_index($index_name, $fields ,$type=self::INDEX_NORMAL)
     {
         $this->items[]="$type INDEX `$index_name` ($fields)";
+        return $this;
     }
 
 
@@ -170,10 +178,12 @@ class Alter_table
     /**
      * Adds the primary key
      * @param string  $fields Comas separated field names.
+     * @return $this
      */
     public function Add_primary_key ($fields)
     {
         $this->changes[]="ADD PRIMARY KEY ($fields)";
+        return $this;
     }
 
 

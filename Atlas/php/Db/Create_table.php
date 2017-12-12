@@ -55,7 +55,7 @@ class Create_table
 
 
     /**
-     * Add a column field.
+     * Adds a column field.
      * Create a column field sql helper
      * @param string $field_type
      *          Type of column:
@@ -173,7 +173,7 @@ class Create_table
 
 
     /**
-     * Run create table query
+     * Runs create table query
      * @return int Affected rows.
      * @param $db Db Instance or Db object, null:for default DB::$db.
      */
@@ -184,7 +184,7 @@ class Create_table
 
 
     /**
-     * Run create table if not exist query
+     * Runs create table query if not exists the table.
      * @return int Affected rows.
      */
     function Run_if_not_exists()
