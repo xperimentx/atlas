@@ -171,7 +171,7 @@ class Create_table
         return $sql.";\n\n";
     }
 
-    
+
     /**
      * Run create table query
      * @return int Affected rows.
@@ -186,7 +186,6 @@ class Create_table
     /**
      * Run create table if not exist query
      * @return int Affected rows.
-     * @param $db Db Instance or Db object, null:for default DB::$db.
      */
     function Run_if_not_exists()
     {
