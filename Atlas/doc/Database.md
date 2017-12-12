@@ -3,27 +3,37 @@
 ![xperimentx atlas](images/atlas.png) 
 
 * [Accessing your main database from anywhere](#accessing-your-main-database-from-anywhere)
-* [Configure the database connection](#configure-the-database-connection)
-* [Establish the connection](#establish-the-connection)
+
+* [Configure and connect](#configure-and-connect)
+    * [Configuration class Db\Db_cfg](#configuration-class-db-db-cfg)
+    * [Setting the cfg property](#Setting the cfg property)
+    * [Pass Db\Db_cfg configuration to Db constructor ](#pass-db-db-cfg-configuration-to-db-constructor)
+    * [Assigning the configuration to the cfg property](#assigning-the-configuration-to-the-cfg-property)
+    * [Establish the connection](#establish-the-connection)
+
+* [Re-use an existing mysqli connection.](#re-use-an-existing-mysqli-connection)
+
 * [Db Properties](#db-properties)
-* [Connect](#connect) 
 * [Generic queries](#generic-queries) 
 * [Get Data](#get-data)
 * [Safe sql](#safe-sql)
 * [Create and update rows](#create-and-update-rows)
 * [Other tools](#other-tools) 
 * [Database Info](#database-info)
+
 * [Database Forge](#database-forge)
   * [Create a table](#create-a-table)
   * [Alter a table](#alter-a-table)
   * [Forge methods from Db object](#forge-db-methods)
+
 * [Migrations](Database-migrations.md)
 * [Benchmarking, query metrics](#benchmarking--query-metrics) 
 
 
-
 # Database Reference
-## Accessing your main database from anywhere
+Namespace Xperimentx\Atlas\Db;
+
+### Accessing your main database from anywhere
 
 'Xperimentx\Atlas\Db` is the class used to manage your databases.
 
@@ -36,12 +46,30 @@ Atlas Database objects use this main database by default.
 You can use as many `Db` object as you wish.
 
 
-## Configure the database connection
+## Configure and connect
+The **Db\Db_cfg** class is used to configuere the dabase connection.
 
-### Option 1, setting the cfg property
+You can  can setup the **Db cfg** property, or assing Db\Db_cfg to de Db object.
 
-Create an object and configure the connection using the `cfg` property.
+### Configuration class Db\Db_cfg.
 
+|  Db\Db_cfg properties     | Defaul value      |                                    |
+|:--------------------------|:------------------|:-----------------------------------|
+| string  $server           | 'localhost'       | Db host. 'p:host' for persistent   |                 
+| string  $user_name        | null              | User name.                         |        
+| string  $password         | null              | Password.                          |        
+| string  $db_name          | null              | Database.                          |        
+| string  $port             | 3306              | Port.                              |        
+| string  $socket           | null              | Socket.                            |        
+| string  $charset          | 'utf8'            | Charset.                           |          
+| string  $collation        | 'utf8_general_ci' | Collation.                         |                     
+| string  $engine           | 'InnoDB'          | Engine                             |            
+| bool    $throw_exceptions | false             | Throw exceptions on mysqli errors. |         
+
+
+
+### Setting the cfg property.
+ 
 ```php
 use Xperimentx\Atlas\Db;
 
@@ -51,34 +79,27 @@ $db->cfg->password  = 'atlas_db_passwd';
 $db->cfg->db_name   = 'atlas_demo_db';
 ```
 
-### Option 2, whit a configuration object
-
-Create a database configuration object `Db_cfg`
-
-And then assign it to a `DB` object using the constructor 
-or assign it to the ``$cfg` property.
-
-
-### Using the constructor.
+### Pass Db\Db_cfg configuration to Db constructor 
 
 ```php
-$db_a = new Db($db_cfg);
+$db_a = new Db($my_db_cfg);
 ```
 
 ### Assigning the configuration to the cfg property
 
 ```
 $db_b = new Db();
-$db->cfg = $db_cfg;
+$db->cfg = $my_db_cfg;
 ````
 
 
 
-## Establish the connection
+### Establish the connection
 
 |Db method   |Info   |
 |:-----------|:------|
 |**Connect**  () :bool|Creates a new mysqli object and connects it to the MySQL server.|
+
 
 ```php
 use Xperimentx\Atlas\Db;
@@ -95,9 +116,22 @@ else
     print_r($db->last_error);
     die (":( \n");
 }
+
 ```
 
+---
 
+## Re-use an existing mysqli connection.
+
+```php
+use Xperimentx\Atlas\Db;
+
+$db = new Db();
+$bd->mysqli = My_mysqli_object;
+
+```
+
+---
 
 ## Db Properties
 
