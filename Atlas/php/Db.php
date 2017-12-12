@@ -315,11 +315,11 @@ class Db
     /**
      * Checks if the value of the field is unique in the table.
      *
-     * @param string $table_name           Table name.
+     * @param string $table_name           Table name. `` will be added.
      * @param string $field_value          Value to check.
      * @param string $field_name           Name of column to check.
      * @param string $key_value_to_ignore  Value of key  to ignore a row, for updates. Null checks all table.
-     * @param string $key_field_name       Name of key field.
+     * @param string $key_field_name       Name of key field. `` will be added.
      * @return bool
      */
     public function Is_unique($table_name, $field_value , $field_name, $key_value_to_ignore=null, $key_field_name='id')
@@ -335,7 +335,7 @@ class Db
 
     /**
      * Insert into statement.
-     * @param string  $table    Table for update
+     * @param string  $table    Table for update.`` will be added.
      * @param array   $data     Data. Index:field name.  Value:field value.
      * @param bool    $do_safe  This values will be processed by Safe().
      * @return int|null         Affected rows or null if error
@@ -357,7 +357,7 @@ class Db
 
     /**
      * Update statement.
-     * @param string  $table    Table for update
+     * @param string  $table    Table for update.`` will be added.
      * @param array   $data     Data. Index:field name.  Value:field value.
      * @param string  $where    WHERE conditions
      * @param bool    $do_safe  This values will be processed by Safe().
@@ -382,10 +382,10 @@ class Db
 
     /**
      * Update a row (key!=null) or Insert a new row  (key value=null).
-     * @param string  $table            Table for update
+     * @param string  $table            Table for update. `` will be added.
      * @param array   $data             Data. Index:field name.  Value:field value.
      * @param string  $key_value        Value of key  to  update. By reference for inserts ( key=null) => get insert_id if autonumeric
-     * @param string  $key_field_name  Name of key field.
+     * @param string  $key_field_name  Name of key field. `` will be added.
      * @param bool    $do_safe         This values will be processed by Safe().
      * @return   int Number of  affected rows.
      * @since 2.0
@@ -412,7 +412,7 @@ class Db
 
     /**
      * Drops a table.
-     * @param string $table
+     * @param string $table Table name. `` will be added.
      * @param bool $if_exists
      * @return int Affected rows
      */
@@ -424,7 +424,7 @@ class Db
 
     /**
      * Truncates a table.
-     * @param string $table
+     * @param string $table Table name. `` will be added.
      * @param bool $if_exists
      * @return int Affected rows
      */
@@ -436,7 +436,7 @@ class Db
 
     /**
      * Drops a database.
-     * @param string $database_name
+     * @param string $database_name Database name.  `` will be added.
      * @param bool $if_exists
      * @return int Affected rows
      */
@@ -448,7 +448,7 @@ class Db
 
     /**
      * Drops a view.
-     * @param string $view_name
+     * @param string $view_name View name. `` will be added.
      * @param bool $if_exists
      * @return int Affected rows
      */
@@ -460,7 +460,7 @@ class Db
 
     /**
      * Creates a new data base.
-     * @param string $database_name
+     * @param string $database_name Database name. `` will be added.
      * @param string $collate Default collation, false equivalent if not collation
      * @param bool $if_not_exists
      * @return int Affected rows
@@ -473,29 +473,29 @@ class Db
 
     /**
      * Show columns info form a table.
-     * @param string $table
-     * @return object[] {Field, Type, Null, Key, Default, Extra}
+     * @param string $table Table name. `` will be added.
+     * @return object[] {Field, Type, Collation, Null, Key, Default, Extra, Privileges, Comment}
      */
     public function Show_columns ($table)
     {
-        return $this->Rows("SHOW COLUMNS FROM `$table`");
+        return $this->Rows("SHOW FULL COLUMNS FROM `$table`;");
     }
 
 
     /**
      * Shows columns names form a table.
-     * @param string $table
+     * @param string $table Table name. `` will be added.
      * @return string[]
      */
     public function Show_column_names ($table)
     {
-        return $this->Column("SHOW COLUMNS FROM `$table`");
+        return $this->Column("SHOW COLUMNS FROM `$table`;");
     }
 
 
     /**
      * Shows CREATE TABLE for a table.
-     * @param string $table
+     * @param string $table Table name. `` will be added.
      * @return string|null
      */
     public function Show_create_table($table)
@@ -507,7 +507,7 @@ class Db
 
     /**
      * Shows CREATE DATABASE for a database.
-     * @param string $database_name
+     * @param string $database_name Database name. `` will be added.
      * @param bool $if_not_exists
      * @return string|null
      */
@@ -523,7 +523,7 @@ class Db
      * SHOW TABLES FROM `$database_name` LIKE '$like';
      *
      * @param string $like Like pattern, optional.
-     * @param string|null $database_name Null=current database;
+     * @param string|null $database_name Database name. Null=current database, `` will be added.
      */
     public function Show_tables ($like=null, $database_name=null)
     {
@@ -551,7 +551,7 @@ class Db
     /**
      * Describes a query in a html table.
      * @param string $query
-     * @return string html Return an htm tlable
+     * @return string html Returns an html tlable
      */
     public function Describe_html_table ($query)
     {
@@ -612,7 +612,7 @@ class Db
 
         return $out.'</table>';
     }
-    
+
 
     /**
      * Returns a report with query description as html.
@@ -630,5 +630,66 @@ class Db
                 '<hr/>';
         }
         return $out;
+    }
+
+
+    function Active_record_class_maker($table, $class_name, $parent_class_name='\Xperimentx\Atlas\Active_record')
+    {
+        $cols = $this->Show_columns($table);
+
+        if (!$cols) return;
+        $properties ='';
+
+        foreach ($cols as $col)
+        {
+            $aux_type   = ($pos=strpos($col->Type,'('))  //:=
+                        ? substr ($col->Type, 0, $pos)
+                        : $col->Type;
+
+            $php_type = 'string';
+
+            $default = (null === $col->Default or 'CURRENT_TIMESTAMP'===$col->Default )
+                       ? 'null'
+                       : '"'.addslashes($col->Default).'"';
+
+            if (strpos($col->Type, 'int')!==false)
+                    $php_type='int';
+
+            switch ($aux_type)
+            {
+                case 'tinyint':
+                    if ('is_' == substr($col->Field, 0,3) or  'has_' == substr($col->Field, 0,4))
+                    {
+                        $php_type='bool';
+
+                        if (null !== $col->Default )
+                            $default =  $col->Default ? 'true':'false';
+                    }
+                    break;
+
+                case 'float':
+                case 'double':
+                case 'decimal':
+                    $php_type = 'float';
+                    break;
+
+            }
+
+            $info = $col->Type;
+            if ($col->Comment)       $info ="$col->Comment  -  $info";
+            if ($col->Null==='YES')  $info.=', null allowed';
+            if ($col->Extra)         $info.=', '.$col->Extra;
+            if ($col->Key)           $info.=', Key '.$col->Key;
+
+            $properties.="\n    /** @var $php_type $info */\n    public \${$col->Field} = $default;\n";
+        }
+
+        return <<<PHP
+class $class_name extends $parent_class_name
+{
+    public static _table = '$table';
+$properties
+}
+PHP;
     }
 }
