@@ -12,6 +12,10 @@
  * @license   MIT
  */
 
+/**
+ * Migrator tool
+ * @author Roberto González Vázquez
+ */
 namespace Xperimentx\Atlas\Tools;
 
 use Xperimentx\Atlas\Db\Migrations\Migrator_cli;

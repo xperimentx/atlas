@@ -17,7 +17,10 @@ namespace Xperimentx\Atlas\Tools;
 use Xperimentx\Atlas\Cli;
 use Xperimentx\Atlas\Db;
 
-
+/**
+ * Active record tool
+ * @author Roberto González Vázquez
+ */
 class Active_record
 {
     /** @var Cli Cli tools */
