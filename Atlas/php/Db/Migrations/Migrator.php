@@ -22,7 +22,7 @@ use Xperimentx\Atlas\Db;
  */
 abstract class Migrator
 {
-    /** @var Db  Migration main Db object.   */
+    /** @var Db  Migration db object.   */
     protected $db  = null;
 
     /** @var string[]  Migration files       */
@@ -39,14 +39,13 @@ abstract class Migrator
 
 
     /**
-     * @param Migrator_cfg $cfg
-     * @param Db $db
+     * @param Migrator_cfg $cfg Configuration.
+     * @param Db           $db  Db object. null=> Default db.
      */
     function __construct($cfg, $db=null)
     {
         $this->cfg = $cfg;
         $this->db = $db ?? Db::$db;
-
     }
 
 
@@ -160,7 +159,7 @@ abstract class Migrator
         {
             end($this->file_titles);
             $last=key($this->file_titles);
-            
+
             if ($last === (int)$this->status->step)
             {
                 $this->Show_notice  ("The current migration step is already the last: $last");
@@ -189,18 +188,18 @@ abstract class Migrator
     {
         $number = $this->Update_to_check($number_or_last);
         if (null===$number) return;
-        
-        $name_space      = trim ($this->cfg->namespace,'\\' ).'\\';  
+
+        $name_space      = trim ($this->cfg->namespace,'\\' ).'\\';
         $step            = 0;
-        
+
         $error_details   = null;
         $error_exception = null;
-        
-                    
+
+
         if ($number<$this->status->step)
-        {   
+        {
             $desc        = true;
-            $file_titles = array_reverse (['Zero migration']+$this->file_titles, true); 
+            $file_titles = array_reverse (['Zero migration']+$this->file_titles, true);
             $direction   = 'DOWN';
         }
         else
@@ -209,8 +208,8 @@ abstract class Migrator
             $file_titles = $this->file_titles;
             $direction   = 'UP';
         }
-        
-        try 
+
+        try
         {
             foreach ($file_titles as $step=>$title)
             {
@@ -218,54 +217,54 @@ abstract class Migrator
                 if  (!$desc && ($step <=$this->status->step)) continue;
 
                 $ms = microtime(true);
-                
-                if ($step>0) 
+
+                if ($step>0)
                 {
                     include_once $this->files[$step];
                     $step_class = $name_space. $title;
-                    $step_obj   = new $step_class();
-                    
+                    $step_obj   = new $step_class($this->db);
+
                     if ($desc)
                          $step_obj->Down();
                     else $step_obj->Up();
                 }
-                
+
                 $ms = round(microtime(true)-$ms,6);
 
                 Status::Save ($this->cfg->db_prefix, $this->db, $step, $title);
                 Log::Add     ($this->cfg->db_prefix, $this->db, $step, $direction, $ms);
-               
+
                 $this->Show_notice(sprintf("Step %3d %s - %.6f s: %s", $step, $direction, $ms, $title));
 
-                if ($number==$step) break;  
-            }            
+                if ($number==$step) break;
+            }
         }
-        
+
         catch (Db\Db_exception $ex)
         {
             $error_details   = (string)$ex->Get_profile();
-            $error_exception = print_r($ex,true);           
+            $error_exception = print_r($ex,true);
         }
-        
+
         catch (Exception $ex)
         {
             $error_details   = (string)$ex->getMessage();
-            $error_exception = print_r($ex,true);  
-        }  
-        
-        
+            $error_exception = print_r($ex,true);
+        }
+
+
         if ($error_details)
         {
             $this->Show_error("ERROR step $step $direction", $error_details.'\n\n'. $error_exception);
-            
-            Log::Add     
+
+            Log::Add
             (
-                $this->cfg->db_prefix  , 
-                $this->db, 
-                $step, 
-                $direction.'_ERROR', 
-                1, 
-                $error_details,  
+                $this->cfg->db_prefix  ,
+                $this->db,
+                $step,
+                $direction.'_ERROR',
+                1,
+                $error_details,
                 print_r($ex,true)
             );
         }

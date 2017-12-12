@@ -57,7 +57,7 @@ class Migrator_cli_views
         echo "{$cli->fg_white}{$cli->bg_red}  $title {$cli->reset}\n";
 
         if ($details)
-            echo "{$cli->fg_light_red}sdsdf  {$details}\n";
+            echo "{$cli->fg_light_red}  {$details}\n";
 
         echo "{$cli->reset}\n";
 
@@ -82,7 +82,7 @@ class Migrator_cli_views
 
 
     /**
-     *
+     * Shows status.
      * @param Status_row $status
      * @param int $num_pending
      * @param int $last_step
@@ -108,7 +108,7 @@ class Migrator_cli_views
 
 
     /**
-     * Shows help
+     * Shows help.
      */
     public function Show_help ()
     {

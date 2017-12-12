@@ -5,7 +5,7 @@
 
 * [Create a table](#create-a-table)
 * [Alter a table](#alter-a-table)
-* [Forge methods from Db object](Database-reference.md#db-forge)
+* [Forge methods from Db object](Database-reference.md#forge)
 
 
 # Database forge
