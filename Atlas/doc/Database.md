@@ -354,7 +354,7 @@ else echo "Success \n";
 
 
 
-**Db::\Column::__construct** 
+### Db::\Column::__construct
 ($field_type, $field_name, $default_value=null, $is_null_allowed=true)
 
 |Type   |Param            |       |
