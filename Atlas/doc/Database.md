@@ -5,19 +5,20 @@
 * [Accessing your main database from anywhere](#accessing-your-main-database-from-anywhere)
 * [Configure the database connection](#configure-the-database-connection)
 * [Establish the connection](#establish-the-connection)
-* [Db class Reference](#db-class-reference)
-  * [Properties](#properties)
-  * [Connect](#connect) 
-  * [Generic queries](#generic-queries) 
-  * [Get Data](#get-data)
-  * [Safe sql](#safe-sql)
-  * [Create and update rows](#create-and-update-rows)
-  * [Other tools](#other-tools)
-  * [Forge](#forge)
-  * [Database Info](#database-info)
-  * [Benchmarking, query metrics](#benchmarking--query-metrics) 
-* [Database Forge](Database-forge.md)
+* [Db Properties](#db-properties)
+* [Connect](#connect) 
+* [Generic queries](#generic-queries) 
+* [Get Data](#get-data)
+* [Safe sql](#safe-sql)
+* [Create and update rows](#create-and-update-rows)
+* [Other tools](#other-tools) 
+* [Database Info](#database-info)
+* [Database Forge](#database-forge)
+  * [Create a table](#create-a-table)
+  * [Alter a table](#alter-a-table)
+  * [Forge methods from Db object](#forge-db-methods)
 * [Migrations](Database-migrations.md)
+* [Benchmarking, query metrics](#benchmarking--query-metrics) 
 
 
 
@@ -75,6 +76,10 @@ $db->cfg = $db_cfg;
 
 ## Establish the connection
 
+|Db method   |Info   |
+|:-----------|:------|
+|**Connect**  () :bool|Creates a new mysqli object and connects it to the MySQL server.|
+
 ```php
 use Xperimentx\Atlas\Db;
 
@@ -94,11 +99,9 @@ else
 
 
 
-## Db class reference
+## Db Properties
 
-### Properties
-
-|Property           |Type           |Info            |
+|Db property        |Type           |Info            |
 |:------------------|:--------------|:---------------|
 | $mysqli           |mysqli         |MySQLi Handler.                                |
 | $profiles         |Profile_item[] |Profiles or successful calls, benchmarking.    |
@@ -110,25 +113,20 @@ else
 | static $db        |Db             |First object connected. The main Db object.    |
 
 
-### Connect
-
-|Method   |Info   |
-|:--------|:------|
-|**Connect**  () :bool|Creates a new mysqli object and connects it to the MySQL server.|
 
 
 ### Generic queries
 
-|Method   |Info   |
-|:--------|:------|
+|Db method   |Info   |
+|:-----------|:------|
 |**Query**    ($query, $caller_method=null) :mixed,null| Performs a query on the database.|
 |**Query_ar** ($query, $caller_method=null) :int,null| Performs a query on the database en returns the number of affected rows.|
 
 
 ### Get Data
 
-|Method   |Info   |
-|:--------|:------|
+|Db method   |Info   |
+|:-----------|:------|
 |**Scalar** ($query ) :scalar            | Returns first column of first row of a query result.|
 |**Row**    ($query, $class_name) :object| Returns first row for a query as an object.|
 |**Rows**   ($query, $class_name) :array | Returns array of objects for a query statement|    
@@ -137,15 +135,15 @@ else
 
 ### Safe sql
 
-|Method   |Info   |
-|:--------|:------|
+|Db method   |Info   |
+|:-----------|:------|
 |**Str**       ($scalar) :string|Escapes special characters in a string for use in an SQL statement, between single quotes '.|    
 |**Safe**      ($value) :string| Returns a safe value from a scalar for an SQL statement.|    
 
 ### Create and update rows.
 
-|Method   |Info   |
-|:--------|:------|
+|Db method   |Info   |
+|:-----------|:------|
 |**Insert**           ($table, $data, $do_safe) :int|Insert into statement.|    
 |**Update**           ($table, $data, $where, $do_safe ) :int|Update statement.|    
 |**Update_or_insert** ($table, $data, &$key_value , $key_field_name, $do_safe) :int|Update a row (key!=null) or Insert a new row  (key value=null)|    
@@ -153,26 +151,18 @@ else
 
 ### Other tools
 
-|Method   |Info   |
-|:--------|:------|
+|Db method   |Info   |
+|:-----------|:------|
 |**Is_unique** ($table_name, $field_value , $field_name, $key_value_to_ignore, $key_field_name) :bool|Checks if the value of the field is unique in the table.|    
 
 
-### Forge
-
-|Method   |Info   |
-|:--------|:------| 
-|**Create_database** ($database_name, $collate, $if_not_exists) :int |Creates a new data base|    
-|**Drop_database**  ($database_name, $if_exists) :int|Drops a database.|    
-|**Drop_table**     ($table, $if_exists) :int|Drops a table.|    
-|**Drop_view**      ($view_name, $if_exists) :int|Drops a view.|    
-|**Truncate_table** ($table) :int|Truncates a table.|    
+ 
 
 
-### Database Info
+## Database Info
 
-|Method   |Info   |
-|:--------|:------|
+|Db method   |Info   |
+|:-----------|:------|
 |**Active_record_class_maker** ($table, $class_name, $parent_class_name) :string |Generates a base code for an active record class based in the fields of a table.|
 |**Show_columns**         ($table) :object[]|Shows columns info form a table.|    
 |**Show_column_names**    ($table) :string[]|Shows columns names form a table.|    
@@ -180,12 +170,70 @@ else
 |**Show_create_table**    ($table)|Shows CREATE TABLE for a table.|
 |**Show_tables**          ($like=null, $database_name) :string[]| Show table names from a database.|
 
-### Benchmarking, query metrics
 
-|Method   |Info   |
-|:--------|:------|
+
+
+
+
+# Database forge.
+
+### Create a table.
+
+```php
+use Xperimentx\Atlas\Db;
+
+$maker = new Db\Create_table('table_name');
+
+$maker->Add_column ('INT'        , 'id'  )->Set_auto_increment()->Set_comment('asdasdasda');
+$maker->Add_column ('VARCHAR(50)', 'name');
+$maker->Add_column ('DATETIME'   , 'creation_date');
+$maker->Add_column ('TINYINT'    , 'delete_me');
+$maker->engine = Db::ENGINE_MYISAM;
+
+if ($maker->Run())
+     echo "Databas created";
+
+else print_r(Db::$db->last_error);
+```
+
+## Alter a table
+```php
+use Xperimentx\Atlas\Db;
+
+$alter = new Db\Alter_table('table_name');
+$alter->Change_column ('VARCHAR(250)', 'name');
+$alter->Add_column    ('TEXT'        , 'notes');
+$alter->Drop_column   ('delete_me');
+$alter->Set_engine    (Db::ENGINE_INNODB);
+
+$maker->Run(); 
+
+if (Db::$db->last_error)
+    print_r(Db::$db->last_error);
+
+else echo "Success \n";
+
+```
+
+### Forge Db methods
+
+|Db method   |Info   |
+|:-----------|:------| 
+|**Create_database** ($database_name, $collate, $if_not_exists) :int |Creates a new data base|    
+|**Drop_database**  ($database_name, $if_exists) :int|Drops a database.|    
+|**Drop_table**     ($table, $if_exists) :int|Drops a table.|    
+|**Drop_view**      ($view_name, $if_exists) :int|Drops a view.|    
+|**Truncate_table** ($table) :int|Truncates a table.| 
+
+
+
+## Benchmarking, query metrics
+
+|Db method   |Info   |
+|:-----------|:------|
 |**Describe**            ($query) :object[] | Describes a query.|
 |**Describe_html_table** ($query) :string   | Describes a query in a html table.|
 |**Pofiles_html_table**    () :string| Returns a basic report of profiles as a html table.|
 |**Pofiles_describe_html** () :string| Returns a report with query description as html.|
  
+

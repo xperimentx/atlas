@@ -13,10 +13,6 @@
 
 namespace Xperimentx\Atlas;
 
-
-
-
-
 /**
  * Active record - Active Record Base
  *
