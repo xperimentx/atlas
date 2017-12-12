@@ -207,7 +207,7 @@ class Db
 
 
     /**
-     * Returns array of objects for a query statement.
+     * Returns an array of objects for a query statement.
      * @param string  $query       Select query statement.
      * @param string  $class_name  Class name of objects.
      * @return array

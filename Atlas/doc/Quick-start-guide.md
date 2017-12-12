@@ -34,12 +34,12 @@ Atlas:
 
 ## Atlas whit other autoloaders
 
-###  I use other autoloder PSR-4 compatible
+###  Use other autoloder PSR-4 compatible
 
 You must map the `Xperimentx\Atlas` namespace to the directory `Atlas/php`.
 
 
-### I use other "spl " autoloader without namespacing  mappig 
+### Use other "spl " autoloader without namespacing  mappig 
 
 Atlas use *spl_autoload_register()*.
 You can  register  the Atlas Autoloader for work together with your autoloader

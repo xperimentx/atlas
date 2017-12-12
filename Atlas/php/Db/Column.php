@@ -33,7 +33,7 @@ class Column
 
 
     /**
-     * Create a column field sql helper
+     * Creates a column field sql helper
      * @param string $field_type
      *          Type of column:
      *          TINIYINT, INT, BIGINT , DECIMAL(10,2),
@@ -42,7 +42,7 @@ class Column
      *
      * @param string $field_name Field name.  `` will be added.
      * @param scalar $default_value
-     * @param bool  $is_null_allowed
+     * @param bool  $is_null_allowed Can the value of this field can be null? 
      *
      * @return Column Added column.
      */

@@ -64,8 +64,8 @@ class Create_table
      *          DATE, TIME, DATETIME ...
      *
      * @param string $field_name Field name.  `` will be added.
-     * @param scalar $default_value
-     * @param bool  $is_null_allowed
+     * @param scalar $default_value  Scalar default value.
+     * @param bool  $is_null_allowed Can the value of this field can be null?
      *
      * @return Column Added column.
      */
@@ -77,7 +77,7 @@ class Create_table
 
 
     /**
-     * Adds column auto increment  pirmary key.
+     * Adds column auto increment  primary key.
      * @param bool $is_auto_increment
      * @param string $field_name
      * @return Column Added column

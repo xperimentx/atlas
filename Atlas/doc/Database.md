@@ -170,7 +170,7 @@ $bd->mysqli = My_mysqli_object;
 |:-----------|:------|
 |**Scalar** ($query ) :scalar            | Returns first column of first row of a query result.|
 |**Row**    ($query, $class_name) :object| Returns first row for a query as an object.|
-|**Rows**   ($query, $class_name) :array | Returns array of objects for a query statement|    
+|**Rows**   ($query, $class_name) :array | Returns an array of objects for a query statement|    
 |**Column** ($query)              :array | Returns a the first column of a query as array.|
 |**Vector** ($query)              :array | Returns a simple array index=>scalar_value from a query.|    
 
@@ -306,7 +306,7 @@ else echo "Success \n";
 |:----------------|:---------------------------------------|
 |**__construct** ($table, $db_object = null);||
 |**Add_column** ($field_type, $field_name, $default_value=NULL, $is_null_allowed=true); |Adds a column field.  Create a column field sql helper |
-|**Add_column_id** ($field_name='id') :Column | Adds column auto increment  pirmary key.     | 
+|**Add_column_id** ($field_name='id') :Column | Adds column auto increment  primary key.     | 
 |**Add_index($index_name, $fields ,$type=self::INDEX_NORMAL);| Adds an index |
 |**Add_primary_key** ($fields) | Adds the primary key | 
 |**Add_foreign_key** ($symbol, $fields, $foreign_table, $foreign_fields,$on_delete,$on_update): int|| Adds a foreign key |
@@ -351,25 +351,20 @@ else echo "Success \n";
 |$is_zerofill       | false | **Set_zerofill**       ($value=true) :$this |
 |$type              | null  | **Set_type**           ($value)      :$this | 
 |*                  |       | **Set** ($attribute_name,$value=true) :$this|
- 
-```php
 
-    /**
-     * Create a column field sql helper
-     * @param string $field_type
-     *          Type of column:
-     *          TINIYINT, INT, BIGINT , DECIMAL(10,2),
-     *          CHAR(50), VARCHAR(50)
-     *          DATE, TIME, DATETIME ...
-     *
-     * @param string $field_name Field name.  `` will be added.
-     * @param scalar $default_value
-     * @param bool  $is_null_allowed
-     *
-     * @return Column Added column.
-     */
-    function __construct ($field_type, $field_name, $default_value=null, $is_null_allowed=true)
-```
+
+
+**Db::\Column::__construct** 
+($field_type, $field_name, $default_value=null, $is_null_allowed=true)
+
+|Type   |Param            |       |
+|:------|:----------------|:------|
+|string |$field_type      | Type of column:<br>TINIYINT, INT, BIGINT , DECIMAL(10,2),<br>CHAR(50), VARCHAR(50)<br>DATE, TIME, DATETIME ...|
+|string |$field_name      | Field name.  `` will be added.|
+|scalar |$default_value   | Scalar default value.|
+|bool   |$is_null_allowed | Can the value of this field can be null?  |
+ 
+
 
 
 
