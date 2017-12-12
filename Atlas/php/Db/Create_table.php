@@ -37,7 +37,7 @@ class Create_table
 
 
     /**
-     * @param string $table Table name. `` are added.
+     * @param string $table Table name. `` will be added.
      */
     public function __construct($table, $db_object = null)
     {
@@ -85,7 +85,7 @@ class Create_table
      *          CHAR(50), VARCHAR(50)
      *          DATE, TIME, DATETIME ...
      *
-     * @param string $field_name Field name.  `` are added.
+     * @param string $field_name Field name.  `` will be added.
      * @param scalar $default_value
      * @param bool  $is_null_allowed
      *
@@ -127,7 +127,7 @@ class Create_table
 
     /**
      * Adds an index
-     * @param string  $index_name Index name. `` are added.
+     * @param string  $index_name Index name. `` will be added.
      * @param string  $fields Coma separated field names.
      * @param string  $type Index type: normal, UNIQUE, FULLTEXT, SPATIAL
      */
@@ -155,9 +155,9 @@ class Create_table
 
     /**
      * Adds a foreign key
-     * @param string|null $symbol Key name. `` are added.
+     * @param string|null $symbol Key name. `` will be added.
      * @param string $fields Coma separated field names.
-     * @param string $foreign_table Foreign table.`` are added.
+     * @param string $foreign_table Foreign table.`` will be added.
      * @param string $foreign_fields Coma separated foreign  field names.
      * @param string $on_delete Reference option
      * @param string $on_update Reference option

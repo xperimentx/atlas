@@ -40,7 +40,7 @@ class Column
      *          CHAR(50), VARCHAR(50)
      *          DATE, TIME, DATETIME ...
      *
-     * @param string $field_name Field name.  `` are added.
+     * @param string $field_name Field name.  `` will be added.
      * @param scalar $default_value
      * @param bool  $is_null_allowed
      *

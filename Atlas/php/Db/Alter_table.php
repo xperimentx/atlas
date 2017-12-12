@@ -33,7 +33,7 @@ class Alter_table
 
 
     /**
-     * @param string $table Table name. `` are added.
+     * @param string $table Table name. `` will be added.
      * @param Db     Instance or Db object, null:for default Db
      */
     public function __construct($table, $db_object = null)
@@ -45,7 +45,7 @@ class Alter_table
 
     /**
      * Renames the table
-     * @param string $new_table_name. `` are added.
+     * @param string $new_table_name. `` will be added.
      * @return $this
      */
     public function Rename ($new_table_name)
@@ -127,7 +127,7 @@ class Alter_table
 
     /**
      * Drops a column or a set of columns from the table
-     * @param string $field Field name of column. `` are added.
+     * @param string $field Field name of column. `` will be added.
      * @return $this
      */
     public function  Drop_column ($field)
@@ -145,7 +145,7 @@ class Alter_table
 
     /**
      * Adds an index
-     * @param string  $index_name Index name. `` are added.
+     * @param string  $index_name Index name. `` will be added.
      * @param string  $fields Coma separated field names.
      * @param string  $type Index type: normal, UNIQUE, FULLTEXT, SPATIAL
      */
@@ -157,7 +157,7 @@ class Alter_table
 
     /**
      * Drops an index
-     * @param string $index_name Index name. `` are added.
+     * @param string $index_name Index name. `` will be added.
      * @return $this
      */
     public function  Drop_index ($index_name)
@@ -196,9 +196,9 @@ class Alter_table
 
     /**
      * Adds a foreign key
-     * @param string|null $symbol Key name. `` are added.
+     * @param string|null $symbol Key name. `` will be added.
      * @param string $fields Coma separated field names.
-     * @param string $foreign_table Foreign table.`` are added.
+     * @param string $foreign_table Foreign table.`` will be added.
      * @param string $foreign_fields Coma separated foreign  field names.
      * @param string $on_delete Reference option
      * @param string $on_update Reference option
