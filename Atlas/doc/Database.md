@@ -6,7 +6,7 @@
 
 * [Configure and connect](#configure-and-connect)
     * [Configuration class Db\Db_cfg](#configuration-class-db-db-cfg)
-    * [Setting the cfg property](#Setting the cfg property)
+    * [Setting the cfg property](#setting-the-cfg-property)
     * [Pass Db\Db_cfg configuration to Db constructor ](#pass-db-db-cfg-configuration-to-db-constructor)
     * [Assigning the configuration to the cfg property](#assigning-the-configuration-to-the-cfg-property)
     * [Establish the connection](#establish-the-connection)
@@ -148,6 +148,9 @@ $bd->mysqli = My_mysqli_object;
 
 
 
+---
+
+
 
 ## Generic queries
 
@@ -155,6 +158,9 @@ $bd->mysqli = My_mysqli_object;
 |:-----------|:------|
 |**Query**    ($query, $caller_method=null) :mixed,null| Performs a query on the database.|
 |**Query_ar** ($query, $caller_method=null) :int,null| Performs a query on the database en returns the number of affected rows.|
+
+
+---
 
 
 ## Get Data
@@ -167,12 +173,19 @@ $bd->mysqli = My_mysqli_object;
 |**Column** ($query)              :array | Returns a the first column of a query as array.|
 |**Vector** ($query)              :array | Returns a simple array index=>scalar_value from a query.|    
 
+
+---
+
 ## Safe sql
 
 |Db method   |Info   |
 |:-----------|:------|
 |**Str**       ($scalar) :string|Escapes special characters in a string for use in an SQL statement, between single quotes '.|    
 |**Safe**      ($value) :string| Returns a safe value from a scalar for an SQL statement.|    
+
+
+---
+
 
 ## Create and update rows.
 
@@ -183,27 +196,31 @@ $bd->mysqli = My_mysqli_object;
 |**Update_or_insert** ($table, $data, &$key_value , $key_field_name, $do_safe) :int|Update a row (key!=null) or Insert a new row  (key value=null)|    
 
 
+---
+
+
 ### Other tools
 
 |Db method   |Info   |
 |:-----------|:------|
 |**Is_unique** ($table_name, $field_value , $field_name, $key_value_to_ignore, $key_field_name) :bool|Checks if the value of the field is unique in the table.|    
+|**Active_record_class_maker** ($table, $class_name, $parent_class_name) :string |Generates a base code for an active record class based in the fields of a table.|
 
 
  
+---
+
 
 
 ## Database Info
 
 |Db method   |Info   |
 |:-----------|:------|
-|**Active_record_class_maker** ($table, $class_name, $parent_class_name) :string |Generates a base code for an active record class based in the fields of a table.|
 |**Show_columns**         ($table) :object[]|Shows columns info form a table.|    
 |**Show_column_names**    ($table) :string[]|Shows columns names form a table.|    
 |**Show_create_database** ($database_name, $if_not_exists) :string| Creates a database.|
 |**Show_create_table**    ($table)|Shows CREATE TABLE for a table.|
 |**Show_tables**          ($like=null, $database_name) :string[]| Show table names from a database.|
-
 
 
 
