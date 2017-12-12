@@ -551,7 +551,7 @@ class Db
     /**
      * Describes a query in a html table.
      * @param string $query
-     * @return string html Returns an html tlable
+     * @return string html Returns a html tlable.
      */
     public function Describe_html_table ($query)
     {
@@ -593,7 +593,7 @@ class Db
 
     /**
      * Returns a basic report of profiles as a html table.
-     * @return string Html table
+     * @return string Html table.
      */
     public function Pofiles_html_table ()
     {
@@ -633,6 +633,14 @@ class Db
     }
 
 
+    /**
+     * Generates a base code for an active recod class based in the fields of a table.
+     *
+     * @param string $table             Table name, `` will be added.
+     * @param string $class_name        Php class name for the active record class
+     * @param string $parent_class_name Active recod class name to extend
+     * @return string Php code of the active record class
+     */
     function Active_record_class_maker($table, $class_name, $parent_class_name='\Xperimentx\Atlas\Active_record')
     {
         $cols = $this->Show_columns($table);
