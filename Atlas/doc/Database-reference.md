@@ -9,7 +9,7 @@
   * [Properties](#properties)
   * [Connect](#connect) 
   * [Generic queries](#generic-queries) 
-  * [Get Data](#get-Data)
+  * [Get Data](#get-data)
   * [Safe sql](#safe-sql)
   * [Create and update rows](#create-and-update-rows)
   * [Other tools](#other-tools)
@@ -117,15 +117,16 @@ else
 |**Connect**  () :bool|Creates a new mysqli object and connects it to the MySQL server.|
 
 
-### Generic queries.
+### Generic queries
 
 |Method   |Info   |
 |:--------|:------|
-|**Query**    |($query, $caller_method=null) :mixed,null| Performs a query on the database.|
-|**Query_ar** |($query, $caller_method=null) :int,null| Performs a query on the database en returns the number of affected rows.|
+|**Query**    ($query, $caller_method=null) :mixed,null| Performs a query on the database.|
+|**Query_ar** ($query, $caller_method=null) :int,null| Performs a query on the database en returns the number of affected rows.|
 
 
 ### Get Data
+
 |Method   |Info   |
 |:--------|:------|
 |**Scalar** ($query ) :scalar            | Returns first column of first row of a query result.|
