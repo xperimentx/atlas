@@ -7,7 +7,7 @@
  *
  * @author    Roberto González Vázquez, https://github.com/xperimentx
  * @copyright 2017 Roberto González Vázquez
- * 
+ *
  * @license   MIT
  */
 
@@ -102,10 +102,16 @@ class Column
 
 
     /**
-     * Sets $default
+     * Sets $default_value
      * @return $this
      */
     public function Set_default_value  ($value)      {  $this->default_value   = $value; return $this; }
+
+    /**
+     * Sets $default_raw
+     * @return $this
+     */
+    public function Set_default_raw  ($value)      {  $this->default_raw   = $value; return $this; }
 
 
     /**
@@ -144,7 +150,7 @@ class Column
 
     /**
      * Sets $type
-     * @param @value string Column type INT, VARCHAR(50) , FATETIME ....
+     * @param @value string Column type INT, VARCHAR(50) , DATETIME ....
      * @return $this
      */
     public function Set_type          ($value)      {  $this->type            = $value; return $this; }

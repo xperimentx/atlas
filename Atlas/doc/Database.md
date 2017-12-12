@@ -260,32 +260,6 @@ if ($maker->Run())
 else print_r(Db::$db->last_error);
 ```
 
-
-
-| Db\Create_table   |       | Properties                       |
-|:---------------|:------|:---------------------------------|
-|$table          |string | Table name                       |
-|$charset        |string | Charset.                         |
-|$collation      |string | Collation.                       |
-|$engine         |string | Engine                           |
-|$auto_increment |string | Auto increment.                  |
-|$comment        |string | Comment.                         |
-|$if_not_exists  |bool   | Only creates table if not exists.|
-
-| Db\Create_table |Methods                     |
-|:----------------|:---------------------------------------|
-| __construct($table, $db_object = null);||
-| Add_column ($field_type, $field_name, $default_value=NULL, $is_null_allowed=true); |Add a column field.  Create a column field sql helper |
-| Add_column_id ($field_name='id') :Column | Adds column auto increment  pirmary key.     | 
-| Add_index($index_name, $fields ,$type=self::INDEX_NORMAL);| Adds an index |
-| Add_primary_key ($fields) | Adds the primary key | 
-| Add_foreign_key ($symbol, $fields, $foreign_table, $foreign_fields,$on_delete,$on_update): int|| Adds a foreign key |
-| __toString () :string | Returns SQL for CREATE TABLE query
-| Run () ;int| Run create table query
-| Run_if_not_exists() :int |Run create table if not exist query |
-  
-
-
 ### Alter a table
 ```php
 use Xperimentx\Atlas\Db;
@@ -303,6 +277,65 @@ if (Db::$db->last_error)
 
 else echo "Success \n";
 
+```
+
+### Db\Create_table
+
+| Db\Create_table   |       | Properties                       |
+|:---------------|:------|:---------------------------------|
+|$table          |string | Table name                       |
+|$charset        |string | Charset.                         |
+|$collation      |string | Collation.                       |
+|$engine         |string | Engine                           |
+|$auto_increment |string | Auto increment.                  |
+|$comment        |string | Comment.                         |
+|$if_not_exists  |bool   | Only creates table if not exists.|
+
+| Db\Create_table |Methods                     |
+|:----------------|:---------------------------------------|
+|**__construct** ($table, $db_object = null);||
+|**Add_column** ($field_type, $field_name, $default_value=NULL, $is_null_allowed=true); |Add a column field.  Create a column field sql helper |
+|**Add_column_id** ($field_name='id') :Column | Adds column auto increment  pirmary key.     | 
+|**Add_index($index_name, $fields ,$type=self::INDEX_NORMAL);| Adds an index |
+|**Add_primary_key** ($fields) | Adds the primary key | 
+|**Add_foreign_key** ($symbol, $fields, $foreign_table, $foreign_fields,$on_delete,$on_update): int|| Adds a foreign key |
+|**__toString** () :string | Returns SQL for CREATE TABLE query
+|**Run** () ;int| Run create table query
+|**Run_if_not_exists** () :int |Run create table if not exist query |
+  
+### Db\Column
+
+|Db\Column property| Default | Related Method  |          
+|:------------------|:--------|:---------|
+|$collation         | null  | **Set_collation**      ($value)      :$this |      
+|$comment           | null  | **Set_comment**        ($value)      :$this |          
+|$default_value     | null  | **Set_default_value**  ($value)      :$this |   
+|$default_raw       | null  |                                      :$this |         
+|$field_name        | null  | **Set_field_name**     ($value)      :$this | 
+|$is_auto_increment | null  | **Set_auto_increment** ($value=true) :$this |
+|$is_null_allowed   | true  | **Set_nullable**       ($value=true) :$this |
+|$is_unsigned       | false | **Set_unsigned**       ($value=true) :$this |
+|$is_zerofill       | false | **Set_zerofill**       ($value=true) :$this |
+|$type              | null  | **Set_type**           ($value)      :$this | 
+|*                  |       | **Set** ($attribute_name,$value=true) :$this|
+ 
+````php
+
+    /**
+     * Create a column field sql helper
+     * @param string $field_type
+     *          Type of column:
+     *          TINIYINT, INT, BIGINT , DECIMAL(10,2),
+     *          CHAR(50), VARCHAR(50)
+     *          DATE, TIME, DATETIME ...
+     *
+     * @param string $field_name Field name.  `` will be added.
+     * @param scalar $default_value
+     * @param bool  $is_null_allowed
+     *
+     * @return Column Added column.
+     */
+    function __construct ($field_type, $field_name, $default_value=null, $is_null_allowed=true)
 ```
 
 
