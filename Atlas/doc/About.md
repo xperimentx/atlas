@@ -1,4 +1,4 @@
-[Documentation](README.md) 
+[xperimentX Atlas documentation](README.md) 
 
 ![xperimentx atlas](images/atlas.png) 
 
