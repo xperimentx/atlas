@@ -272,8 +272,8 @@ else print_r(Db::$db->last_error);
 |$comment        |string | Comment.                         |
 |$if_not_exists  |bool   | Only creates table if not exists.|
 
-| Db\Create_table   |Methods                     |
-|:---------------|:------|:---------------------------------|
+| Db\Create_table |Methods                     |
+|:----------------|:---------------------------------------|
 | __construct($table, $db_object = null);||
 | Add_column ($field_type, $field_name, $default_value=NULL, $is_null_allowed=true); |Add a column field.  Create a column field sql helper |
 | Add_column_id ($field_name='id') :Column | Adds column auto increment  pirmary key.     | 
