@@ -6,14 +6,16 @@
 
 ## Thanks
 
-> Especially I thank [Haustvindr](https://github.com/Haustvindr) for his help, support, fantastic ideas and constructive criticism.
+ Especially I thank [Haustvindr](https://github.com/Haustvindr) for his help, support, fantastic ideas and constructive criticism.
 
 > [Code igniter:](https://codeigniter.com/)
 > Although I prefer objects and they arrays, 
 > I discovered in code igniter a magnificent source of ideas,
 > learning and solutions
 
-> To all those who share their knowledge and works with the rest: tutorials, forums, open source, search engines .....
+>To all those who share their knowledge and works with the rest: 
+>tutorials, forums, open source, search engines:
+
 
 > And, of course, to all my friends and family.
 
