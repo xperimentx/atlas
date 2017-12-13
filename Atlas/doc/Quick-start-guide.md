@@ -32,7 +32,7 @@ Atlas:
  
 
 
-## Atlas whit other autoloaders
+## Atlas with other autoloaders
 
 ###  Use other autoloder PSR-4 compatible
 

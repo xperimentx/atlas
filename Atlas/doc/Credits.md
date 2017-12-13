@@ -7,7 +7,6 @@
 ## Thanks
 
 > Especially I thank [Haustvindr](https://github.com/Haustvindr) for his help, support, fantastic ideas and constructive criticism.
-> I hope that one day he will be encouraged to publish his code and work, he has revolutionary ideas but he has been a bit shy.
 
 > [Code igniter:](https://codeigniter.com/)
 > Although I prefer objects and they arrays, 
