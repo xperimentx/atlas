@@ -23,47 +23,51 @@ namespace Xperimentx\Atlas;
  */
 class Cli
 {
-    /** @var string[[] color available                 */   public $colors = [];
+    /** @var string[] color available                  */   public $colors = [];
 
-    /** @var string reset                              */   public $reset           = "\033[0m";
+    /** @var string reset                              */   public $reset           ;
 
-    /** @var string bold / bright                      */   public $bold            = "\033[1m";
-    /** @var string bold / bright  unset               */   public $bold_unset      = "\033[2m";
-    /** @var string italic                             */   public $italic          = "\033[3m";
-    /** @var string underline                          */   public $underline       = "\033[4m";
-    /** @var string inverse                            */   public $inverse         = "\033[7m";
-    /** @var string bold / bright unset alternative    */   public $bold_unset_2    = "\033[22m";
-    /** @var string italic unset                       */   public $italic_unset    = "\033[23m";
-    /** @var string underline unset                    */   public $underline_unset = "\033[24m";
-    /** @var string normal colors                      */   public $normal_colors   = "\033[27m";
-    /** @var string foreground reset                   */   public $fg_reset        = "\033[39m";
-    /** @var string background reset                   */   public $bg_reset        = "\033[49m";
+    /** @var string bold / bright                      */   public $bold            ;
+    /** @var string bold / bright  unset               */   public $bold_unset      ;
+    /** @var string italic                             */   public $italic          ;
+    /** @var string underline                          */   public $underline       ;
+    /** @var string inverse                            */   public $inverse         ;
+    /** @var string bold / bright unset alternative    */   public $bold_unset_2    ;
+    /** @var string italic unset                       */   public $italic_unset    ;
+    /** @var string underline unset                    */   public $underline_unset ;
+    /** @var string normal colors                      */   public $normal_colors   ;
+    /** @var string foreground reset                   */   public $fg_reset        ;
+    /** @var string background reset                   */   public $bg_reset        ;
 
-    /** @var string foreground black                   */   public $fg_black        = "\033[0;30m";
-    /** @var string foreground red                     */   public $fg_red          = "\033[0;31m";
-    /** @var string foreground green                   */   public $fg_green        = "\033[0;32m";
-    /** @var string foreground brown                   */   public $fg_brown        = "\033[0;33m";
-    /** @var string foreground blue                    */   public $fg_blue         = "\033[0;34m";
-    /** @var string foreground purple                  */   public $fg_purple       = "\033[0;35m";
-    /** @var string foreground cyan                    */   public $fg_cyan         = "\033[0;36m";
-    /** @var string foreground gray                    */   public $fg_gray         = "\033[0;37m";
-    /** @var string foreground light black, dark gray  */   public $fg_light_black  = "\033[1;30m";
-    /** @var string foreground light red               */   public $fg_light_red    = "\033[1;31m";
-    /** @var string foreground light green             */   public $fg_light_green  = "\033[1;32m";
-    /** @var string foreground yellow                  */   public $fg_yellow       = "\033[1;33m";
-    /** @var string foreground light blue              */   public $fg_light_blue   = "\033[1;34m";
-    /** @var string foreground light purple            */   public $fg_light_purple = "\033[1;35m";
-    /** @var string foreground light cyan              */   public $fg_light_cyan   = "\033[1;36m";
-    /** @var string foreground white                   */   public $fg_white        = "\033[1;37m";
+    /** @var string foreground black                   */   public $fg_black        ;
+    /** @var string foreground red                     */   public $fg_red          ;
+    /** @var string foreground green                   */   public $fg_green        ;
+    /** @var string foreground brown                   */   public $fg_brown        ;
+    /** @var string foreground blue                    */   public $fg_blue         ;
+    /** @var string foreground purple                  */   public $fg_purple       ;
+    /** @var string foreground cyan                    */   public $fg_cyan         ;
+    /** @var string foreground gray                    */   public $fg_gray         ;
+    /** @var string foreground light black, dark gray  */   public $fg_light_black  ;
+    /** @var string foreground light red               */   public $fg_light_red    ;
+    /** @var string foreground light green             */   public $fg_light_green  ;
+    /** @var string foreground yellow                  */   public $fg_yellow       ;
+    /** @var string foreground light blue              */   public $fg_light_blue   ;
+    /** @var string foreground light purple            */   public $fg_light_purple ;
+    /** @var string foreground light cyan              */   public $fg_light_cyan   ;
+    /** @var string foreground white                   */   public $fg_white        ;
 
-    /** @var string background black                   */   public $bg_black        = "\033[40m";
-    /** @var string background red                     */   public $bg_red          = "\033[41m";
-    /** @var string background green                   */   public $bg_green        = "\033[42m";
-    /** @var string background yellow                  */   public $bg_yellow       = "\033[43m";
-    /** @var string background blue                    */   public $bg_blue         = "\033[44m";
-    /** @var string background magenta                 */   public $bg_magenta      = "\033[45m";
-    /** @var string background cyan                    */   public $bg_cyan         = "\033[46m";
-    /** @var string background gray                    */   public $bg_gray         = "\033[47m";
+    /** @var string background black                   */   public $bg_black        ;
+    /** @var string background red                     */   public $bg_red          ;
+    /** @var string background green                   */   public $bg_green        ;
+    /** @var string background brown, dark yellow      */   public $bg_yellow       ;
+    /** @var string background blue                    */   public $bg_blue         ;
+    /** @var string background purple, magenta         */   public $bg_magenta      ;
+    /** @var string background cyan                    */   public $bg_cyan         ;
+    /** @var string background gray                    */   public $bg_gray         ;
+    /** @var string background light black, dark gray  */   public $bg_light_black  ;
+    /** @var string background light red               */   public $bg_light_red    ;
+    /** @var string background light green             */   public $bg_light_green  ;
+
 
 
     public function __construct()
@@ -127,7 +131,7 @@ class Cli
 
 
     /**
-     * Returns colored string
+     * Returns a colored string.
      *
      * @param string $string Text to be colored
      * @param string $foreground_color Index of colors array or any special formating text.
@@ -144,7 +148,7 @@ class Cli
 
 
     /**
-     * Checks that the environment is cli
+     * Checks that the environment is Cli.
      * @return bool
      */
     public function  Is_cli_environment ()
@@ -156,12 +160,74 @@ class Cli
 
 
     /**
-     * Ensures that the environment is cli.
-     * Dies the program if not is cli whit 403.
+     * Ensures that the environment is Cli.
+     * >Dies the program if not is Cli with 403.
      */
     public function  Require_cli_environment ()
     {
         global  $argv;
         $argv[0] ?? header(($_SERVER["SERVER_PROTOCOL"]??'HTTP/1.1').' 403 Forbidden') & exit();
     }
+
+
+    /**
+     * Returns the pallete demo
+     * @return string
+     */
+    public function Pallete_demo()
+    {
+        $idx =
+        [
+            'black'       ,  'gray'       , 'red'         ,   'brown'       ,
+            'green'       ,  'cyan'       , 'blue'        ,   'purple'      ,
+            'light_black' ,  'white'      , 'light_red'   ,   'yellow'      ,
+            'light_green' ,  'light_cyan' , 'light_blue'  ,   'light_purple',
+        ];
+
+        $bg_idx = ['blue' ,'magenta' ,'red' ,'black' ,'cyan' ,'green' ,'yellow' ,'gray' ];
+
+        $names =
+        [
+            ' black  '      , ' gray   '      , ' red    '      , ' brown  '      ,
+            ' green  '      , ' cyan   '      , ' blue   '      , ' purple '      ,
+            ' light_black  ', ' white        ', ' light_red    ', ' yellow       ',
+            ' light_green  ', ' light_cyan   ', ' light_blue   ', ' light_purple ',
+        ];
+
+        $out = "\n".
+             "{$this->reset}  Normal {$this->reset}" .
+             "{$this->bold } Bold   {$this->reset}".
+             "{$this->underline} Underline {$this->reset}".
+             "{$this->italic} Italic {$this->reset}".
+             "{$this->inverse} Inverse {$this->reset}\n\n";
+
+
+        $clr = $this->colors;
+
+        for ($b=0;$b<4;$b++)
+        {
+            $bn1 = $bg_idx[$b ];
+            $bn2 = $bg_idx[$b+4];
+            $bc1 = $clr['bg_'.$bn1];
+            $bc2 = $clr['bg_'.$bn2];
+
+            $out .= sprintf ("\n  %s%-22s  %-20s\n",$this->reset, 'bg_'.$bn1,'bg_'.$bn2);
+
+            for ($f=0; $f<8; $f++)
+            {
+                $fn1 = $names[$f  ];
+                $fn2 = $names[$f+8];
+                $fc1 = $clr['fg_'.$idx[$f  ]];
+                $fc2 = $clr['fg_'.$idx[$f+8]];
+
+                $out.=  '  '.$fc1.$bc1 .$fn1 . $fc2.$bc1. $fn2.
+                        $this->reset.'  '.
+                        $fc1.$bc2 .$fn1 .$fc2.$bc2 .$fn2.
+                        "$this->reset\n";
+            }
+        }
+
+        return $out;
+    }
 }
+
