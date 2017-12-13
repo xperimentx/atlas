@@ -13,9 +13,9 @@ The challenge to achieve the objective of migrations has begun. :smiley:
 
 ## Migrator CLi
 
-![xperimentx atlas](images/db/migrator-help.png) 
+![Migrator help](images/db/migrator-help.png) 
 
-![xperimentx atlas](images/db/migrator-list.png) 
+![Migrator step list](images/db/migrator-list.png) 
 
 ## Usage of migrators
 

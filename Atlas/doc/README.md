@@ -18,6 +18,8 @@
 * [Quick start guide.](Quick-start-guide.md)
 * [Autoloader.](Autoloader.md)
 * [App example.](App-demo.md)
+* [Cli. Coman line tools helper](Cli.md)
+* [Active Record.](Atlas/doc/Active-record.md)
 
 ---
 
@@ -28,6 +30,5 @@
 
 ---
 
-* [Active Record](Atlas/doc/Active-record.md)
 
 * [Credits.](Credits.md)
