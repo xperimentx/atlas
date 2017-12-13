@@ -8,6 +8,7 @@
 Command line helper. 
 
 **Cli::Pallete_demo() output**
+
 ![Cli pallete demo](images/cli/cli-pallete.png) 
 
  
@@ -73,4 +74,5 @@ echo $cli->Color_string('Example', 'fg_white', 'bg_red');
 ```
 
 **Sample output**
+
 ![Cli sample output](images/cli/cli-sample.png) 

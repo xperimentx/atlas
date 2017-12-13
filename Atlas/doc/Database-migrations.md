@@ -3,7 +3,7 @@
 
 ![xperimentx atlas](images/atlas.png) 
 
-* [Migrator CLi](#migrator-cli)
+* [Migrator CLi](#migrator-cli-tool)
 * [Database Forge](Database.md#database-forge)
 
 
@@ -11,7 +11,7 @@
 
 The challenge to achieve the objective of migrations has begun. :smiley: 
 
-## Migrator CLi
+## Migrator CLi Tool
 
 ![Migrator help](images/db/migrator-help.png) 
 

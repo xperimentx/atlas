@@ -2,33 +2,34 @@
 
 # xperimentX Atlas php toolkit 
 
-----
+## Basic
+* [Quick start guide.](Quick-start-guide.md)
+* [Autoloader.](Autoloader.md)
+* [App example.](App-demo.md)
 
-### About Atlas toolkit
+## Database Reference
+* [Database Reference.](Database.md)
+* [Database Forge.](Database.md#database-forge)
+* [Migrations.](Database-migrations.md)
+
+
+## Models
+* [Active Record.](Atlas/doc/Active-record.md)
+
+
+## Tools
+* [Cli. Command line tools helper](Cli.md)
+* [Migrator tool](Database-migrations.md#migrator-cli-tool)
+* [Active Record tool.](Atlas/doc/Active-record.md|active-record-tool)
+
+
+## About Atlas toolkit
 * [About Atlas.](About.md#about-atlas)
 * [Features.](About.md#features)
 * [Goals.](About.md#goals)
 * [Code Style.](Code-style.md)
 * [History.](History.md)
 
----
-
-### Basic documentation
-
-* [Quick start guide.](Quick-start-guide.md)
-* [Autoloader.](Autoloader.md)
-* [App example.](App-demo.md)
-* [Cli. Coman line tools helper](Cli.md)
-* [Active Record.](Atlas/doc/Active-record.md)
-
----
-
-### Database Reference
-* [Database Reference.](Database.md)
-* [Database Forge.](Database.md#database-forge)
-* [Migrations.](Database-migrations)
-
----
-
+## Other
 
 * [Credits.](Credits.md)
