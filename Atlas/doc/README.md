@@ -14,13 +14,13 @@
 
 
 ## Models
-* [Active Record.](Atlas/doc/Active-record.md)
+* [Active Record.](Active-record.md)
 
 
 ## Tools
-* [Cli. Command line tools helper](Cli.md)
-* [Migrator tool](Database-migrations.md#migrator-cli-tool)
-* [Active Record tool.](Atlas/doc/Active-record.md|active-record-tool)
+* [Cli. Command line tools helper.](Cli.md)
+* [Migrator tool.](Database-migrations.md#migrator-cli-tool)
+* [Active Record tool.](Active-record.md|active-record-tool)
 
 
 ## About Atlas toolkit

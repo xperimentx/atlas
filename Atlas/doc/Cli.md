@@ -1,5 +1,4 @@
 [xperimentX Atlas documentation](README.md) 
-\ [Database reference](Database-reference.md)
 
 ![xperimentx atlas](images/atlas.png) 
 

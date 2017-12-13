@@ -13,22 +13,38 @@ Take a look at [xperimentX Demo](https://github.com/xperimentx/atlas-sample)  pr
 
 [:books: Documentation](Atlas/doc/README.md)
 
-[:green_book: Quick start guide](Atlas/doc/Quick-start-guide.md)
+## Basic
+* [Quick start guide.](Atlas/doc/Quick-start-guide.md)
+* [Autoloader.](Atlas/doc/Autoloader.md)
+* [App example.](Atlas/doc/App-demo.md)
 
-[:green_book: Database Reference](Atlas/doc/Database.md)
-
-[:green_book: Database Forge](Atlas/doc/Database.md#database-forge)
-
-[:green_book: Migrations](Atlas/doc/Database-migrations.md)
-
-[:green_book: Active Record](Atlas/doc/Active-record.md)
+## Database Reference
+* [Database Reference.](Atlas/doc/Database.md)
+* [Database Forge.](Atlas/doc/Database.md#database-forge)
+* [Migrations.](Atlas/doc/Database-migrations.md)
 
 
-[:green_book: Credits](Atlas/doc/Credits.md)
+## Models
+* [Active Record.](Atlas/doc/Active-record.md)
 
----
 
-[:blue_book: About atlas](Atlas/doc/About.md)
+## Tools
+* [Cli. Command line tools helper.](Atlas/doc/Cli.md)
+* [Migrator tool.](Atlas/doc/Database-migrations.md#migrator-cli-tool)
+* [Active Record tool.](Atlas/doc/Active-record.md|active-record-tool)
+
+
+## About Atlas toolkit
+* [About Atlas.](Atlas/doc/About.md#about-atlas)
+* [Features.](Atlas/doc/About.md#features)
+* [Goals.](Atlas/doc/About.md#goals)
+* [Code Style.](Atlas/doc/Code-style.md)
+* [History.](Atlas/doc/History.md)
+
+## Other
+
+* [Credits.](Atlas/doc/Credits.md)
+
 
 ---
 
