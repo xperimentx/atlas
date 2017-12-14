@@ -11,7 +11,7 @@
  * @license   MIT
  */
 
-namespace Xperimentx\Atlas\Db;
+namespace Xperimentx\Atlas\Db; 
 
 /**
  * Profile item and error info item

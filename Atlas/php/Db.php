@@ -40,12 +40,15 @@ class Db
 
 
     /**
-     * @param Db_cfg $cfg Configuration, options for create mysqli connection.
+     * @param Db_cfg|string $cfg Configuration object, or full class name of the configuration object
      */
     function __construct($cfg=null)
     {
         if (!self::$db)
             self::$db = $this;
+
+        if (is_string($cfg))
+            $cfg = new $cfg;
 
         $this->cfg = $cfg ?? new Db_cfg();
 
