@@ -349,7 +349,7 @@ $alter->Run();
 |   |  |
 |**Add_index($index_name, $fields ,[$type]);| Adds an index |
 |**Add_primary_key** ($fields) | Adds the primary key | 
-|**Add_foreign_key** ($symbol, $fields, $foreign_table, $foreign_fields,$on_delete,$on_update): int|| Adds a foreign key |
+|**Add_foreign_key** ($symbol, $fields, $foreign_table, $foreign_fields,$on_delete,$on_update): int | Adds a foreign key |
 |   |  |
 |**Run** () ;int| Runs create table query
 |**Run_if_not_exists** () :int |Runs create table query if not exists the table |
@@ -395,7 +395,7 @@ $alter->Run();
 |$is_unsigned       | false | **Set_unsigned**       ($value=true) :$this |
 |$is_zerofill       | false | **Set_zerofill**       ($value=true) :$this |
 |$type              | null  | **Set_type**           ($value)      :$this | 
-|*                  |       | **Set** ($attribute_name,$value=true) :$this|
+|*                  |       | **Set** ($attribute_name,$value) :$this|
 
 
 

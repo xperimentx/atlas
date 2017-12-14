@@ -42,7 +42,7 @@ class Column
      *
      * @param string $field_name Field name.  `` will be added.
      * @param scalar $default_value
-     * @param bool  $is_null_allowed Can the value of this field can be null? 
+     * @param bool  $is_null_allowed Can the value of this field can be null?
      *
      * @return Column Added column.
      */
@@ -84,7 +84,7 @@ class Column
      * Sets an attribute
      * @return $this
      */
-    public function Set($attribute_name,$value=true) {$this->$attribute_name     = $value;   return $this;}
+    public function Set($attribute_name,$value) {$this->$attribute_name     = $value;   return $this;}
 
 
     /**
@@ -111,7 +111,7 @@ class Column
      * Sets $default_raw
      * @return $this
      */
-    public function Set_default_raw  ($value)      {  $this->default_raw   = $value; return $this; }
+    public function Set_default_raw  ($value)       {  $this->default_raw   = $value; return $this; }
 
 
     /**
