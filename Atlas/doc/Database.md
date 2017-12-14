@@ -275,8 +275,8 @@ $bd->mysqli = My_mysqli_object;
 |**Create_database** ($database_name, $collate, $if_not_exists) :int |Creates a new data base|    
 |**Drop_database**  ($database_name, $if_exists) :int|Drops a database.|    
 | |  |
-|**Alter_table      ($table) :Alter_table  |Returns a handler to alter a table |
-|**Create_table     ($table) :Create_table |Returns a handler to create a table |
+|**Alter_table**      ($table) :Alter_table  |Returns a handler to alter a table |
+|**Create_table**     ($table) :Create_table |Returns a handler to create a table |
 |**Optimize_table** ($table) :array|Optimizes a table.|
 |**Drop_table**     ($table, $if_exists) :int|Drops a table.|    
 |**Truncate_table** ($table) :int|Truncates a table.| 
@@ -342,13 +342,15 @@ $alter->Run();
 
 | Db\Create_table |Methods                     |
 |:----------------|:---------------------------------------|
-|**__construct** ($table, $db_object = null);||
-|**Add_column** ($field_type, $field_name, $default_value=NULL, $is_null_allowed=true); |Adds a column field.  Create a column field sql helper |
-|**Add_column_id** ($field_name='id') :Column | Adds column auto increment  primary key.     | 
-|**Add_index($index_name, $fields ,$type=self::INDEX_NORMAL);| Adds an index |
+|**__construct** ($table, [$db_object]);| |
+|   |  |
+|**Add_column** ($field_type, $field_name, [$default_value], [$is_null_allowed]); |Adds a column field.  Create a column field sql helper |
+|**Add_column_id** ([$field_name]) :Column | Adds column auto increment  primary key.     | 
+|   |  |
+|**Add_index($index_name, $fields ,[$type]);| Adds an index |
 |**Add_primary_key** ($fields) | Adds the primary key | 
 |**Add_foreign_key** ($symbol, $fields, $foreign_table, $foreign_fields,$on_delete,$on_update): int|| Adds a foreign key |
-|**__toString** () :string | Returns SQL for CREATE TABLE query
+|   |  |
 |**Run** () ;int| Runs create table query
 |**Run_if_not_exists** () :int |Runs create table query if not exists the table |
 
@@ -357,19 +359,24 @@ $alter->Run();
 
 | Db\Alter_table |Methods                     |
 |:----------------|:---------------------------------------| 
-| **__construct** ($table, $db_object = null)
+| **__construct** ($table, [$db_object]) | |
 | **Rename** ($new_table_name) :$this | Renames the table|
 | **Set_engine** ($engine) :$this |  Changes table engine |
 | **Set_comment** ($comment) :$this | Set comment |
+|   |  |
 | **Add_column** ($column) :$this |  Adds a field / column. |
 | **Change_column** ($old_column_name, $column) :$this | Changes a column |
 | **Drop_column** ($field)  :$this | Drops a column or a set of columns from the table |
-| **Add_index** ($index_name, $fields ,$type=self::INDEX_NORMAL) :$this |   Adds an index |
+|   |  |
+| **Add_index** ($index_name, $fields ,[$type]) :$this |   Adds an index |
 | **Drop_index** ($index_name) :$this | Drops an index |
+|   |  |
 | **Add_primary_key** ($fields) :$this |  Adds the primary key  |
 | **Drop_primary_key** ($index_name)  :$this | Drops the primary key |
+|   |  |
 | **Add_foreign_key** ($symbol, $fields, $foreign_table, $foreign_fields,$on_delete, $on_update ) :$this | Adds a foreign key |
 | **Drop_foreign_key** ($symbol) :$this |  Drops a foreign key |
+|   |  |
 | **Run** () :int| Runs alter table query |
 
 
