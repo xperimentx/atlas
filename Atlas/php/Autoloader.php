@@ -24,14 +24,14 @@ class Autoloader
     /** @var string Root path  */
     static private  $root_path = null;
 
-
     /** @var string Root path of Xperimentx  */
     static private  $root_xperimentx = null;
 
+    /** @var string Root path of Xperimentx Atlas */
+    static private  $root_atlas = null;
 
     /** @var boll Is autoloader registered */
     static private $is_registered = false;
-
 
     /**
      * @var string[] Maps namespaces prefixes with their base directories.
@@ -41,7 +41,6 @@ class Autoloader
      * @see Add_namespace()
      */
     static private $namespace_map = [];
-
 
     /**
      * @var string[]  Maps classes with their file name with path.
@@ -73,19 +72,26 @@ class Autoloader
 
         $translated     = str_replace('\\','/',$class_name).'.php';
 
-        // Xperimentx e default mapping
+        // Xperimentx Atlas default mapping, simply to be a little faster.
+        if ('Xperimentx\\Atlas\\' === substr($class_name, 0, 17))
+        {
+            include_once self::$root_atlas.  substr($translated, 16);
+            return;
+        }
+
+        // Xperimentx Packages default mapping, simply to be a little faster.
         if ('Xperimentx\\' === substr($class_name, 0, 11))
         {
             $pos = strpos($class_name, '\\', 12);
-            $filename_1st   = self::$root_xperimentx
-                            . substr($translated, 10, $pos-9) // package
-                            . 'php'
-                            . substr($translated,$pos);
+            include self::$root_xperimentx
+                    . substr($translated, 10, $pos-9) // package
+                    . 'php'
+                    . substr($translated,$pos);
+            return;
         }
-        else $filename_1st = $translated;
 
         // load from include path
-        if ($filename = stream_resolve_include_path($filename_1st))
+        if ($filename = stream_resolve_include_path($translated))
         {
             include_once $filename;
             return;
@@ -156,7 +162,7 @@ class Autoloader
     }
 
 
-     /**
+    /**
      * Adds a filename for a full qualified class name.
      *
      * @param string      $full_qualified_class_name Full qualified class name.
@@ -193,17 +199,20 @@ class Autoloader
 
 
     /**
-     * Register autoloader in spl_autoload_register.
+     * Registers autoloader in spl_autoload_register.
+     * Include basic Atlas files.
      * @see spl_autoload_register
      * @param $root_path Root of your application for includes, it will be added to include path.
      * @param int $dir_up_levels Uses path of the Parent directory's path that is $dir_up_leves levels up.
+     *
      */
     static public function Register($root_path=NULL, $dir_up_levels=0)
     {
         if (self::$is_registered) reuturn;
 
         self::$is_registered   = true;
-        self::$root_xperimentx = dirname(__DIR__, 2);
+        self::$root_atlas      = __DIR__;
+        self::$root_xperimentx = dirname(self::$root_atlas, 2);
 
         if ($root_path)
         {
@@ -213,5 +222,8 @@ class Autoloader
 
         // register
         spl_autoload_register('Xperimentx\Atlas\Autoloader::load_class');
+
+        ///todo: include basic atlas files
     }
 }
+
