@@ -27,8 +27,7 @@ class Environment
     const STAGE_UNKNOW      =  null;
 
     const VIA_CLI        = 'cli';
-    const VIA_HTPX       = 'httpx';
-    const VIA_WEB        = 'web';
+    const VIA_HTTP       = 'web';
 
     static public $via    = null;
     static private $stage = null;
@@ -38,17 +37,14 @@ class Environment
     public static function Initialize()
     {
         global  $argv;
+
         if (!self::$via)
-        {
-            if (isset($argv[0]))       self::$via = self::CLI;
-            if (isset($_SERVER['ss'])) self::$via = self::HTPX;
-            else                       self::$via = self::WEB;
-        }
+            self::$via = isset($argv[0]) ? self::VIA_CLI : self::VIA_HTTP;
+
 
         if (!self::$stage)
-        {
-            self::$stage = self::SERVER_DEVELOPMENT;
-        }
+            self::$stage = self::STAGE_PRODUCTION;
+
     }
 
 
@@ -65,6 +61,7 @@ class Environment
             ini_set('display_errors', 1);
         }
     }
+
 
     public static function Set_development_stage($report_all_errors=true)
     {
@@ -87,7 +84,7 @@ class Environment
     /**
      * @return string
      */
-    public static function Get_Stage()
+    public static function Get_stage()
     {
         return self::$stage;
     }
@@ -119,5 +116,29 @@ class Environment
         return self::STAGE_TESTING === self::$stage;
     }
 
+    /**
+     * @return bool
+     */
+    public static function Is_via_cli()
+    {
+        return self::VIA_CLI === self::$via;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public static function Is_via_http()
+    {
+        return self::VIA_HTTP === self::$via;
+    }
+
+    /**
+     * @return string
+     */
+    public static function Get_via()
+    {
+        return self::$stage;
+    }
 }
 
