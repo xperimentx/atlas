@@ -435,6 +435,28 @@ class Db
     // --------------------------------------------------------------------------- FORGE ----
 
     /**
+     * Returns a handler to create a table.
+     * @param string $table Table name. `` will be added.
+     * @return \Xperimentx\Atlas\Db\Create_table
+     */
+    public function Create_table($table)
+    {
+        return new Db\Create_table($table, $this);
+    }
+
+
+    /**
+     * Returns a handler to alter a table.
+     * @param string $table Table name. `` will be added.
+     * @return \Xperimentx\Atlas\Db\Alter_table
+     */
+    public function Alter_table($table)
+    {
+        return new Db\Alter_table($table, $this);
+    }
+    
+
+    /**
      * Drops a table.
      * @param string $table Table name. `` will be added.
      * @param bool $if_exists
@@ -442,10 +464,19 @@ class Db
      */
     public function Drop_table($table, $if_exists=true)
     {
-        return $this->Query_ar('DROP TABLE '.($if_exists?'IF EXISTS ':'')."`$table`;\n");
+        return $this->Query_ar('DROP TABLE '.($if_exists?'IF EXISTS ':'')."`$table`;");
     }
 
+    /**
+     * Optimizes a table.
+     * @param string $table Table name. `` will be added.
+     * @return array MySql messages {Table, Op, Msg_type, Msg_text}[]
+     */
+    public function Optimize_table($table)
+    {
+        return $this->Rows("OPTIMIZE TABLE `{$table}`; ");
 
+    }
     /**
      * Truncates a table.
      * @param string $table Table name. `` will be added.
@@ -466,7 +497,7 @@ class Db
      */
     public function Drop_database($database_name, $if_exists=true)
     {
-        return $this->Query_ar('DROP DATABASE '.($if_exists?'IF EXISTS ':'')."`$database_name`;\n");
+        return $this->Query_ar('DROP DATABASE '.($if_exists?'IF EXISTS ':'')."`$database_name`;");
     }
 
 
@@ -478,7 +509,7 @@ class Db
      */
     public function Drop_view($view_name, $if_exists=true)
     {
-        return $this->Query_ar('DROP VIEW '.($if_exists?'IF EXISTS ':'')."`$view_name`;\n");
+        return $this->Query_ar('DROP VIEW '.($if_exists?'IF EXISTS ':'')."`$view_name`;");
     }
 
 
@@ -491,7 +522,7 @@ class Db
      */
     public function Create_database($database_name, $collate='utf8_general_ci', $if_not_exists=true)
     {
-        return $this->Query_ar('CREATE DATABASE '.($if_not_exists?'IF NOT EXISTS ':'')."`$database_name` ". ($collate ? " /*!40100 COLLATE '$collate' */;\n":";\n"));
+        return $this->Query_ar('CREATE DATABASE '.($if_not_exists?'IF NOT EXISTS ':'')."`$database_name` ". ($collate ? " /*!40100 COLLATE '$collate' */;\n":";"));
     }
 
 

@@ -138,7 +138,7 @@ else
 
 A deadly alternative, if can't connect terminates the current script.
 
-If [Environment::Is_development()](Environment.md] shows the error message.
+If [Environment::Is_development()](Environment.md) shows the error message.
 
 ```php
 use Xperimentx\Atlas\Db;
@@ -274,40 +274,59 @@ $bd->mysqli = My_mysqli_object;
 |:-----------|:------| 
 |**Create_database** ($database_name, $collate, $if_not_exists) :int |Creates a new data base|    
 |**Drop_database**  ($database_name, $if_exists) :int|Drops a database.|    
+| |  |
+|**Alter_table      ($table) :Alter_table  |Returns a handler to alter a table |
+|**Create_table     ($table) :Create_table |Returns a handler to create a table |
+|**Optimize_table** ($table) :array|Optimizes a table.|
 |**Drop_table**     ($table, $if_exists) :int|Drops a table.|    
-|**Drop_view**      ($view_name, $if_exists) :int|Drops a view.|    
 |**Truncate_table** ($table) :int|Truncates a table.| 
-
-
+|   |  |
+|**Drop_view**      ($view_name, $if_exists) :int|Drops a view.|    
+     
 
 ## Create a table.
 
 ```php
 use Xperimentx\Atlas\Db;
 
-$maker = new Db\Create_table('table_name');
-
+$maker = new Db\Create_table('table_name', $my_db);
 $maker->Add_column_id ();
 $maker->Add_column ('VARCHAR(50)', 'name')->Set_comment('Lore ipsum');
 $maker->Add_column ('DATETIME'   , 'creation_date');
 $maker->Add_column ('TINYINT'    , 'delete_me');
 $maker->engine = Db::ENGINE_MYISAM;
-
 $maker->Run();     
 ```
 
+or
+
+```php
+$maker = $my_db->Create_table('table_name');
+$maker->Add_column_id ();
+//...
+$maker->Run();     
+```
+
+
+
 ## Alter a table
+
 ```php
 use Xperimentx\Atlas\Db;
 use Xperimentx\Atlas\Db\Column;
 
-$alter = new Db\Alter_table('table_name');
+$alter = new Db\Alter_table('table_name', $my_db);
 $alter->Change_column ('name_2' , new Column('VARCHAR(250)', 'last_name'));
 $alter->Add_column    (new Column ('TEXT', 'notes'));
 $alter->Drop_column   ('delete_me');
 $alter->Set_engine    (Db::ENGINE_INNODB);
-
 $alter->Run(); 
+```
+
+```php
+$alter = $my_db->Alter_table('table_name');
+$alter->Drop_column   ('delete_me');
+$alter->Run();     
 ```
 
 ## Db\Create_table
