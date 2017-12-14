@@ -1,4 +1,5 @@
 ![xperimentx atlas](Atlas/doc/images/atlas.png) 
+[:books: Documentation](Atlas/doc/README.md)
 
 # xperimentX Atlas Php Toolkit
 
@@ -11,7 +12,6 @@ Take a look at [xperimentX Demo](https://github.com/xperimentx/atlas-sample)  pr
 
 
 
-[:books: Documentation](Atlas/doc/README.md)
 
 ## Basic
 * [Quick start guide.](Atlas/doc/Quick-start-guide.md)

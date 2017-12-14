@@ -1,4 +1,4 @@
-[Documentation](README.md)
+[xperimentX Atlas documentation](README.md) 
 
 ![xperimentx atlas](images/atlas.png) 
 
@@ -16,12 +16,14 @@ A simple method is to rely on the existence of a file that is only found in one 
 
 In this sample if **.development** file exists, we are in the development stage environment.
 
-````php 
+```php 
 if (file_exists(__DIR__.'/.development'))
      Environment::Set_development_stage();
 else Environment::Set_production_stage('production-site.com');
 
 Environment::Initialize();
 ```
+
+
 
 
