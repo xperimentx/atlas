@@ -15,7 +15,7 @@
 namespace Xperimentx\Atlas;
 
 /**
- * Enviroment info
+ * Environment info
  * @link https://github.com/xperimentx/atlas/blob/master/Atlas/doc/Enviroment.md
  * @author Roberto González Vázquez
  */
@@ -31,7 +31,7 @@ class Environment
     const VIA_WEB        = 'web';
 
     static public $via    = null;
-    static public $stage = null;
+    static private $stage = null;
 
     static public  $host = null;
 
@@ -54,7 +54,7 @@ class Environment
 
     public static function Set_stage($stage, $host_name, $report_all_errors)
     {
-        self::$stage = self::SERVER_DEVELOPMENT;
+        self::$stage = $stage;
 
         if ($host_name)
             self::$host = $host_name;
@@ -71,14 +71,53 @@ class Environment
         self::Set_stage(self::STAGE_DEVELOPMENT, null, $report_all_errors);
     }
 
+
     public static function Set_testing_stage($report_all_errors=true)
     {
         self::Set_stage(self::STAGE_TESTING, null, $report_all_errors);
     }
 
+
     public static function Set_production_stage($host_name=null,$report_all_errors=false)
     {
         self::Set_stage(self::STAGE_TESTING, $host_name, $report_all_errors);
     }
+
+
+    /**
+     * @return string
+     */
+    public static function Get_Stage()
+    {
+        return self::$stage;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public static function Is_development_stage()
+    {
+        return self::STAGE_DEVELOPMENT === self::$stage;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public static function Is_testing_stage()
+    {
+        return self::STAGE_TESTING === self::$stage;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public static function Is_production_stage()
+    {
+        return self::STAGE_TESTING === self::$stage;
+    }
+
 }
 
