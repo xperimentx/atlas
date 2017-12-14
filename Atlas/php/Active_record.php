@@ -166,6 +166,14 @@ class Active_record
         return $this->Load_from_where("`$field_name`=".static::$_db->Safe($field_value));
     }
 
+    /**
+     * Gets a new object.
+     * @return static
+     */
+     static public function Obj_new()
+    {
+        return new static;
+    }
 
     /**
      * Gets a object from db.
