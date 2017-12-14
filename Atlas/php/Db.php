@@ -20,7 +20,7 @@ use Xperimentx\Atlas\Db\Profile_item;
 
 /**
  * MySQL and MariaDB helper
- *
+ * @link https://github.com/xperimentx/atlas/blob/master/Atlas/doc/Database.md
  * @author Roberto González Vázquez
  */
 class Db
@@ -57,6 +57,8 @@ class Db
 
 
     /**
+     * Connects to the MySQL server.
+     *
      * Creates a new mysqli object and connects it to the MySQL server.
      * @param Db_cfg Configuration.
      * @return bool  Is connection successful.
@@ -104,6 +106,25 @@ class Db
             $this->mysqli->set_charset($cfg->charset);
 
         return true;
+    }
+
+
+    /**
+     * Connects to the MySQL server, if not connection terminates the current script.
+     *
+     * If Environment::Is_development() shows the error message.
+     *
+     * @param Db_cfg|string $cfg Configuration object, or full class name of the configuration object
+     * @param string $message Message to show.
+     */
+    public function Connect_or_die($message="Database connection error \n")
+    {
+        if($this->Connect()) return;
+
+        if (Environment::Is_development_stage())
+            print_r($this->last_error);
+
+        exit($message);
     }
 
 

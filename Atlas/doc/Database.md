@@ -80,18 +80,32 @@ $db->cfg->password  = 'atlas_db_passwd';
 $db->cfg->db_name   = 'atlas_demo_db';
 ```
 
+### Assigning the configuration to the cfg property
+
+```
+use Xperimentx\Atlas\Db;
+
+$db_b = new Db();
+$db->cfg = $my_db_cfg;
+````
+
 ### Pass Db\Db_cfg configuration to Db constructor 
 
 ```php
 $db_a = new Db($my_db_cfg);
 ```
 
-### Assigning the configuration to the cfg property
 
+### Pass configuration class name to Db constructor 
+
+In this case based on the current environment.
+
+```php
+use Xperimentx\Atlas\Db;
+use Xperimentx\Atlas\Enviroment;
+
+$db = new Atlas\Db('Config\Database_'.Environment::Get_stage());
 ```
-$db_b = new Db();
-$db->cfg = $my_db_cfg;
-````
 
 
 
@@ -99,8 +113,10 @@ $db->cfg = $my_db_cfg;
 
 |Db method   |Info   |
 |:-----------|:------|
-|**Connect**  () :bool|Creates a new mysqli object and connects it to the MySQL server.|
+|**Connect**  () :bool|Connects to the MySQL server.|
+|**Connect_or_die**  ([$message]) |Connects to the MySQL server, if not connection terminates the current script.|
 
+### Connect
 
 ```php
 use Xperimentx\Atlas\Db;
@@ -112,12 +128,23 @@ if ($db->Connect())
      echo "DB connected \n";
 }
 else
-{
-    echo "Error \n";
+{    
     print_r($db->last_error);
-    die (":( \n");
+    exit();
 }
+```
 
+### Connect_or_die
+
+A deadly alternative, if can't connect terminates the current script.
+
+If [Environment::Is_development()](Environment.md] shows the error message.
+
+```php
+use Xperimentx\Atlas\Db;
+
+$db = new Db($my_database_configuration);
+$db->Connect_or_die();
 ```
 
 ---
@@ -157,8 +184,8 @@ $bd->mysqli = My_mysqli_object;
 
 |Db method   |Info   |
 |:-----------|:------|
-|**Query**    ($query, $caller_method=null) :mixed,null| Performs a query on the database.|
-|**Query_ar** ($query, $caller_method=null) :int,null| Performs a query on the database en returns the number of affected rows.|
+|**Query**    ($query, [$caller_method]) :mixed,null| Performs a query on the database.|
+|**Query_ar** ($query, [$caller_method]) :int,null| Performs a query on the database en returns the number of affected rows.|
 
 
 ---
@@ -169,8 +196,8 @@ $bd->mysqli = My_mysqli_object;
 |Db method   |Info   |
 |:-----------|:------|
 |**Scalar** ($query ) :scalar            | Returns first column of first row of a query result.|
-|**Row**    ($query, $class_name) :object| Returns first row for a query as an object.|
-|**Rows**   ($query, $class_name) :array | Returns an array of objects for a query statement|    
+|**Row**    ($query, [$class_name]) :object| Returns first row for a query as an object.|
+|**Rows**   ($query, [$class_name]) :array | Returns an array of objects for a query statement|    
 |**Column** ($query)              :array | Returns a the first column of a query as array.|
 |**Vector** ($query)              :array | Returns a simple array index=>scalar_value from a query.|    
 
@@ -192,9 +219,9 @@ $bd->mysqli = My_mysqli_object;
 
 |Db method   |Info   |
 |:-----------|:------|
-|**Insert**           ($table, $data, $do_safe) :int|Insert into statement.|    
-|**Update**           ($table, $data, $where, $do_safe ) :int|Update statement.|    
-|**Update_or_insert** ($table, $data, &$key_value , $key_field_name, $do_safe) :int|Update a row (key!=null) or Insert a new row  (key value=null)|    
+|**Insert**           ($table, $data, [$do_safe]) :int|Insert into statement.|    
+|**Update**           ($table, $data, $where, [$do_safe]) :int|Update statement.|    
+|**Update_or_insert** ($table, $data, &$key_value , [$key_field_name], [$do_safe]) :int|Update a row (key!=null) or Insert a new row  (key value=null)|    
 
 
 ---
@@ -204,8 +231,8 @@ $bd->mysqli = My_mysqli_object;
 
 |Db method   |Info   |
 |:-----------|:------|
-|**Is_unique** ($table_name, $field_value , $field_name, $key_value_to_ignore, $key_field_name) :bool|Checks if the value of the field is unique in the table.|    
-|**Active_record_class_maker** ($table, $class_name, $parent_class_name) :string |Generates a base code for an active record class based in the fields of a table.|
+|**Is_unique** ($table_name, $field_value , $field_name, [$key_value_to_ignore], [$key_field_name]) :bool|Checks if the value of the field is unique in the table.|    
+|**Active_record_class_maker** ($table, $class_name, [$parent_class_name]) :string |Generates a base code for an active record class based in the fields of a table.|
 
 
  
@@ -219,9 +246,9 @@ $bd->mysqli = My_mysqli_object;
 |:-----------|:------|
 |**Show_columns**         ($table) :object[]|Shows columns info form a table.|    
 |**Show_column_names**    ($table) :string[]|Shows columns names form a table.|    
-|**Show_create_database** ($database_name, $if_not_exists) :string| Creates a database.|
+|**Show_create_database** ($database_name, [$if_not_exists]) :string| Creates a database.|
 |**Show_create_table**    ($table)|Shows CREATE TABLE for a table.|
-|**Show_tables**          ($like=null, $database_name) :string[]| Show table names from a database.|
+|**Show_tables**          ([$like], [$database_name]) :string[]| Show table names from a database.|
 
 
 
