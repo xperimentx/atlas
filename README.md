@@ -18,7 +18,7 @@ Take a look at [xperimentX Demo](https://github.com/xperimentx/Demo)  project to
 * [Quick start guide.](Atlas/doc/Quick-start-guide.md)
 * [Autoloader.](Atlas/doc/Autoloader.md)
 * [Environment (production, development...)](Atlas/doc/Environment.md)
-* [Uri (production, development...)](Atlas/doc/Environment.md)
+* [Uri](Atlas/doc/Uri.md)
  
 
 ## Database Reference
