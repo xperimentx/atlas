@@ -1,6 +1,6 @@
 <?php
 /**
- * xperimentX Atlas Toolkit
+ * xperimentX atlas php toolkit
  *
  * @link      https://github.com/xperimentx/atlas
  * @link      https://xperimentX.com
@@ -134,14 +134,14 @@ class Cli
      * Returns a colored string.
      *
      * @param string $string Text to be colored
-     * @param string $foreground_color Index of colors array or any special formating text.
-     * @param string $background_color Index of colors array or any special formating text.
-     * @return type
+     * @param string $foreground_color Index of colors array.
+     * @param string $background_color Index of colors array.
+     * @return string
      */
-    public function Color_string($string, $foreground_color=null, $background_color=null)
+    public function Color_string(string $string, string $foreground_color=null, string $background_color=null) : string
     {
-        $fore = $this->colors[$foreground_color] ?? $foreground_color;
-        $back = $this->colors[$background_color] ?? $background_color;
+        $fore = $this->colors[$foreground_color] ?? '';
+        $back = $this->colors[$background_color] ?? '';
 
         return $fore.$back.$string.$this->reset;
     }
@@ -151,7 +151,7 @@ class Cli
      * Checks that the environment is Cli.
      * @return bool
      */
-    public function  Is_cli_environment ()
+    public function  Is_cli_environment () :bool
     {
         return defined('STDIN');
     }
@@ -159,7 +159,7 @@ class Cli
 
     /**
      * Ensures that the environment is Cli.
-     * >Dies the program if not is Cli with 403.
+     * Terminates the program if not is Cli with 403.
      */
     public function  Require_cli_environment ()
     {
@@ -175,7 +175,7 @@ class Cli
      * Returns the pallete demo
      * @return string
      */
-    public function Pallete_demo()
+    public function Pallete_demo() :string
     {
         $idx =
         [

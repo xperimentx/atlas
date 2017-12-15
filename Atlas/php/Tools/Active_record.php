@@ -1,7 +1,7 @@
 <?php
 
 /**
- * xperimentX Atlas Toolkit
+ * xperimentX atlas php toolkit
  *
  * @link      https://github.com/xperimentx/atlas
  * @link      https://xperimentX.com
