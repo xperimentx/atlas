@@ -42,7 +42,7 @@ class Migrator_cli extends Migrator
      * @param Migrator_cfg $cfg
      * @param Db $db Db object. null=> Default db
      */
-    function __construct($cfg, $db=null)
+    function __construct(Migrator_cfg $cfg, Db $db=null)
     {
         $this->views = new Migrator_cli_views();
         parent::__construct($cfg,$db);
@@ -80,9 +80,9 @@ class Migrator_cli extends Migrator
     /**
      * Shows an error running Init().
      * @var string $title   Error title
-     * @var string|null $details Details
+     * @var string $details Details
      */
-    protected function Show_error($title, $details=null)
+    protected function Show_error(string $title, string $details='')
     {
         $this->views->Show_error ($title, $details);
     }
@@ -91,9 +91,9 @@ class Migrator_cli extends Migrator
     /**
      * Shows a notice running Init().
      * @var string $title   Error title
-     * @var string|null $details Details
+     * @var string $details Details
      */
-    protected function  Show_notice ($title, $details=null)
+    protected function  Show_notice (string $title, string $details='')
     {
          $this->views->Show_notice ($title, $details);
     }
@@ -168,6 +168,7 @@ class Migrator_cli extends Migrator
         $this->views->List_files($n, $this->file_titles);
     }
 
+
     protected function On_log ()
     {
         if ('delete'===$this->opt)
@@ -194,7 +195,6 @@ class Migrator_cli extends Migrator
             $this->views->Show_error ('Incorrect option', null);
         }
     }
-
 
 
     protected function On_update ()

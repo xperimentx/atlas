@@ -11,7 +11,7 @@
  * @license   MIT
  */
 
-namespace Xperimentx\Atlas\Db; 
+namespace Xperimentx\Atlas\Db;
 
 /**
  * Profile item and error info item
@@ -28,7 +28,7 @@ class Profile_item
     /**@var float  Seconds            */  public $seconds            = null;
 
 
-    function __construct($method, $query, $prev_microtime, $error_code=null, $error_description=null )
+    function __construct(string $method, string $query, float $prev_microtime, int $error_code=null, string $error_description=null)
     {
         $this->method       = $method      ;
         $this->query        = $query       ;

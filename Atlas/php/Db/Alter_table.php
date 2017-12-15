@@ -36,7 +36,7 @@ class Alter_table
      * @param string $table Table name. `` will be added.
      * @param Db     Instance or Db object, null:for default Db
      */
-    public function __construct($table, $db_object = null)
+    public function __construct(string $table, Db $db_object = null)
     {
         $this->table = $table            ;
         $this->db    = $db_object ?? Db::$db;
@@ -45,10 +45,10 @@ class Alter_table
 
     /**
      * Renames the table
-     * @param string $new_table_name. `` will be added.
+     * @param string $new_table_name New table name. `` will be added.
      * @return $this
      */
-    public function Rename ($new_table_name)
+    public function Rename (string $new_table_name)
     {
         $this->changes[] ="RENAME `$new_table_name`";
         return $this;
@@ -61,7 +61,7 @@ class Alter_table
      * @param string $engine 'MyISAM', 'InnoDB', 'Aria'
      * @return $this
      */
-    public function Set_engine ($engine)
+    public function Set_engine (string $engine)
     {
         $this->changes[] ="ENGINE=$engine";
         return $this;
@@ -73,7 +73,7 @@ class Alter_table
      * @param string $comment
      * @return $this
      */
-    public function Set_comment ($comment)
+    public function Set_comment (string $comment)
     {
         $this->changes[] ='COMENT=\''. addslashes($comment).'\'';
         return $this;
@@ -112,7 +112,7 @@ class Alter_table
      * Adds a field / column.
      * @param Column $column
      */
-    public function Add_column ($column)
+    public function Add_column (Column $column)
     {
         $this->changes[] ="ADD COLUMN ". $column->Render_sql();
         return $this;
@@ -124,7 +124,7 @@ class Alter_table
      * @param Column $column
      * @return $this
      */
-    public function Change_column ($old_column_name, $column)
+    public function Change_column (string $old_column_name, Column $column)
     {
         $this->changes[] ="CHANGE COLUMN `$old_column_name` ". $column->Render_sql();
         return $this;
@@ -136,7 +136,7 @@ class Alter_table
      * @param string $field Field name of column. `` will be added.
      * @return $this
      */
-    public function  Drop_column ($field)
+    public function  Drop_column (string $field)
     {
         $this->changes[] ="DROP COLUMN `$field`";
         return $this;
@@ -156,7 +156,7 @@ class Alter_table
      * @param string  $type Index type: normal, UNIQUE, FULLTEXT, SPATIAL
      * @return $this
      */
-    public function Add_index($index_name, $fields ,$type=self::INDEX_NORMAL)
+    public function Add_index(string $index_name, string $fields , string $type=self::INDEX_NORMAL)
     {
         $this->items[]="$type INDEX `$index_name` ($fields)";
         return $this;
@@ -168,7 +168,7 @@ class Alter_table
      * @param string $index_name Index name. `` will be added.
      * @return $this
      */
-    public function  Drop_index ($index_name)
+    public function  Drop_index (string $index_name)
     {
         $this->changes[] ="DROP INDEX `$index_name`";
         return $this;
@@ -180,7 +180,7 @@ class Alter_table
      * @param string  $fields Comas separated field names.
      * @return $this
      */
-    public function Add_primary_key ($fields)
+    public function Add_primary_key (string $fields)
     {
         $this->changes[]="ADD PRIMARY KEY ($fields)";
         return $this;
@@ -191,7 +191,7 @@ class Alter_table
      * Drops the primary key
      * @return $this
      */
-    public function  Drop_primary_key ($index_name)
+    public function  Drop_primary_key ()
     {
         $this->changes[] ="DROP PRIMARY KEY";
         return $this;
@@ -214,8 +214,8 @@ class Alter_table
      * @param string $on_update Reference option
      * @return $this
      */
-    public function Add_foreign_key ($symbol, $fields, $foreign_table, $foreign_fields,
-                                     $on_delete=self::FOREIGN_KEY_NO_RESTRICT, $on_update=self::FOREIGN_KEY_RESTRICT)
+    public function Add_foreign_key ($symbol, string $fields, string $foreign_table, string $foreign_fields,
+                                     string $on_delete=self::FOREIGN_KEY_NO_RESTRICT, string $on_update=self::FOREIGN_KEY_RESTRICT)
     {
         $cs= $symbol? "CONSTRAINT `$symbol`":'';
         $this->changes[]="ADD $cs FOREIGN KEY ($fields) REFERENCES `$foreign_table'(`$foreign_fields`)".
@@ -229,7 +229,7 @@ class Alter_table
      * @param string $symbol  Constraint symbol
      * @return $this
      */
-    public function Drop_foreign_key ($symbol)
+    public function Drop_foreign_key (string $symbol)
     {
         $this->changes[]="DROP FOREIGN KEY `$symbol` ";
         return $this;

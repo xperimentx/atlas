@@ -29,7 +29,7 @@ class Status
      * @param string $table_prefix
      * @param Db $db
      */
-    static public  function Create_table_if_not_exists($table_prefix, $db)
+    static public  function Create_table_if_not_exists(string $table_prefix, Db $db)
     {
         $n = new Db\Create_table($table_prefix.'status', $db);
         $n->Add_column('BIGINT'       , 'step'         , 0)->Set_unsigned();
@@ -45,7 +45,7 @@ class Status
      * @param string $table_prefix
      * @param Db $db
      */
-    static public function Load($table_prefix, $db)
+    static public function Load(string $table_prefix, Db $db)
     {
         if ($obj = $db->Row("SELECT * FROM `{$table_prefix}status`", __CLASS__)) //:=
             return $obj;
@@ -59,7 +59,7 @@ class Status
         return $db->Insert  ($table_prefix.'status', (array)$obj) ? $obj : null;
     }
 
-    
+
     /**
      *
      * @param string $table_prefix
@@ -68,7 +68,7 @@ class Status
      * @param string $title
      * @return type
      */
-    static function Save ($table_prefix, $db, $step, $title)
+    static function Save (string $table_prefix, Db $db, string $step, string $title)
     {
         return $db->Update
         (

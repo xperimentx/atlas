@@ -39,16 +39,16 @@ class Db_cfg
      * Maker similar to msqli constructor
      * @param type $server     MySQL or MariaDB Server host name or IP address.
      *                         Prepend host by 'p:' for persistent connections .
-     * @param type $user_name  User name.
-     * @param type $password   Password.
-     * @param type $db_name    Database.
-     * @param type $port       Port.
-     * @param type $socket     Socket.
+     * @param string $user_name  User name.
+     * @param string $password   Password.
+     * @param string $db_name    Database.
+     * @param int    $port       Port.
+     * @param string $socket     Socket.
      *
      * @return \static
      */
-    public static function  Basic ( $server, $user_name, $password,
-                                    $db_name=null, $port=3306, $socket=null)
+    public static function  Basic ( string $server, string $user_name, string $password,
+                                    string $db_name=null, int $port=3306, string $socket=null)
     {
         $obj = new static;
 

@@ -13,6 +13,8 @@
 
 namespace Xperimentx\Atlas\Db\Migrations;
 
+use Xperimentx\Atlas\Db;
+
 /**
  * Migration step base.
  *
@@ -32,9 +34,8 @@ abstract class Step
     /**
      * @param Db $db Db object. null=> Default db.
      */
-    function __construct($db=null)
+    function __construct(Db $db=null)
     {
-        $this->cli = new Cli();
         $this->db = $db ?? Db::$db;
     }
 }

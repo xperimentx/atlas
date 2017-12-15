@@ -46,7 +46,7 @@ class Column
      *
      * @return Column Added column.
      */
-    function __construct ($field_type, $field_name, $default_value=null, $is_null_allowed=true)
+    function __construct (string $field_type, string $field_name, $default_value=null, bool $is_null_allowed=true)
     {
         $this->type            = $field_type;
         $this->field_name      = $field_name;
@@ -84,68 +84,109 @@ class Column
      * Sets an attribute
      * @return $this
      */
-    public function Set($attribute_name,$value) {$this->$attribute_name     = $value;   return $this;}
+    public function Set(string $attribute_name, $value)
+    {
+        $this->$attribute_name = $value;
+        return $this;
+    }
 
 
     /**
      * Sets $collation
      * @return $this
      */
-    public function Set_collation      ($value)      {  $this->collation       = $value; return $this; }
+    public function Set_collation(string $value)
+    {
+        $this->collation = $value;
+        return $this;
+    }
 
 
     /**
      * Sets $comment
      * @return $this
      */
-    public function Set_comment        ($value)      {  $this->comment         = $value; return $this; }
+    public function Set_comment(string $value)
+    {
+        $this->comment = $value;
+        return $this;
+    }
 
 
     /**
      * Sets $default_value
      * @return $this
      */
-    public function Set_default_value  ($value)      {  $this->default_value   = $value; return $this; }
+    public function Set_default_value($value)
+    {
+        $this->default_value = $value;
+        return $this;
+    }
+
 
     /**
      * Sets $default_raw
      * @return $this
      */
-    public function Set_default_raw  ($value)       {  $this->default_raw   = $value; return $this; }
+    public function Set_default_raw($value)
+    {
+        $this->default_raw = $value;
+        return $this;
+    }
 
 
     /**
      * Sets $field_name
      * @return $this
      */
-    public function Set_field_name     ($value)      {  $this->field_name      = $value; return $this; }
+    public function Set_field_name(string $value)
+    {
+        $this->field_name = $value;
+        return $this;
+    }
 
 
     /**
      * Sets $is_auto_increment
      */
-    public function Set_auto_increment ($value=true) {  $this->auto_increment  = $value; return $this; }
+    public function Set_auto_increment($value = true)
+    {
+        $this->auto_increment = $value;
+        return $this;
+    }
 
 
     /**
      * Sets $is_null_allowed
      * @return $this
      */
-    public function Set_nullable      ($value=true)  {  $this->is_null_allowed = $value; return $this; }
+    public function Set_nullable(bool $value = true)
+    {
+        $this->is_null_allowed = $value;
+        return $this;
+    }
 
 
     /**
      * Sets $is_unsigned
      * @return $this
      */
-    public function Set_unsigned      ($value=true)  {  $this->is_unsigned     = $value; return $this; }
+    public function Set_unsigned(bool $value = true)
+    {
+        $this->is_unsigned = $value;
+        return $this;
+    }
 
 
     /**
      * Sets $is_zerofill
      * @return $this
      */
-    public function Set_zerofill      ($value=true)  {  $this->is_zerofill     = $value; return $this; }
+    public function Set_zerofill(bool $value = true)
+    {
+        $this->is_zerofill = $value;
+        return $this;
+    }
 
 
     /**
@@ -153,5 +194,9 @@ class Column
      * @param @value string Column type INT, VARCHAR(50) , DATETIME ....
      * @return $this
      */
-    public function Set_type          ($value)      {  $this->type            = $value; return $this; }
+    public function Set_type(string $value)
+    {
+        $this->type = $value;
+        return $this;
+    }
 }

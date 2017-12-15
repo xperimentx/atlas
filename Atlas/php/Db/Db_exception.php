@@ -25,11 +25,10 @@ class Db_exception extends \Exception
 
     /**
      *
-     * @param Profile_item $db_profile_item
-     * @param type $code
+     * @param Profile_item $db_profile
      * @param \Exception $previous
      */
-    public function __construct($db_profile, $previous = null)
+    public function __construct(Profile_item $db_profile, $previous = null)
     {
         parent::__construct($db_profile->error_description, $db_profile->error_code, $previous);
 
@@ -41,7 +40,7 @@ class Db_exception extends \Exception
      * Return Db error item
      * @return Profile_item
      */
-    function Get_profile()
+    function Get_profile() :Profile_item
     {
         return $this->db_profile;
     }

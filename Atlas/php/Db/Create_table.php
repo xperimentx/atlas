@@ -39,7 +39,7 @@ class Create_table
     /**
      * @param string $table Table name. `` will be added.
      */
-    public function __construct($table, $db_object = null)
+    public function __construct(string $table, Db $db_object = null)
     {
         $this->table = $table            ;
         $this->db    = $db_object ?? Db::$db;
@@ -64,12 +64,12 @@ class Create_table
      *          DATE, TIME, DATETIME ...
      *
      * @param string $field_name Field name.  `` will be added.
-     * @param scalar $default_value  Scalar default value.
+     * @param scalar|null $default_value  Scalar default value.
      * @param bool  $is_null_allowed Can the value of this field can be null?
      *
      * @return Column Added column.
      */
-    public function Add_column ($field_type, $field_name, $default_value=NULL, $is_null_allowed=true)
+    public function Add_column (string $field_type, string $field_name, $default_value=null, bool $is_null_allowed=true) :Column
     {
         $this->columns[] = $col = new Column($field_type, $field_name, $default_value, $is_null_allowed);
         return $col;
@@ -82,7 +82,7 @@ class Create_table
      * @param string $field_name
      * @return Column Added column
      */
-    public function Add_column_id ($field_name='id')
+    public function Add_column_id (string $field_name='id') :Column
     {
         $col = new Column('int', $field_name);
         $col->is_unsigned       = true;
@@ -104,22 +104,22 @@ class Create_table
 
 
     /**
-     * Adds an index
+     * Adds an index.
      * @param string  $index_name Index name. `` will be added.
      * @param string  $fields Coma separated field names.
      * @param string  $type Index type: normal, UNIQUE, FULLTEXT, SPATIAL
      */
-    public function Add_index($index_name, $fields ,$type=self::INDEX_NORMAL)
+    public function Add_index(string $index_name, string $fields , string $type=self::INDEX_NORMAL)
     {
         $this->items[]="$type INDEX `$index_name` ($fields)";
     }
 
 
     /**
-     * Adds the primary key
+     * Adds the primary key.
      * @param string  $fields Comas separated field names.
      */
-    public function Add_primary_key ($fields)
+    public function Add_primary_key (string $fields)
     {
         $this->items[]="PRIMARY KEY ($fields)";
     }
@@ -132,7 +132,7 @@ class Create_table
 
 
     /**
-     * Adds a foreign key
+     * Adds a foreign key.
      * @param string|null $symbol Key name. `` will be added.
      * @param string $fields Coma separated field names.
      * @param string $foreign_table Foreign table.`` will be added.
@@ -140,8 +140,8 @@ class Create_table
      * @param string $on_delete Reference option
      * @param string $on_update Reference option
      */
-    public function Add_foreign_key ($symbol, $fields, $foreign_table, $foreign_fields,
-                                     $on_delete=self::FOREIGN_KEY_NO_RESTRICT, $on_update=self::FOREIGN_KEY_RESTRICT)
+    public function Add_foreign_key ($symbol, string $fields, string $foreign_table, string $foreign_fields,
+                                     string $on_delete=self::FOREIGN_KEY_NO_RESTRICT, string $on_update=self::FOREIGN_KEY_RESTRICT)
     {
         $cs= $symbol? "CONSTRAINT `$symbol`":'';
         $this->items[]="$cs FOREIGN KEY ($fields) REFERENCES `$foreign_table'(`$foreign_fields`)".
@@ -176,8 +176,9 @@ class Create_table
      * Runs create table query
      * @return int Affected rows.
      * @param $db Db Instance or Db object, null:for default DB::$db.
+     * @return int Affected rows.
      */
-    function Run()
+    function Run() : int
     {
         return $this->db->Query_ar((string)$this);
     }
@@ -187,7 +188,7 @@ class Create_table
      * Runs create table query if not exists the table.
      * @return int Affected rows.
      */
-    function Run_if_not_exists()
+    function Run_if_not_exists() :int
     {
         $this->if_not_exists = true;
         return $this->db->Query_ar((string)$this);

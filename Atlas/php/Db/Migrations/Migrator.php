@@ -42,7 +42,7 @@ abstract class Migrator
      * @param Migrator_cfg $cfg Configuration.
      * @param Db           $db  Db object. null=> Default db.
      */
-    function __construct($cfg, $db=null)
+    function __construct(Migrator_cfg$cfg, Db $db=null)
     {
         $this->cfg = $cfg;
         $this->db = $db ?? Db::$db;
@@ -127,17 +127,17 @@ abstract class Migrator
     /**
      * Shows an error running Init().
      * @var string $title   Error title
-     * @var string|null $details Details
+     * @var string  $details Details
      */
-    abstract protected function Show_error($title, $details=null);
+    abstract protected function Show_error(string $title, string $details='');
 
 
     /**
      * Shows a notice running Init().
      * @var string $title   Error title
-     * @var string|null $details Details
+     * @var string $details Details
      */
-    abstract protected function  Show_notice($title, $details=null);
+    abstract protected function  Show_notice(string $title, string $details='');
 
 
     /**

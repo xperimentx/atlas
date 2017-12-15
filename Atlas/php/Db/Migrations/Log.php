@@ -32,7 +32,7 @@ class Log
      * @param string $table_prefix
      * @param Db $db
      */
-    static public  function Create_table_if_not_exists($table_prefix, $db)
+    static public  function Create_table_if_not_exists(string $table_prefix, Db $db) :int
     {
         $l = new Create_table($table_prefix.'log', $db);
         $l->Add_column_id();
@@ -45,19 +45,19 @@ class Log
 
         return $l->Run_if_not_exists();
     }
-     
-          
+
+
     /**
      *
      * @param string $table_prefix
      * @param Db $db
-     * @param int $step     
+     * @param int $step
      * @param string $status 'UP', 'DOWN', 'UP_ERROR', 'DOWN_ERROR' , 'ERROR', 'INFO'
      * @param float  $seconds
      * @param string|null $details
      * @param string|null $exception Exception details
      */
-    static function Add($table_prefix, $db, $step, $status, $seconds, $details=null, $exception=null)
+    static function Add(string $table_prefix, Db $db, int $step, string $status, float $seconds, string $details=null, string $exception=null) :int
     {
         return $db->Insert
         (
@@ -70,24 +70,24 @@ class Log
                 'details'      => $details,
                 'exception'    => $exception,
             ],
-            true                
+            true
         );
-    }   
-    
-    
+    }
+
+
     /**
      *
      * @param string $table_prefix
      * @param Db $db
-     * @param int $step     
+     * @param int $step
      * @param string $status 'UP', 'DOWN', 'UP_ERROR', 'DOWN_ERROR' , 'ERROR', 'INFO'
      * @param int $microseconds
      * @param string|null $details
      */
-    static function Clean($table_prefix, $db)
+    static function Clean(string $table_prefix, DB $db) :int
     {
         return $db->Truncate_table($table_prefix.'log');
-    }   
+    }
 }
 
 

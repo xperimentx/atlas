@@ -48,9 +48,9 @@ class Migrator_cli_views
 
     /**
      * @var string $title   Error title
-     * @var string|null $details Details
+     * @var string $details Details
      */
-    public function Show_error($title, $details)
+    public function Show_error(string $title, string $details='')
     {
         $cli = $this->cli;
 
@@ -66,9 +66,9 @@ class Migrator_cli_views
 
     /**
      * @var string $title   Error title
-     * @var string|null $details Details
+     * @var string $details Details
      */
-    public function Show_notice($title, $details)
+    public function Show_notice(string $title, string $details='')
     {
         $cli = $this->cli;
 
@@ -83,12 +83,12 @@ class Migrator_cli_views
 
     /**
      * Shows status.
-     * @param Status_row $status
+     * @param Status $status
      * @param int $num_pending
      * @param int $last_step
      * @param string $last_title
      */
-    public function Show_status ($status, $num_pending, $last_step, $last_title )
+    public function Show_status (Status $status, int $num_pending, int $last_step, string $last_title )
     {
         $cli = $this->cli;
         echo "{$cli->fg_gray}  Current step :{$cli->fg_light_cyan} $status->step"
@@ -139,7 +139,7 @@ class Migrator_cli_views
     }
 
 
-    public function List_files($number, $file_titles)
+    public function List_files(int $number, array $file_titles)
     {
         $cli = $this->cli;
 
