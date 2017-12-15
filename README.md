@@ -9,7 +9,7 @@
 Atlas is designed to give you freedom in the structure and implementation of your website.
 
 
-Take a look at [xperimentX Demo](https://github.com/xperimentx/atlas-sample)  project to see a more realistic example than the documentation.
+Take a look at [xperimentX Demo](https://github.com/xperimentx/Demo)  project to see a more realistic example than the documentation.
 
 
 
@@ -18,7 +18,7 @@ Take a look at [xperimentX Demo](https://github.com/xperimentx/atlas-sample)  pr
 * [Quick start guide.](Atlas/doc/Quick-start-guide.md)
 * [Autoloader.](Atlas/doc/Autoloader.md)
 * [Environment (production, development...)](Atlas/doc/Environment.md)
-* [App example.](Atlas/doc/App-demo.md)
+* [Uri (production, development...)](Atlas/doc/Environment.md)
  
 
 ## Database Reference
@@ -45,7 +45,7 @@ Take a look at [xperimentX Demo](https://github.com/xperimentx/atlas-sample)  pr
 * [History.](Atlas/doc/History.md)
 
 ## Other
-
+* [Demo app.](Atlas/doc/App-demo.md)
 * [Credits.](Atlas/doc/Credits.md)
 
 
