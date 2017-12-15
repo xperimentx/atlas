@@ -153,9 +153,7 @@ class Cli
      */
     public function  Is_cli_environment ()
     {
-        global  $argv;
-
-        return isset($argv[0]);
+        return defined('STDIN');
     }
 
 
@@ -165,8 +163,11 @@ class Cli
      */
     public function  Require_cli_environment ()
     {
-        global  $argv;
-        $argv[0] ?? header(($_SERVER["SERVER_PROTOCOL"]??'HTTP/1.1').' 403 Forbidden') & exit();
+        if (defined('STDIN'))
+            return;
+
+        header(($_SERVER["SERVER_PROTOCOL"]??'HTTP/1.1').' 403 Forbidden') ;
+        exit();
     }
 
 
