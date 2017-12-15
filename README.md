@@ -2,9 +2,9 @@
 
 [:books: Documentation](Atlas/doc/README.md)
 
-# xperimentX Atlas Php Toolkit
+# xperimentX atlas php toolkit
 
-**xperimentX Atlas** is a development toolkit** for PHP projects.
+**xperimentX atlas** is a development toolkit** for PHP projects.
 
 Atlas is designed to give you freedom in the structure and implementation of your website.
 

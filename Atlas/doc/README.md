@@ -1,6 +1,6 @@
 ![xperimentx atlas](images/atlas.png) 
 
-# xperimentX Atlas php toolkit 
+# xperimentX atlas php toolkit 
 
 
 ## Basic
