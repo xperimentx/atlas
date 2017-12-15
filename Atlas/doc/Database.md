@@ -54,19 +54,21 @@ You can  can setup the **Db cfg** property, or assing Db\Db_cfg to de Db object.
 
 ### Configuration class Db\Db_cfg.
 
-|  Db\Db_cfg properties     | Defaul value      |                                    |
-|:--------------------------|:------------------|:-----------------------------------|
-| string  $server           | 'localhost'       | Db host. 'p:host' for persistent   |                 
-| string  $user_name        | null              | User name.                         |        
-| string  $password         | null              | Password.                          |        
-| string  $db_name          | null              | Database.                          |        
-| string  $port             | 3306              | Port.                              |        
-| string  $socket           | null              | Socket.                            |        
-| string  $charset          | 'utf8'            | Charset.                           |          
-| string  $collation        | 'utf8_general_ci' | Collation.                         |                     
-| string  $engine           | 'InnoDB'          | Engine                             |            
-| bool    $throw_exceptions | false             | Throw exceptions on mysqli errors. |         
-
+|        | properties        | Default value     |                                    |
+|:-------|-------------------|:------------------|:-----------------------------------|
+| string | $server           | 'localhost'       | Database host. 'p:host' for persistent   |                 
+| string | $user_name        | null              | User name.                         |        
+| string | $password         | null              | Password.                          |        
+| string | $db_name          | null              | Database name.                     |        
+|        |                   |                   |                                    |        
+| string | $port             | 3306              | Port.                              |        
+| string | $socket           | null              | Socket.                            |        
+| string | $charset          | 'utf8'            | Charset.                           |          
+| string | $collation        | 'utf8_general_ci' | Collation.                         |                     
+| string | $engine           | 'InnoDB'          | Engine                             |    
+|        |                   |                   |                                    |        
+| bool   | $throw_exceptions | false             | Throw exceptions on mysqli errors. Do not affect to connect errors |         
+| bool   | $throw_exceptions_on_connect| false   | Throw exceptions on connect errors.|
 
 
 ### Setting the cfg property.
@@ -171,7 +173,6 @@ $bd->mysqli = My_mysqli_object;
 | $last_error       |Profile_item   |Last error. Null if last call is successful.   |
 | $last_profile     |Profile_item   |Last profile. Null if error in last call.      |
 | $cfg              |Db_cfg         |Configuration, options.                        |
-| $throw_exceptions |bool           |Throw Db_exception exceptions on mysqli errors.|
 | static $db        |Db             |First object connected. The main Db object.    |
 
 
@@ -185,7 +186,7 @@ $bd->mysqli = My_mysqli_object;
 |Db method   |Info   |
 |:-----------|:------|
 |**Query**    ($query, [$caller_method]) :mixed,null| Performs a query on the database.|
-|**Query_ar** ($query, [$caller_method]) :int,null| Performs a query on the database en returns the number of affected rows.|
+|**Query_ar** ($query, [$caller_method]) :int| Performs a query on the database and returns the number of affected rows.|
 
 
 ---
@@ -195,8 +196,8 @@ $bd->mysqli = My_mysqli_object;
 
 |Db method   |Info   |
 |:-----------|:------|
-|**Scalar** ($query ) :scalar            | Returns first column of first row of a query result.|
-|**Row**    ($query, [$class_name]) :object| Returns first row for a query as an object.|
+|**Scalar** ($query ) :scalar,null            | Returns first column of first row of a query result.|
+|**Row**    ($query, [$class_name]) :object,null| Returns first row for a query as an object.|
 |**Rows**   ($query, [$class_name]) :array | Returns an array of objects for a query statement|    
 |**Column** ($query)              :array | Returns a the first column of a query as array.|
 |**Vector** ($query)              :array | Returns a simple array index=>scalar_value from a query.|    
@@ -233,7 +234,7 @@ $bd->mysqli = My_mysqli_object;
 |:-----------|:------|
 |**Is_unique** ($table_name, $field_value , $field_name, [$key_value_to_ignore], [$key_field_name]) :bool|Checks if the value of the field is unique in the table.|    
 |**Active_record_class_maker** ($table, $class_name, [$parent_class_name]) :string |Generates a base code for an active record class based in the fields of a table.|
-
+|**Throw_exceptions () | Configure to throw exceptions on mysqli errors and on connect errors.|
 
  
 ---
@@ -247,7 +248,7 @@ $bd->mysqli = My_mysqli_object;
 |**Show_columns**         ($table) :object[]|Shows columns info form a table.|    
 |**Show_column_names**    ($table) :string[]|Shows columns names form a table.|    
 |**Show_create_database** ($database_name, [$if_not_exists]) :string| Creates a database.|
-|**Show_create_table**    ($table)|Shows CREATE TABLE for a table.|
+|**Show_create_table**    ($table) :string  |Shows CREATE TABLE for a table.|
 |**Show_tables**          ([$like], [$database_name]) :string[]| Show table names from a database.|
 
 

@@ -84,7 +84,7 @@ abstract class Migrator
 
     private function Init_db()
     {
-        $this->db->throw_exceptions = true;
+        $this->db->Throw_exceptions();
 
         $ko_txt       = '';
 

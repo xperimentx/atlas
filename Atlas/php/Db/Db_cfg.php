@@ -30,7 +30,9 @@ class Db_cfg
     /** @var string Charset.                           */  public $charset          = 'utf8';
     /** @var string Collation.                         */  public $collation        = 'utf8_general_ci';
     /** @var string Engine                             */  public $engine           = 'InnoDB';
-    /** @var bool   Throw exceptions on mysqli errors. */  public $throw_exceptions = false;
+    /** @var bool   Throw exceptions on mysqli errors
+     *              Do not affect to connect errors.   */  public $throw_exceptions            = false;
+    /** @var bool   Throw exceptions on connect errors.*/  public $throw_exceptions_on_connect = false;
 
 
     /**

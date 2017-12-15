@@ -30,9 +30,9 @@ class Db
     /** @var Profile_item[] Errors.                                        */  public $errors           = [];
     /** @var Profile_item   Last error. Null if last call is successful.   */  public $last_error       = null;
     /** @var Profile_item   Last profile. Null if error in last call       */  public $last_profile     = null;
-    /** @var Db_cfg         Configuration, options.                        */  public $cfg              = null;
     /** @var bool           Throw Db_exception exceptions on mysqli errors.*/  public $throw_exceptions = false;
     /** @var Db             First object connected. The main Db object.    */  public static $db        = null;
+    /** @var Db_cfg         Configuration, options.                        */  public  $cfg             = null;
 
     const ENGINE_MYISAM = 'MyISAM';
     const ENGINE_INNODB = 'InnoDB';
@@ -50,9 +50,16 @@ class Db
         if (is_string($cfg))
             $cfg = new $cfg;
 
-        $this->cfg = $cfg ?? new Db_cfg();
+        $this->Set_cfg($cfg ?? new Db_cfg());
+    }
 
-        $this->throw_exceptions = $this->cfg->throw_exceptions;
+    /**
+     * Configure to throw exceptions on mysqli errors and on connect errors.
+     */
+    public function Trow_exceptions()
+    {
+        $this->cfg->throw_exceptions = true;
+        $this->cfg->throw_exceptions_on_connect = true;
     }
 
 
@@ -61,9 +68,10 @@ class Db
      *
      * Creates a new mysqli object and connects it to the MySQL server.
      * @param Db_cfg Configuration.
+     * @throws Db\Db_exception
      * @return bool  Is connection successful.
      */
-    public function Connect ()
+    public function Connect () : bool
     {
         $cfg    = $this->cfg;
         $m_time = microtime(true);
@@ -94,7 +102,7 @@ class Db
                         $this->mysqli->connect_error
                     );
 
-            if ($this->throw_exceptions)
+            if ($this->cfg->throw_exceptions_on_connect)
                 throw new Db\Db_exception($this->last_error);
 
             return false;
@@ -117,7 +125,7 @@ class Db
      * @param Db_cfg|string $cfg Configuration object, or full class name of the configuration object
      * @param string $message Message to show.
      */
-    public function Connect_or_die($message="Database connection error \n")
+    public function Connect_or_die(string $message="Database connection error \n")
     {
         if($this->Connect()) return;
 
@@ -133,9 +141,10 @@ class Db
      *
      * @param string  $query            Sql query statement.
      * @param string $caller_method Caller name for log errors, __METHOD__.
+     * @throws Db\Db_exception
      * @return mixed|null  null:error or mysqli::query result.
      */
-    protected function Query ($query, $caller_method=null)
+    protected function Query (string $query, string $caller_method=null)
     {
         $m_time = microtime(true);
 
@@ -180,13 +189,13 @@ class Db
      * @param string  $query   Sql query statement.
      * @param string $caller_method Caller name for log errors, __METHOD__.
      *
-     * @return int|null  Affected rows by query, null if error
+     * @return int  Affected rows by query, null if error
      */
-    public function Query_ar ($query, $caller_method=null)
+    public function Query_ar (string $query, string $caller_method=null) : int
     {
         return  $this->Query($query, $caller_method?:__METHOD__)
                 ? $this->mysqli->affected_rows
-                : null;
+                : 0;
     }
 
 
@@ -195,9 +204,9 @@ class Db
      *
      * @param string  $query  SELECT sql query statement.
      *
-     * @return mixed|null  Scalar value, null if no query result or error.
+     * @return scalar|null  Scalar value, null if no query result or error.
      */
-    public function Scalar ($query )
+    public function Scalar (string $query)
     {
         if ($result = $this->Query($query, __METHOD__))  //:=
         {
@@ -217,7 +226,7 @@ class Db
      * @param string  $class_name  Class Name of object.
      * @return object|null Row data, null if no data or error.
      */
-    public function Row ($query, $class_name='stdClass')
+    public function Row (string $query, string $class_name='stdClass')
     {
         if ($result = $this->Query($query, __METHOD__))  //:=
         {
@@ -236,7 +245,7 @@ class Db
      * @param string  $class_name  Class name of objects.
      * @return array
      */
-    public function  Rows ($query, $class_name='stdClass')
+    public function  Rows (string $query, string $class_name='stdClass') :array
     {
         $lista = [];
 
@@ -258,7 +267,7 @@ class Db
      * @param string  $query Select query statement.
      * @return array
      */
-    public function Column ($query )
+    public function Column (string $query ) : array
     {
         $lista = [];
 
@@ -281,7 +290,7 @@ class Db
      * @param string $query    Select query statement with 'id' and 'name' columns.
      * @return array
     */
-    public function Vector ($query)
+    public function Vector (string $query): array
     {
         $lista = array();
         if ($result = $this->Query($query, __METHOD__))  //:=
@@ -298,17 +307,13 @@ class Db
     }
 
 
-
-
-
-
     /**
      * Escapes special characters in a string for use in an SQL statement, between single quotes '.
      * @param string $scalar Scalar value to process.
      * @return string
      * @see Safe()
      */
-    public function Str ($scalar)
+    public function Str (string $scalar) : string
     {
         return '\''.$this->mysqli->real_escape_string($scalar).'\'';
     }
@@ -317,22 +322,17 @@ class Db
 
     /**
      * Returns a safe value from a scalar for an SQL statement.
-     * @param string|int|float|bool|null $value Scalar value to process.
+     *
+     * All not scalars values are considered as null.
+     * @param scalar|null $value Scalar value to process.
      * @see Str()
      */
-    public function  Safe($value)
+    public function  Safe($value) :string
     {
-        if      (is_null   ($value))
-            return 'NULL';
-
-        else if (is_bool   ($value))
-            return (int)$value;
-
-        else if (is_numeric($value) and substr($value,0,1)!=='0')
-            return      $value;
-
-        else
-            return $this->Str($value);
+        if     (!is_scalar($value))  return 'NULL';
+        elseif (is_bool($value))     return $value ? '1':'0';
+        elseif (is_numeric($value))  return (string)$value;
+        else                         return '\''.$this->mysqli->real_escape_string($value).'\'';
     }
 
 
@@ -342,11 +342,13 @@ class Db
      * @param string $table_name           Table name. `` will be added.
      * @param string $field_value          Value to check.
      * @param string $field_name           Name of column to check.
-     * @param string $key_value_to_ignore  Value of key  to ignore a row, for updates. Null checks all table.
+     * @param scalar|null $key_value_to_ignore  Value of key  to ignore a row, for updates.
+     *                                          Null checks all table.
      * @param string $key_field_name       Name of key field. `` will be added.
      * @return bool
      */
-    public function Is_unique($table_name, $field_value , $field_name, $key_value_to_ignore=null, $key_field_name='id')
+    public function Is_unique( string $table_name, string $field_value , string $field_name,
+                               $key_value_to_ignore=null, string $key_field_name='id') : bool
     {
         $value_db = $this->Safe($field_value);
         $ignore_key   = $key_value_to_ignore !==NULL ? " AND `$key_field_name`!=". $this->Safe($key_value_to_ignore) : '' ;
@@ -355,16 +357,14 @@ class Db
     }
 
 
-
-
     /**
      * Insert into statement.
      * @param string  $table    Table for update.`` will be added.
      * @param array   $data     Data. Index:field name.  Value:field value.
      * @param bool    $do_safe  This values will be processed by Safe().
-     * @return int|null         Affected rows or null if error
+     * @return int              Affected rows
      */
-    public function  Insert($table, $data, $do_safe = true )
+    public function  Insert(string $table, array $data, bool $do_safe = true ) : int
     {
         if ($do_safe)
         {
@@ -377,17 +377,15 @@ class Db
     }
 
 
-
-
     /**
      * Update statement.
      * @param string  $table    Table for update.`` will be added.
      * @param array   $data     Data. Index:field name.  Value:field value.
-     * @param string  $where    WHERE conditions
+     * @param string|null  $where    WHERE conditions
      * @param bool    $do_safe  This values will be processed by Safe().
-     * @return int|null         Affected rows or null if error
+     * @return int              Affected rows or null if error
      */
-    public function  Update($table, $data, $where=null, $do_safe=true )
+    public function  Update(string $table, array $data, string $where=null, bool $do_safe=true ) : int
     {
         $sets = [];
 
@@ -403,19 +401,16 @@ class Db
     }
 
 
-
     /**
      * Update a row (key!=null) or Insert a new row  (key value=null).
      * @param string  $table            Table for update. `` will be added.
      * @param array   $data             Data. Index:field name.  Value:field value.
-     * @param string  $key_value        Value of key  to  update. By reference for inserts ( key=null) => get insert_id if autonumeric
+     * @param scalar  $key_value        Value of key  to  update. By reference for inserts ( key=null) => get insert_id if autonumeric
      * @param string  $key_field_name  Name of key field. `` will be added.
      * @param bool    $do_safe         This values will be processed by Safe().
      * @return   int Number of  affected rows.
-     * @since 2.0
      */
-
-    public function  Update_or_insert($table, $data, &$key_value , $key_field_name='id', $do_safe=true)
+    public function  Update_or_insert(string $table, array $data, &$key_value , string $key_field_name='id', bool $do_safe=true) : int
     {
         if (null !==$key_value)
         {
@@ -439,7 +434,7 @@ class Db
      * @param string $table Table name. `` will be added.
      * @return \Xperimentx\Atlas\Db\Create_table
      */
-    public function Create_table($table)
+    public function Create_table(string $table) : Db\Create_table
     {
         return new Db\Create_table($table, $this);
     }
@@ -450,11 +445,11 @@ class Db
      * @param string $table Table name. `` will be added.
      * @return \Xperimentx\Atlas\Db\Alter_table
      */
-    public function Alter_table($table)
+    public function Alter_table(string $table) : Db\Alter_table
     {
         return new Db\Alter_table($table, $this);
     }
-    
+
 
     /**
      * Drops a table.
@@ -462,28 +457,31 @@ class Db
      * @param bool $if_exists
      * @return int Affected rows
      */
-    public function Drop_table($table, $if_exists=true)
+    public function Drop_table(string $table, bool $if_exists=true) : int
     {
         return $this->Query_ar('DROP TABLE '.($if_exists?'IF EXISTS ':'')."`$table`;");
     }
+
 
     /**
      * Optimizes a table.
      * @param string $table Table name. `` will be added.
      * @return array MySql messages {Table, Op, Msg_type, Msg_text}[]
      */
-    public function Optimize_table($table)
+    public function Optimize_table(string $table) : array
     {
         return $this->Rows("OPTIMIZE TABLE `{$table}`; ");
 
     }
+
+
     /**
      * Truncates a table.
      * @param string $table Table name. `` will be added.
      * @param bool $if_exists
      * @return int Affected rows
      */
-    public function Truncate_table($table)
+    public function Truncate_table(string $table) : int
     {
         return $this->Query_ar("TRUNCATE TABLE `$table`;\n");
     }
@@ -495,7 +493,7 @@ class Db
      * @param bool $if_exists
      * @return int Affected rows
      */
-    public function Drop_database($database_name, $if_exists=true)
+    public function Drop_database(string $database_name, bool $if_exists=true) :int
     {
         return $this->Query_ar('DROP DATABASE '.($if_exists?'IF EXISTS ':'')."`$database_name`;");
     }
@@ -507,7 +505,7 @@ class Db
      * @param bool $if_exists
      * @return int Affected rows
      */
-    public function Drop_view($view_name, $if_exists=true)
+    public function Drop_view(string $view_name, bool $if_exists=true) : int
     {
         return $this->Query_ar('DROP VIEW '.($if_exists?'IF EXISTS ':'')."`$view_name`;");
     }
@@ -520,7 +518,7 @@ class Db
      * @param bool $if_not_exists
      * @return int Affected rows
      */
-    public function Create_database($database_name, $collate='utf8_general_ci', $if_not_exists=true)
+    public function Create_database(string $database_name, string $collate='utf8_general_ci', bool $if_not_exists=true) :int
     {
         return $this->Query_ar('CREATE DATABASE '.($if_not_exists?'IF NOT EXISTS ':'')."`$database_name` ". ($collate ? " /*!40100 COLLATE '$collate' */;\n":";"));
     }
@@ -531,7 +529,7 @@ class Db
      * @param string $table Table name. `` will be added.
      * @return object[] {Field, Type, Collation, Null, Key, Default, Extra, Privileges, Comment}
      */
-    public function Show_columns ($table)
+    public function Show_columns (string $table) :array
     {
         return $this->Rows("SHOW FULL COLUMNS FROM `$table`;");
     }
@@ -542,7 +540,7 @@ class Db
      * @param string $table Table name. `` will be added.
      * @return string[]
      */
-    public function Show_column_names ($table)
+    public function Show_column_names (string $table) :array
     {
         return $this->Column("SHOW COLUMNS FROM `$table`;");
     }
@@ -551,12 +549,12 @@ class Db
     /**
      * Shows CREATE TABLE for a table.
      * @param string $table Table name. `` will be added.
-     * @return string|null
+     * @return string
      */
-    public function Show_create_table($table)
+    public function Show_create_table(string $table) :string
     {
         $x = $this->Row("SHOW CREATE TABLE `$table`");
-        return $x->{"Create Table"}??null;
+        return $x->{"Create Table"}??'';
     }
 
 
@@ -564,23 +562,24 @@ class Db
      * Shows CREATE DATABASE for a database.
      * @param string $database_name Database name. `` will be added.
      * @param bool $if_not_exists
-     * @return string|null
+     * @return string
      */
-    public function Show_create_database($database_name, $if_not_exists=true)
+    public function Show_create_database(string $database_name, bool $if_not_exists=true) :string
     {
         $x = $this->Row('SHOW CREATE DATABASE '.($if_not_exists?'IF NOT EXISTS ':'')."`$database_name` ");
-        return $x->{"Create Database"}??null;
+        return $x->{"Create Database"}??'';
     }
 
+
     /**
-     * Show table names from a database
+     * Show table names from a database .
      *
      * SHOW TABLES FROM `$database_name` LIKE '$like';
      *
-     * @param string $like Like pattern, optional.
+     * @param string|null $like Like pattern, optional.
      * @param string|null $database_name Database name. Null=current database, `` will be added.
      */
-    public function Show_tables ($like=null, $database_name=null)
+    public function Show_tables_like (string $like, string $database_name=null) : array
     {
         $from     = $database_name ? " FROM `$database_name` ":'';
         $like_sql = $like          ? " LIKE '$like'":'' ;
@@ -597,7 +596,7 @@ class Db
      * @param string $query
      * @return object[] {id, select_type, table, partitions,type,posible_keys,key_len,ref,rows. filtered, Extra}
      */
-    public function Describe ($query)
+    public function Describe (string $query) :array
     {
         return $this->Rows("DESCRIBE $query ;");
     }
@@ -606,13 +605,13 @@ class Db
     /**
      * Describes a query in a html table.
      * @param string $query
-     * @return string html Returns a html tlable.
+     * @return string html Returns a html table, empty string if not description.
      */
-    public function Describe_html_table ($query)
+    public function Describe_html_table (string $query) :string
     {
         $data = $this->Describe($query);
 
-        if(!$data) return null;
+        if(!$data) return '';
 
         $out="<table class='xx-atlas-db-describe'>
             <tr><th style='text-align:right'>Id</th>
@@ -650,7 +649,7 @@ class Db
      * Returns a basic report of profiles as a html table.
      * @return string Html table.
      */
-    public function Pofiles_html_table ()
+    public function Pofiles_html_table () :string
     {
         $out="<table class='xx-atlas-db-profiles'>
             <tr><th style='text-align:right'>Seconds</th>
@@ -673,7 +672,7 @@ class Db
      * Returns a report with query description as html.
      * @return string Html report
      */
-    public function Pofiles_describe_html ()
+    public function Pofiles_describe_html () :string
     {
         $out ='';
         foreach ($this->profiles as $pro)
@@ -696,11 +695,11 @@ class Db
      * @param string $parent_class_name Active recod class name to extend
      * @return string Php code of the active record class
      */
-    function Active_record_class_maker($table, $class_name, $parent_class_name='\Xperimentx\Atlas\Active_record')
+    function Active_record_class_maker(string $table, string $class_name, string $parent_class_name='\Xperimentx\Atlas\Active_record') :string
     {
         $cols = $this->Show_columns($table);
 
-        if (!$cols) return;
+        if (!$cols) return '';
         $properties ='';
 
         foreach ($cols as $col)
