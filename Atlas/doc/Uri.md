@@ -4,7 +4,7 @@
 
 # Uri
 
-## Uri class
+## Htt\Uri class
 
  Parses an URI string to part  and generates the URI string  from parts.
 

@@ -11,7 +11,7 @@
  * @license   MIT
  */
 
-namespace Xperimentx\Atlas;
+namespace Xperimentx\Atlas\Http;
 
 /**
  * Parses an URI string to part  and generates the URI string  from parts
