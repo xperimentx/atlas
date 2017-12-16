@@ -12,20 +12,13 @@
  * @license   MIT
  */
 
-    /**
-namespace Xperimentx\Atlas\Http;
-https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
-    https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-	 * Constants for status codes.
-	 * From  https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
-	 * /
-	// Informational
-
-
 /**
- * Description of Status
- * _NST Deprecate, no standaerd , draft
- * @author rogon
+ * Http Status.
+ *
+ * @link https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+ * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+ * @link https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+ * @author  Roberto González Vázquez
  */
 class Status
 {
@@ -249,7 +242,7 @@ class Status
     /**
      * Returns a short description of the status code.
      *
-     * If not found : 
+     * If not found :
      * - $show_family_if_unknow==true  shows a generic description for status family.
      * - $show_family_if_unknow==false returns a empty string.
      * @param int $status_code
