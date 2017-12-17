@@ -36,7 +36,7 @@ class Active_record
     function __construct($db=null)
     {
         $this->cli = new Cli();
-        $this->db = $db ?? Db::$db;
+        $this->db = $db ?? Db::Obj();
     }
 
 

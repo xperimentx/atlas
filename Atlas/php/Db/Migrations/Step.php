@@ -36,6 +36,6 @@ abstract class Step
      */
     function __construct(Db $db=null)
     {
-        $this->db = $db ?? Db::$db;
+        $this->db = $db ?? Db::Obj();
     }
 }

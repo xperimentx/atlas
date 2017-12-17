@@ -42,7 +42,7 @@ class Create_table
     public function __construct(string $table, Db $db_object = null)
     {
         $this->table = $table            ;
-        $this->db    = $db_object ?? Db::$db;
+        $this->db    = $db_object ?? Db::Obj();
 
         if ($this->db && $this->db->cfg)
         {

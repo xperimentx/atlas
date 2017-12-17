@@ -19,7 +19,15 @@ use Xperimentx\Atlas\Db\Profile_item;
 
 
 /**
- * MySQL and MariaDB helper
+ * MySQL and MariaDB helper.
+ *
+ * The first **Db** object created  will registered as the default Object.
+ *
+ * You can change this default object using *Make_default()* method.
+ *
+ * *Db::Obj()* returns the default Db.
+ *
+ *
  * @link https://github.com/xperimentx/atlas/blob/master/Atlas/doc/Database.md
  * @author Roberto González Vázquez
  */
@@ -31,12 +39,31 @@ class Db
     /** @var Profile_item   Last error. Null if last call is successful.   */  public $last_error       = null;
     /** @var Profile_item   Last profile. Null if error in last call       */  public $last_profile     = null;
     /** @var bool           Throw Db_exception exceptions on mysqli errors.*/  public $throw_exceptions = false;
-    /** @var Db             First object connected. The main Db object.    */  public static $db        = null;
     /** @var Db_cfg         Configuration, options.                        */  public  $cfg             = null;
+    /** @var Db             First object connected. The main Db object.    */  private static $db_default        = null;
 
     const ENGINE_MYISAM = 'MyISAM';
     const ENGINE_INNODB = 'InnoDB';
     const ENGINE_ARIA   = 'Aria';
+
+    /**
+     * Returns the Default Db
+     * @see Set_
+     * @return \Xperimentx\Atlas\Db
+     */
+    function Obj() :Db
+    {
+        return self::$db_default;
+    }
+
+    /**
+     * Sets this Db as the default Db object.
+     * @see Obj();
+     */
+    function Make_default()
+    {
+        self::$db_default_db = $this;
+    }
 
 
     /**
@@ -44,8 +71,8 @@ class Db
      */
     function __construct($cfg=null)
     {
-        if (!self::$db)
-            self::$db = $this;
+        if (!self::$db_default)
+            self::$db_default = $this;
 
         if (is_string($cfg))
             $cfg = new $cfg;

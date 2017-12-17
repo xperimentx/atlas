@@ -36,27 +36,37 @@ Namespace Xperimentx\Atlas\Db;
 
 ### Accessing your main database from anywhere
 
-'Xperimentx\Atlas\Db` is the class used to manage your databases.
+**Xperimentx\Atlas\Db** is the class used to manage your databases.
 
-The first created `DB` object will be registered in the static and public 
-property `Db::$db` as the main database.
+The first **Db** object created  will registered as the default Object.
+
+You can change this default object using *Make_default()* method.
+
+*Db::Obj()* returns the default Db.
 
 This simplifies the development by making this main database easily accessible.
 
 Atlas Database objects use this main database by default. 
-You can use as many `Db` object as you wish.
+You can use as many **Db** object as you wish.
+
+|                      |                                      |
+|:---------------------|:-------------------------------------|
+| static **Obj**() :Db |Returns the Default Db.               |
+| **Make_default**()   |Sets this Db as the default Db object.|
+    
+
 
 
 ## Configure and connect
-The **Db\Db_cfg** class is used to configuere the dabase connection.
+The **Db\Db_cfg** class is used to configure the database connection.
 
-You can  can setup the **Db cfg** property, or assing Db\Db_cfg to de Db object.
+You can  can setup the **Db cfg** property, or assign Db\Db_cfg to de Db object.
 
 ### Configuration class Db\Db_cfg.
 
 |        | properties        | Default value     |                                    |
 |:-------|-------------------|:------------------|:-----------------------------------|
-| string | $server           | 'localhost'       | Database host. 'p:host' for persistent   |                 
+| string | $server           | 'localhost'       | Database host. 'p:host' for persistent. |                 
 | string | $user_name        | null              | User name.                         |        
 | string | $password         | null              | Password.                          |        
 | string | $db_name          | null              | Database name.                     |        

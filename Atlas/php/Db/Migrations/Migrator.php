@@ -45,7 +45,7 @@ abstract class Migrator
     function __construct(Migrator_cfg$cfg, Db $db=null)
     {
         $this->cfg = $cfg;
-        $this->db = $db ?? Db::$db;
+        $this->db = $db ?? Db::Obj();
     }
 
 
