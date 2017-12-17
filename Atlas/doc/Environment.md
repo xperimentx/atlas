@@ -21,7 +21,19 @@ if (file_exists(__DIR__.'/.development'))
      Environment::Set_development_stage();
 else Environment::Set_production_stage('production-site.com');
 
-Environment::Initialize();
+
+if (file_exists(__DIR__.'/.development'))
+{
+     Stage::Development_stage();
+}
+else 
+{
+    Stage::Set_production_stage();
+    X::Set_host('production-site.com');
+}
+
+
+
 ```
 
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * xperimentX Atlas Toolkit
+ * xperimentX atlas php toolkit
  *
  * @link      https://github.com/xperimentx/atlas
  * @link      https://xperimentX.com
@@ -14,131 +14,249 @@
 
 namespace Xperimentx\Atlas;
 
+use Xperimentx\Atlas\Http;
+
 /**
- * Environment info
+ * Environment info.
+ *
  * @link https://github.com/xperimentx/atlas/blob/master/Atlas/doc/Enviroment.md
  * @author Roberto González Vázquez
  */
 class Environment
 {
-    const STAGE_PRODUCTION  = 'production';
-    const STAGE_DEVELOPMENT = 'development';
-    const STAGE_TESTING     = 'testing';
-    const STAGE_UNKNOW      =  null;
+    private static $__initialized = false;
+    private static $host         = null;
+    private static $host_uri     = '';
+    private static $is_ajax_     = null;
+    private static $is_https_    = null;
+    private static $method ;
+    private static $port;
+    private static $protocol ;
+    private static $query_string ;
+    private static $request_uri ;
+    private static $uri          = null;
 
-    const VIA_CLI        = 'cli';
-    const VIA_HTTP       = 'web';
-
-    static public $via    = null;
-    static private $stage = null;
-
-    static public  $host = null;
-
-    public static function Initialize()
+    /**
+     * Checks is via is command line.
+     * @return bool
+     */
+    public static function Is_cli() : bool
     {
-        global  $argv;
-
-        if (!self::$via)
-            self::$via = isset($argv[0]) ? self::VIA_CLI : self::VIA_HTTP;
-
-
-        if (!self::$stage)
-            self::$stage = self::STAGE_PRODUCTION;
-
+        return defined('STDIN');
     }
 
 
-    public static function Set_stage($stage, $host_name, $report_all_errors)
+
+    /**
+     * Returns if https is used in the request of this page
+     * @return bool
+     */
+    public static function Is_https():bool
     {
-        self::$stage = $stage;
-
-        if ($host_name)
-            self::$host = $host_name;
-
-        if ($report_all_errors)
+        if (null===self::$is_https_)
         {
-            error_reporting(E_ALL);
-            ini_set('display_errors', 1);
+            self::$is_https     =  !empty($_SERVER['HTTPS'])                  &&  'off'   !== strtolower($_SERVER['HTTPS']                 )
+                                || !empty($_SERVER['HTTP_FRONT_END_HTTPS'])   &&  'off'   !== strtolower($_SERVER['HTTP_FRONT_END_HTTPS']  )
+                                ||  isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&  'https' === strtolower($_SERVER['HTTP_X_FORWARDED_PROTO'])
+                                || !empty($_SERVER['HTTP_X_FORWARDED_SSL'])   &&  'on'    === strtolower($_SERVER['HTTP_X_FORWARDED_SSL']  ) ;
         }
-    }
 
-
-    public static function Set_development_stage($report_all_errors=true)
-    {
-        self::Set_stage(self::STAGE_DEVELOPMENT, null, $report_all_errors);
-    }
-
-
-    public static function Set_testing_stage($report_all_errors=true)
-    {
-        self::Set_stage(self::STAGE_TESTING, null, $report_all_errors);
-    }
-
-
-    public static function Set_production_stage($host_name=null,$report_all_errors=false)
-    {
-        self::Set_stage(self::STAGE_TESTING, $host_name, $report_all_errors);
+        return self::$is_https_;
     }
 
 
     /**
+     * Sets host name.
+     * For security reasons is recommend set this value in production stage.
+     */
+    public static  function Set_host(string $host_name)
+    {
+        self::$_host    = $host_name;
+        self::$host_uri = null; // must recalculate
+        self::$uri      = null; // must recalculate
+    }
+
+
+    /**
+     * Gets host name.
+     * For security reasons is recommend set this value in production stage.
+     */
+    public static function Get_host()
+    {
+        if (null===self::$host)
+        {
+            self::$host  == $_SERVER['SERVER_NAME']
+                         ?? $_SERVER['HTTP_HOST']
+                         ?? $_ENV["HOSTNAME"]
+                         ?? $_ENV["SERVER_NAME"]
+                         ?? $_ENV["COMPUTERNAME"];
+        }
+
+        return self::$host;
+    }
+
+
+    /**
+     * Returns scheme://host[:port]
      * @return string
      */
-    public static function Get_stage()
+    public static function Get_host_uri() :string
     {
-        return self::$stage;
+        if (null!==self::$host_uri)
+        {
+            if (self::Is_https())
+            {
+                self::$host_uri= 'https://'. self::Get_host();
+
+                if (self::$port!=443)
+                    self::$host_uri .=':'.self::$port;
+            }
+            else
+            {
+                self::$host_uri = 'http://'. self::Get_host();
+
+                if (self::$port!=80)
+                    self::$host_uri .=':'.self::$port;
+            }
+        }
+
+        return self::$host_url;
     }
 
 
     /**
-     * @return bool
-     */
-    public static function Is_development_stage()
-    {
-        return self::STAGE_DEVELOPMENT === self::$stage;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public static function Is_testing_stage()
-    {
-        return self::STAGE_TESTING === self::$stage;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public static function Is_production_stage()
-    {
-        return self::STAGE_TESTING === self::$stage;
-    }
-
-    /**
-     * @return bool
-     */
-    public static function Is_via_cli()
-    {
-        return self::VIA_CLI === self::$via;
-    }
-
-
-    /**
-     * @return bool
-     */
-    public static function Is_via_http()
-    {
-        return self::VIA_HTTP === self::$via;
-    }
-
-    /**
+     * Returns  the URI requested scheme://host[:port]
      * @return string
      */
-    public static function Get_via()
+    public static function Get_uri () :string
     {
-        return self::$stage;
+        if (null!==self::$uri)
+        {
+            self::$uri = self::Get_host_uri().self::$request_uri;
+        }
+
+        return self::$uri;
+    }
+
+
+    /**
+     * Returns a new Uri object form the requested URI.
+     * @return Http\Uri_friendly
+     */
+    public static function Get_uri_obj () :Http\Uri
+    {
+        return new Http\Uri(self::Get_uri());
+    }
+
+    /**
+     * Returns a new Uri object form the requested URI.
+     * @return Http\Uri_friendly
+     */
+    public static function Get_uri_friendlyobj () :Http\Uri_friendly
+    {
+        return new Http\Uri_friendly(self::Get_uri());
+    }
+
+
+
+    /**
+     * Check if the page is requested via ajax. Unsafe.
+     *
+     * Uses  $_SERVER['HTTP_X_REQUESTED_WITH'], it is not a standard header, can be spoofed.
+     * @return bool
+     */
+    public static function Is_ajax () :bool
+    {
+        if (null===self::$is_ajax_)
+        {
+            self:$is_ajax_ = strtolower($_SERVER['HTTP_X_REQUESTED_WITH']??'') === 'xmlhttprequest';
+        }
+
+        return self::$is_ajax_;
+    }
+
+
+    /**
+     * Timestamp of the start of the request, with microsecond precision.
+     * @return float
+     * @see Time_from_Request()
+     */
+    public static function Request_time(): float
+    {
+        return self::$request_time;
+    }
+
+
+    /**
+     * Seconds from  the star of the request, , with microsecond precision.
+     * @return float
+     * @see Requested_time()
+     */
+    public static function Time_from_Request(): float
+    {
+        return microtime(true) - self::$request_time;
+    }
+
+
+    /**
+     * Protocol which the page was requested: ex: 'HTTP/1.1'.
+     * @return string
+     */
+    public static function Protocol(): string
+    {
+        return self::$protocol;
+    }
+
+
+    /**
+     * Method used to access the page: 'GET', 'HEAD', 'POST', 'PUT'...
+     * @var string
+     */
+    public static function Method(): string
+    {
+        return self::$method;
+    }
+
+
+    /**
+     * @var int Server port.
+     */
+    public static function Port(): int
+    {
+        return self::$port;
+    }
+
+    /**
+     * Calculate the Environment variables.
+     * @internal
+     */
+    public static function __initialize()
+    {
+        if (self::$__initialized)
+            return;
+
+        self::$__initialized = true;
+
+        self::$request_time     = $_SERVER['REQUEST_TIME_FLOAT'] ?? 0.0;
+        self::$protocol         = $_SERVER['SERVER_PROTOCOL'   ] ?? '';
+        self::$method           = $_SERVER['REQUEST_METHOD'    ] ?? '';
+        self::$port             = (int) $_SERVER['SERVER_PORT' ] ?? 0;
+        self::$request_uri      = $_SERVER['REQUEST_URI'       ] ?? '';
+
+  /*
+        self::$query_string     = $_SERVER['QUERY_STRING'      ] ?? '';
+        self::$php_self         = $_SERVER['PHP_SELF'          ] ?? '';
+        self::$document_root    = $_SERVER['DOCUMENT_ROOT'       ] ?? '';
+        self::$script_filename  = $_SERVER['SCRIPT_FILENAME'     ] ?? '';
+        self::$script_name      = $_SERVER['SCRIPT_NAME'         ] ?? '';
+        self::$http_accept_language = $_SERVER['HTTP_ACCEPT_LANGUAGE'           ] ?? '';
+
+*/
     }
 }
+
+
+Environment::__initialize();
+
+
 
