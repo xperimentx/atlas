@@ -20,8 +20,10 @@ Take a look at [xperimentX Demo](https://github.com/xperimentx/Demo)  project to
 * [Environment (production, development...)](Atlas/doc/Environment.md)
 
 ## Http
-* [Uri.](Atlas/doc/Uri.md)
-* [Status.](Atlas/doc/----.md)
+* [Ip class](Atlas/doc/Http.md#ip-class)
+* [Status Codes class](Atlas/doc/Http.md#status-codes-class)
+* [Uri class](Atlas/doc/Http.md#uri-class)
+
  
 
 ## Database Reference

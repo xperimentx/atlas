@@ -11,6 +11,7 @@
  *
  * @license   MIT
  */
+namespace Xperimentx\Atlas\Http;
 
 /**
  * Http Status.
@@ -20,6 +21,8 @@
  * @link https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
  * @author  Roberto González Vázquez
  */
+
+
 class Status_codes
 {
     /** @var string[] Family to string */
@@ -36,12 +39,12 @@ class Status_codes
     /** @var string[] Family to string */
     static protected $family_xx_str =
     [
-        0 => ' xxx Unknown status',
-        1 => ' 1xx Informational',
-        2 => ' 2xx Successful'   ,
-        3 => ' 3xx Redirection'  ,
-        4 => ' 4xx Client Error' ,
-        5 => ' 5xx Server Error' ,
+        0 => 'xxx Unknown status',
+        1 => '1xx Informational',
+        2 => '2xx Successful'   ,
+        3 => '3xx Redirection'  ,
+        4 => '4xx Client Error' ,
+        5 => '5xx Server Error' ,
     ];
 
     /** @var string[] Status to string */
