@@ -97,6 +97,7 @@ class Alter_table
 
         return "ALTER TABLE `$this->table` ". join(",\n ", $items).";\n\n";
     }
+    
 
     /**
      * Run alter table query

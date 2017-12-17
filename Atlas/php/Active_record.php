@@ -275,10 +275,10 @@ class Active_record
      */
     public function Vector($field_name=null, $sql_extra=NULL, $order_by='2')
     {
-        return DB::$db->Vector("SELECT id, $field_name name
-                                FROM `".static::$_table."`
-                                $sql_extra
-                                ORDER BY $order_by");
+        return static::$_db->Vector("SELECT id, $field_name name
+                                    FROM `".static::$_table."`
+                                    $sql_extra
+                                    ORDER BY $order_by");
     }
 
 
@@ -499,4 +499,4 @@ class Active_record
 }
 
 //Initialize db
-Active_record::$_db = DB::$db;
+Active_record::$_db = DB::$db_default;
