@@ -11,9 +11,9 @@
 
 ## Ip class
 |Http\Ip|         |
-|static **Get_ip_remote**() :string|Returns IP from remote address. Not good for proxies but safe.|
-|static **Get_ip_client() :string |Returns IP of client sent in the Http request, unsafe, can be spoofed  but good for proxies.|
-|static **Get_all_ip() :array | Returns all IPs from client sent in Http request, unsafe, these values can be spoofed.|
+|static **Get_ip_remote** () :string|Returns IP from remote address. Not good for proxies but safe.|
+|static **Get_ip_client** () :string |Returns IP of client sent in the Http request, unsafe, can be spoofed  but good for proxies.|
+|static **Get_all_ip()** :array | Returns all IPs from client sent in Http request, unsafe, these values can be spoofed.|
  
 
 ## Status codes class

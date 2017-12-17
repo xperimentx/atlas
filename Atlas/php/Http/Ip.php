@@ -75,7 +75,7 @@ class Ip
 
 
     /**
-     * Returns all IPs fron client sended in Http request, unsafe, these values can be spoofed.
+     * Returns all IPs from client sent in Http request, unsafe, these values can be spoofed.
      * @return string[] array index: server variable used for get this ip,  value valid ip.
      */
    static public function Get_all_ip_client() :array
