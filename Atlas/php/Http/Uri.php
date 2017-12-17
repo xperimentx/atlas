@@ -29,28 +29,30 @@ namespace Xperimentx\Atlas\Http;
  */
 class Uri
 {
-    /**@var string|null Full URI parsed or built,
+    /**@var string  Full URI parsed or built,
      *      scheme:[//[user[:password]@]host[:port]][/path][?query][#fragment]
      */
     public $uri       = null;
 
-    /**@var string|null Scheme         */ public $scheme    = null;
-    /**@var string|null Host name.     */ public $host      = null;
-    /**@var string|null Port           */ public $port      = null;
-    /**@var string|null User           */ public $user      = null;
-    /**@var string|null Password.      */ public $password  = null;
-    /**@var string|null Path           */ public $path      = null;
-    /**@var string|null Query          */ public $query     = null;
-    /**@var string|null Fragment       */ public $fragment  = null;
+    /**@var string Scheme         */ public $scheme    = '';
+    /**@var string Host name.     */ public $host      = '';
+    /**@var string Port           */ public $port      = '';
+    /**@var string User           */ public $user      = '';
+    /**@var string Password.      */ public $password  = '';
+    /**@var string Path           */ public $path      = '';
+    /**@var string Query          */ public $query     = '';
+    /**@var string Fragment       */ public $fragment  = '';
 
+    
     /**
-     *  @param string $uri Uri to parse
+     * @param string $uri Uri to parse
      */
     function __construct (string $url=null)
     {
         if ($url)
             $this->Parse($url);
     }
+
 
     /**
      * Parses an URI and assign the result in the object properties.
@@ -62,14 +64,14 @@ class Uri
 
        $x = parse_url($uri);
 
-       $this->scheme    = $x['scheme'  ] ?? null;
-       $this->host      = $x['host'    ] ?? null;
-       $this->port      = $x['port'    ] ?? null;
-       $this->user      = $x['user'    ] ?? null;
-       $this->password  = $x['pass'    ] ?? null;
-       $this->path      = $x['path'    ] ?? null;
-       $this->query     = $x['query'   ] ?? null;
-       $this->fragment  = $x['fragment'] ?? null;
+       $this->scheme    = $x['scheme'  ] ?? '';
+       $this->host      = $x['host'    ] ?? '';
+       $this->port      = $x['port'    ] ?? '';
+       $this->user      = $x['user'    ] ?? '';
+       $this->password  = $x['pass'    ] ?? '';
+       $this->path      = $x['path'    ] ?? '';
+       $this->query     = $x['query'   ] ?? '';
+       $this->fragment  = $x['fragment'] ?? '';
     }
 
 
@@ -81,8 +83,6 @@ class Uri
         'http'	 => 80,
 		'https'	 => 443,
     ];
-
-
 
 
      /**
