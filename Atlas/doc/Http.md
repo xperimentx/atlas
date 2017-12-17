@@ -13,12 +13,13 @@
 |Http\Ip|         |
 |static **Get_ip_remote**() :string|Returns IP from remote address. Not good for proxies but safe.|
 |static **Get_ip_client() :string |Returns IP of client sent in the Http request, unsafe, can be spoofed  but good for proxies.|
-|static **Get_all_ip() :array | Returns all IPs fron client sended in Http request, unsafe, these values can be spoofed.|
+|static **Get_all_ip() :array | Returns all IPs from client sent in Http request, unsafe, these values can be spoofed.|
  
 
 ## Status codes class
 
-About 80 constats status codes, for example  and A method for returns a short description of a status code.
+Status_codes_class contains constants for the principal status codes, 
+and the **Str** method for return a short description of a status code.
 
 ```
 Status_codes::Str(int $status_code, bool $show_family_if_unknow = true) : string
@@ -27,20 +28,20 @@ Status_codes::Str(int $status_code, bool $show_family_if_unknow = true) : string
 ```php
 use Xperimentx\Atlas\Http\Status_codes;
 
-Status_codes::STATUS_200_OK                     ;
-Status_codes::STATUS_201_CREATED                ;   
-Status_codes::STATUS_404_NOT_FOUND              ;
-Status_codes::STATUS_500_INTERNAL_SERVER_ERROR  ;S
-
 Status_codes::Str(404); 
 //returns 'Not found';
 
-Status_codes::Str(Status_codes::STATUS_201_CREATED ); 
-//returns: Created
+Status_codes::STATUS_404_NOT_FOUND              ;
+//returns 'Not found';
 
 Status_codes::Str(288);
 //returns:: '2xx Successful'
 ```
+
+More info:
+* https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+* https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+* https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 
 
 ## Uri class
