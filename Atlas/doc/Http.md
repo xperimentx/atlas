@@ -5,10 +5,10 @@
 * [Ip class.](#ip-class)
 * [Status Codes class.](#status-codes-class)
 * [Uri class.](#uri-class)
-* [Http Methods](#http-methods)
+* [Http Methods.](#http-methods)
 
 
-# Htt pNamespace
+# Http Namespace
 
 ## Ip class
 |Http\Ip|         |

@@ -17,7 +17,7 @@ Take a look at [xperimentX Demo](https://github.com/xperimentx/Demo)  project to
 ## Basic
 * [Quick start guide.](Atlas/doc/Quick-start-guide.md)
 * [Autoloader.](Atlas/doc/Autoloader.md)
-* [Environment (production, development...)](Atlas/doc/Environment.md)
+* [Environment, hostname, Stages (production, development...)](Atlas/doc/Environment.md)
 * [Router](Atlas/doc/Router.md)
 
 ## Http

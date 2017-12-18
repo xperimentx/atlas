@@ -82,9 +82,8 @@ class Environment
 
     /**
      * Gets host name.
-     * For security reasons is recommend set this value in production stage.
      */
-    public static function Get_host()
+    public static function Get_host() :string
     {
         if (null===self::$host)
         {
@@ -92,7 +91,8 @@ class Environment
                          ?? $_SERVER['HTTP_HOST']
                          ?? $_ENV["HOSTNAME"]
                          ?? $_ENV["SERVER_NAME"]
-                         ?? $_ENV["COMPUTERNAME"];
+                         ?? $_ENV["COMPUTERNAME"]
+                         ?? '';
         }
 
         return self::$host;
@@ -144,7 +144,7 @@ class Environment
 
     /**
      * Returns a new Uri object form the requested URI.
-     * @return Http\Uri_friendly
+     * @return Http\Uri
      */
     public static function Get_uri_obj () :Http\Uri
     {
@@ -223,7 +223,7 @@ class Environment
 
     /**
      * Int code corresponding to method code used to access the page: 'CLI', 'GET', 'HEAD', 'POST', 'PUT'...
-     * @var string
+     * @var int
      */
     public static function Get_method_code(): int
     {
@@ -231,17 +231,18 @@ class Environment
     }
 
 
-
     /**
-     * @var int Server port.
+     * Gets server port.
+     * @var int
      */
     public static function Get_port(): int
     {
         return self::$port;
     }
 
+
     /**
-     * Calculate the Environment variables.
+     * Calculates the Environment variables.
      * @internal
      */
     public static function __initialize()
