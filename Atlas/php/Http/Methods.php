@@ -36,7 +36,7 @@ class Methods
 
 
     /**
-     * Return method name for an atlas int method code
+     * Retursn method name for an atlas int method code
      * @param int $method_code
      * @return string  GET, POST...
      */
@@ -86,7 +86,7 @@ class Methods
 
 
     /**
-     * Checks i a method code match the mask.
+     * Checks if a method code match the mask.
      * @param int|string $method_code_or_name
      * @param int $mask Mask, ex: Method::GET|Method::POST
      * @return bool

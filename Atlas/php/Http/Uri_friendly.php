@@ -21,17 +21,17 @@ namespace Xperimentx\Atlas\Http;
  */
 class Uri_friendly extends Uri
 {
-    /**@var string|null Friendly path part
+    /**@var string  Friendly path part
      * If the path is /index.php/es/blog/last-news returns. Trims index.php
      * Returns: '/es/blog/last-news'
      */
-    public $frienddly = null;
+    public $frienddly = '';
 
-    /**@var string|null Path of the main php file.
+    /**@var string  Path of the main php file.
      * If the path is '/index.php/es/blog/last-news'. Trims index.php.
      * Returns: '/index.php'
      */
-    public $php      = null;
+    public $php      = '';
 
 
     /**

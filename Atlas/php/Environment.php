@@ -156,7 +156,7 @@ class Environment
      * Returns a new Uri object form the requested URI.
      * @return Http\Uri_friendly
      */
-    public static function Get_uri_friendlyobj () :Http\Uri_friendly
+    public static function Get_uri_friendly_obj () :Http\Uri_friendly
     {
         return new Http\Uri_friendly(self::Get_uri());
     }

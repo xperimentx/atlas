@@ -17,17 +17,20 @@ namespace Xperimentx\Atlas;
 use Xperimentx\Atlas\Http\Methods;
 
 /**
- * Description of Router_item
+ * Router item structure
  *
- * @author rogon
+ * @author Roberto González Vázquez
  */
 class Router_item
 {
-    public $pattern ;
+    const REPLACE = 1;
+    const BASIC   = 2;
+
+    public $data ;
     public $is_raw_exp = false;
-    public $reg_exp  ;
     public $method_mask = Methods::ALL;
     public $mode = null;
+    public $pattern ;
     public $stops_routing = true;
 
     /**

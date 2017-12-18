@@ -47,8 +47,12 @@ class Router
 
 
     protected static $continue_routing;
-    protected static $original_uri;
-    protected static $current_uri;
+    protected static $original_method=null;
+    protected static $original_uri=null;
+    protected static $current_uri =null;
+    protected static $current_method = null;
+    protected static $pattern_prefix = null;
+    protected static $call_to_prefix = null;
 
     public static function Add_placeholder($template, $regex)
     {
@@ -57,13 +61,24 @@ class Router
 
 
     /**
-     * Sets the current uri
+     * Sets the current URI path
      * @param string $uri
      */
     public static function Set_uri(string $uri)
     {
         self::$current_uri = $uri;
     }
+
+
+    /**
+     * Sets the current http method
+     * @param int $method
+     */
+    public static function Set_method(int $method)
+    {
+        self::$current_method = $method;
+    }
+
 
 
     /**
@@ -75,16 +90,31 @@ class Router
     }
 
 
+    protected static function Load_environment()
+    {
+        if (null===self::$current_method)
+            self::$current_method ?? Environment::Get_method_code();
+
+        if (null===self::$current_uri)
+        {
+            $uri = Environment::Get_uri_friendly_obj();
+            self::$current_uri = $uri->frienddly;
+        }
+
+        self::$original_method = self::$current_method;
+        self::$original_uri    = self::$current_uri ;
+    }
+
+
     public static function Run()
     {
-        $method_code = Environment::Get_method_code();
+        self::Load_environment();
+        $matches = null;
 
         $wild_keys   = array_keys   (self::$placeholders);
         $wild_values = array_values (self::$placeholders);
 
         self::$continue_routing = true;
-
-        $method_code = Methods::GET;
 
         foreach (self::$items as $i)
         {
@@ -92,7 +122,7 @@ class Router
             if (!self::$continue_routing)
                 break;
 
-            if (!($method_code & $i->method_mask)) continue;
+            if (!(self::$current_method & $i->method_mask)) continue;
 
             $reg_ex = $i->is_raw_exp
                     ? $i->pattern
@@ -100,10 +130,38 @@ class Router
 
             switch ($i->mode)
             {
+                case Router_item::BASIC:
+                    $ok =  preg_match($reg_ex, self::$current_uri, $matches);
+                    if (null===$i->data )
+                    {
+                        echo $ok ? "\n\n ok --- {$i->pattern}\n" : "\n\n ko --- {$i->pattern}\n";
+                        if ($matches) print_r ($matches);
+                    }
+
+                    elseif (is_string($i->data))
+                    {
+                        $aux= explode('::',$i->data);
+                        if (count($aux)!=2)
+                            continue;
+
+
+                        $aux_obj = new $aux[0];
+                        $aux_obj->{$aux[1]}($matches);
+                    }
+
+                    elseif ($i->data instanceof \Closure)
+                    {
+                        ($i->data)($matches);
+                    }
+                    break;
+
+                case Router_item::REPLACE:
+                    $result = preg_replace($reg_ex, $i->data, self::$current_uri);
+                    if (null!==$result)
+                        self::$current_uri = $result;
+                    break;
+
                 default:
-                $ok =  preg_match($reg_ex, self::$current_uri, $matches);
-                echo $ok ? "\n\n ok --- {$i->pattern}\n" : "\n\n ko --- {$i->pattern}\n";
-                 print_r ($matches);
 
             }
         }
@@ -115,58 +173,46 @@ class Router
     }
 
 
-    public static function Add(string $pattern, $xx, bool $is_raw_reg_exp=false)
+    public static function Add(string $pattern, $call_to, bool $is_raw_reg_exp=false)
     {
         self::$items[] = $i = new Router_item();
         $i->is_raw_exp = $is_raw_reg_exp;
-        $i->pattern    = $pattern;
+        $i->pattern    = self::$pattern_prefix.$pattern;
+        $i->data       = is_string($call_to) ?self::$call_to_prefix.$call_to : $call_to;
+        $i->mode       = Router_item::BASIC;
     }
 
-/*
-    public static function Rewrite($uri_mask, $neo_uri)
-    {
-        $obj = new Router_item ($uri_mask, $control);
-        $obj->stops_routing=false;
-        return $obj;
-    }
-
-
-
-    public static function Redirect($uri_mask, $neo_uri, $status=Status_codes::STATUS_301_MOVED_PERMANENTLY)
+    public static function Replace(string $pattern, string $replacement, bool $is_raw_reg_exp=false)
     {
         self::$items[] = $i = new Router_item();
-        $i->mode = 'redirect';
-
-        return $i;
+        $i->is_raw_exp = $is_raw_reg_exp;
+        $i->pattern    = self::$pattern_prefix. $pattern;
+        $i->data       = $replacement;
+        $i->mode       = Router_item::REPLACE;
     }
 
-    public static function Methods( $method_mask, $uri_mask, $control)
+
+    public static function Add_methods(int $method_mask, string $pattern, $call_to, bool $is_raw_reg_exp=false)
     {
-        $obj = new Router_item ($uri_mask, $control);
-        $obj->method_mask = $method_maskr;
+        $obj = $this->Add($pattern, $call_to, $is_raw_reg_exp);
+        $obj->method_mask = $method_mask;
         return $obj;
     }
-    public static function Method_get   ( $uri_mask, $control) {return self::Methods(Methods::GET   , $uri_mask, $control);}
-    public static function Method_post  ( $uri_mask, $control) {return self::Methods(Methods::POST  , $uri_mask, $control);}
-    public static function Method_put   ( $uri_mask, $control) {return self::Methods(Methods::PUD   , $uri_mask, $control);}
-    public static function Method_delete( $uri_mask, $control) {return self::Methods(Methods::DELETE, $uri_mask, $control);}
 
-*/
+    public static function Add_connect(string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::CONNECT, $pattern, $call_to, $is_raw_reg_exp);}
+    public static function Add_delete (string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::DELETE , $pattern, $call_to, $is_raw_reg_exp);}
+    public static function Add_get    (string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::GET    , $pattern, $call_to, $is_raw_reg_exp);}
+    public static function Add_head   (string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::HEAD   , $pattern, $call_to, $is_raw_reg_exp);}
+    public static function Add_options(string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::OPTIONS, $pattern, $call_to, $is_raw_reg_exp);}
+    public static function Add_patch  (string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::PATCH  , $pattern, $call_to, $is_raw_reg_exp);}
+    public static function Add_post   (string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::POST   , $pattern, $call_to, $is_raw_reg_exp);}
+    public static function Add_put    (string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::PUT    , $pattern, $call_to, $is_raw_reg_exp);}
+    public static function Add_trace  (string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::TRACE  , $pattern, $call_to, $is_raw_reg_exp);}
+    public static function Add_patch_put(string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::PATCH|Methods::PUT, $pattern, $call_to, $is_raw_reg_exp);}
+
+    public static function Prefix(string $patter_prefix='', $call_to_prefix='')
+    {
+        self::$pattern_prefix = $patter_prefix;
+        self::$call_to_prefix = $call_to_prefix;
+    }
 }
-/*
-'/controller/(Action:acion)/(num:id)/(alpha:'
-
-
-Router::Rewrite('/es/index' , 'spain/home');
-
-Router::Prefix('', 'Controllers\');
-    Router::Mx_controler ('/client/(:any)', 'Controllers\Client::Run/$1');
-    Router::Mx_controler ('/client/(:any)', function()
-
-$Router::Prefix('/api', 'Api\');
-    Router::Mx_controler ('/client/(:any)', 'Controllers\Client::Run/$1');
-    Router::Mx_controler ('/client/(:any)', function()
-
-$Router::Prefix('', '');
-;*/
-
