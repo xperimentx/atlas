@@ -44,8 +44,8 @@ class Uri_friendly extends Uri
 
         if ($pos = strpos($this->path, '.php')) //:=
         {
-            $this->php       = substr($uri, 0, $pos+4);
-            $this->frienddly = substr($uri, $pos+4);
+            $this->php       = substr($this->path, 0, $pos+4);
+            $this->frienddly = substr($this->path, $pos+4);
         }
         else
         {

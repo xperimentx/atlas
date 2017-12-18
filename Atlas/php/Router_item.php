@@ -44,4 +44,16 @@ class Router_item
         return $this;
     }
 
+    public function Last()
+    {
+        $this->stops_routing = true;
+    }
+
+    public function Cc()
+    {
+        $this->stops_routing = false;
+    }
+
+
+
 }

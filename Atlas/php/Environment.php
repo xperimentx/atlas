@@ -27,7 +27,7 @@ class Environment
     private static $__initialized = false;
 
     private static $host         = null;
-    private static $host_uri     = '';
+    private static $host_uri     = null;
     private static $is_ajax_     = null;
     private static $is_https_    = null;
     private static $method ;
@@ -58,7 +58,7 @@ class Environment
     {
         if (null===self::$is_https_)
         {
-            self::$is_https     =  !empty($_SERVER['HTTPS'])                  &&  'off'   !== strtolower($_SERVER['HTTPS']                 )
+            self::$is_https_    =  !empty($_SERVER['HTTPS'])                  &&  'off'   !== strtolower($_SERVER['HTTPS']                 )
                                 || !empty($_SERVER['HTTP_FRONT_END_HTTPS'])   &&  'off'   !== strtolower($_SERVER['HTTP_FRONT_END_HTTPS']  )
                                 ||  isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&  'https' === strtolower($_SERVER['HTTP_X_FORWARDED_PROTO'])
                                 || !empty($_SERVER['HTTP_X_FORWARDED_SSL'])   &&  'on'    === strtolower($_SERVER['HTTP_X_FORWARDED_SSL']  ) ;
@@ -87,8 +87,9 @@ class Environment
     {
         if (null===self::$host)
         {
-            self::$host  == $_SERVER['SERVER_NAME']
-                         ?? $_SERVER['HTTP_HOST']
+            self::$host  = $_SERVER['HTTP_HOST']
+                         ?? $_SERVER['SERVER_NAME']
+
                          ?? $_ENV["HOSTNAME"]
                          ?? $_ENV["SERVER_NAME"]
                          ?? $_ENV["COMPUTERNAME"]
@@ -105,7 +106,7 @@ class Environment
      */
     public static function Get_host_uri() :string
     {
-        if (null!==self::$host_uri)
+        if (null===self::$host_uri)
         {
             if (self::Is_https())
             {
@@ -123,7 +124,7 @@ class Environment
             }
         }
 
-        return self::$host_url;
+        return self::$host_uri;
     }
 
 
@@ -133,7 +134,7 @@ class Environment
      */
     public static function Get_uri () :string
     {
-        if (null!==self::$uri)
+        if (null===self::$uri)
         {
             self::$uri = self::Get_host_uri().self::$request_uri;
         }
@@ -257,7 +258,6 @@ class Environment
         self::$method           = $_SERVER['REQUEST_METHOD'    ] ?? '';
         self::$port             = (int)($_SERVER['SERVER_PORT' ] ?? 0);
         self::$request_uri      = $_SERVER['REQUEST_URI'       ] ?? '';
-
         self::$method_code      = Http\Methods::Get_code(self::$method);
 
 

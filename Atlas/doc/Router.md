@@ -52,8 +52,8 @@ You can add a new place-holder or edit an exiting one whith  **Router::Add_place
 |  |  |
 |static **Add_placeholder** ($template, $regex) |Adds or redefine a place holder/ wildcard|
 |  |  |
-|static **Set_uri**(string $uri)|Sets the current URI path |
-|static **Set_method**(int $method)|Sets the current http method |
+|static **Set_uri_path**(string $uri)|Sets the current URI path |
+|static **Set_http_method**(int $method)|Sets the current http method |
 |static **Stop_routing**()   |Stops the routing loop|
 
 
@@ -95,8 +95,8 @@ You can add a new place-holder or edit an exiting one whith  **Router::Add_place
 ```php
 use Xperimentx\Atlas\Router;
 
-Router::Set_uri('/es/blog/post/135/ave-rapido');
-Router::Set_method(Atlas\Http\Methods::GET);
+Router::Set_uri_path('/es/blog/post/135/ave-rapido');
+Router::Set_http_method(Atlas\Http\Methods::GET);
 ```
 ### Some sampless
 ```php
@@ -130,7 +130,7 @@ Router::Add ('/(?<lang>es|pt|en)/(?<controller>:segment)/(?<path>:any)',null);
 
 ### Force another URI path
 ```php
-Router::Set_uri('/gato/blog/view-blue/714-adsjkh/fjs/df');
+Router::Set_uri_path('/gato/blog/view-blue/714-adsjkh/fjs/df');
 ```
 
 

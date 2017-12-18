@@ -47,10 +47,10 @@ class Router
 
 
     protected static $continue_routing;
-    protected static $original_method=null;
-    protected static $original_uri=null;
-    protected static $current_uri =null;
-    protected static $current_method = null;
+    protected static $original_http_method=null;
+    protected static $original_uri_path=null;
+    protected static $uri_path =null;
+    protected static $http_method = null;
     protected static $pattern_prefix = null;
     protected static $call_to_prefix = null;
 
@@ -64,9 +64,9 @@ class Router
      * Sets the current URI path
      * @param string $uri
      */
-    public static function Set_uri(string $uri)
+    public static function Set_uri_path(string $uri)
     {
-        self::$current_uri = $uri;
+        self::$uri_path = $uri;
     }
 
 
@@ -74,9 +74,9 @@ class Router
      * Sets the current http method
      * @param int $method
      */
-    public static function Set_method(int $method)
+    public static function Set_http_method(int $method)
     {
-        self::$current_method = $method;
+        self::$http_method = $method;
     }
 
 
@@ -92,23 +92,24 @@ class Router
 
     protected static function Load_environment()
     {
-        if (null===self::$current_method)
-            self::$current_method ?? Environment::Get_method_code();
+        if (null===self::$http_method)
+            self::$http_method = Environment::Get_method_code();
 
-        if (null===self::$current_uri)
+        if (null===self::$uri_path)
         {
             $uri = Environment::Get_uri_friendly_obj();
-            self::$current_uri = $uri->frienddly;
+            self::$uri_path = $uri->frienddly;
         }
 
-        self::$original_method = self::$current_method;
-        self::$original_uri    = self::$current_uri ;
+        self::$original_http_method = self::$http_method;
+        self::$original_uri_path    = self::$uri_path ;
     }
 
 
     public static function Run()
     {
         self::Load_environment();
+
         $matches = null;
 
         $wild_keys   = array_keys   (self::$placeholders);
@@ -118,11 +119,10 @@ class Router
 
         foreach (self::$items as $i)
         {
-            echo self::$current_uri, "--\n";
             if (!self::$continue_routing)
                 break;
 
-            if (!(self::$current_method & $i->method_mask)) continue;
+            if (!(self::$http_method & $i->method_mask)) continue;
 
             $reg_ex = $i->is_raw_exp
                     ? $i->pattern
@@ -131,7 +131,8 @@ class Router
             switch ($i->mode)
             {
                 case Router_item::BASIC:
-                    $ok =  preg_match($reg_ex, self::$current_uri, $matches);
+                    $ok =  preg_match($reg_ex, self::$uri_path, $matches);
+
                     if (null===$i->data )
                     {
                         echo $ok ? "\n\n ok --- {$i->pattern}\n" : "\n\n ko --- {$i->pattern}\n";
@@ -144,7 +145,6 @@ class Router
                         if (count($aux)!=2)
                             continue;
 
-
                         $aux_obj = new $aux[0];
                         $aux_obj->{$aux[1]}($matches);
                     }
@@ -156,9 +156,10 @@ class Router
                     break;
 
                 case Router_item::REPLACE:
-                    $result = preg_replace($reg_ex, $i->data, self::$current_uri);
+                    $result = preg_replace($reg_ex, $i->data, self::$uri_path);
+                    
                     if (null!==$result)
-                        self::$current_uri = $result;
+                        self::$uri_path = $result;
                     break;
 
                 default:
