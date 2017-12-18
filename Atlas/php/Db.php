@@ -51,7 +51,7 @@ class Db
      * @see Set_
      * @return \Xperimentx\Atlas\Db
      */
-    function Obj() :Db
+    public static function Obj() :Db
     {
         return self::$db_default;
     }
@@ -60,7 +60,7 @@ class Db
      * Sets this Db as the default Db object.
      * @see Obj();
      */
-    function Make_default()
+    public function Make_default()
     {
         self::$db_default_db = $this;
     }
@@ -74,10 +74,9 @@ class Db
         if (!self::$db_default)
             self::$db_default = $this;
 
-        if (is_string($cfg))
-            $cfg = new $cfg;
-
-        $this->Set_cfg($cfg ?? new Db_cfg());
+        $this->cfg = is_string($cfg)
+                    ? new $cfg
+                    : ($cfg ?? new Db_cfg());
     }
 
     /**
@@ -156,7 +155,7 @@ class Db
     {
         if($this->Connect()) return;
 
-        if (Environment::Is_development_stage())
+        if (Stage::Is_development())
             print_r($this->last_error);
 
         exit($message);

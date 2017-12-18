@@ -28,7 +28,7 @@ class Profile_item
     /**@var float  Seconds            */  public $seconds            = null;
 
 
-    function __construct(string $method, string $query, float $prev_microtime, int $error_code=null, string $error_description=null)
+    function __construct(string $method, string $query=null, float $prev_microtime=0.0, int $error_code=null, string $error_description=null)
     {
         $this->method       = $method      ;
         $this->query        = $query       ;
