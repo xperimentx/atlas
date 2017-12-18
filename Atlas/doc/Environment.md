@@ -2,6 +2,9 @@
 
 ![xperimentx atlas](images/atlas.png) 
 
+* [Environmet.](#environment)
+* [Stage.](#stage)
+
 # Environment, hostname, Stage
 
 Do not blindly trust in $_SERVER['HTTP_HOST'] or $_SERVER['SERVER_NAME'] ,
@@ -62,8 +65,8 @@ else Stage::Set_production ('demo.xperimentx.com');
 |static **Set_testing** (string $host_name=null, bool $report_all_errors=true) | Sets environment to TESTING stage.
 |static **Set_production** (string $host_name=null, bool $report_all_errors=true)| Sets environment to PRODUCTION stage.<br>For security reasons is recommend set host name  this value in production stage.|        
 |static **Get** () :string |      Gets the stage |    
-|static **Is_development** () :bool |  Checks is stage is DEVELOPMENT.|
-|static **Is_testing** () :bool |  Checks is stage is TESTING. |
-|static **Is_production** () :bool | Checks is stage is PRODUCTION. |
+|static **Is_development** () :bool |  Checks if stage is DEVELOPMENT.|
+|static **Is_testing** () :bool |  Checks if stage is TESTING. |
+|static **Is_production** () :bool | Checks if stage is PRODUCTION. |
  
 

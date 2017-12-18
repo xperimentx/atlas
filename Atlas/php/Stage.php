@@ -95,7 +95,7 @@ class Stage
 
 
     /**
-     * Checks is stage is DEVELOPMENT.
+     * Checks if stage is DEVELOPMENT.
      * @return bool
      */
     public static function Is_development() :bool
@@ -105,7 +105,7 @@ class Stage
 
 
     /**
-     * Checks is stage is TESTING.
+     * Checks if stage is TESTING.
      * @return bool
      */
     public static function Is_testing() :bool
@@ -115,7 +115,7 @@ class Stage
 
 
     /**
-     * Checks is stage is PRODUCTION.
+     * Checks if stage is PRODUCTION.
      * @return bool
      */
     public static function Is_production() :bool
