@@ -18,13 +18,14 @@ Take a look at [xperimentX Demo](https://github.com/xperimentx/Demo)  project to
 * [Quick start guide.](Atlas/doc/Quick-start-guide.md)
 * [Autoloader.](Atlas/doc/Autoloader.md)
 * [Environment (production, development...)](Atlas/doc/Environment.md)
+* [Router](Atlas/doc/Router.md)
 
 ## Http
 * [Ip class](Atlas/doc/Http.md#ip-class)
 * [Status Codes class](Atlas/doc/Http.md#status-codes-class)
+* [Http Methods](Atlas/doc/Http.md#http-methods)
 * [Uri class](Atlas/doc/Http.md#uri-class)
 
- 
 
 ## Database Reference
 * [Database Reference.](Atlas/doc/Database.md)

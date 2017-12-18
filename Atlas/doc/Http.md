@@ -5,6 +5,7 @@
 * [Ip class.](#ip-class)
 * [Status Codes class.](#status-codes-class)
 * [Uri class.](#uri-class)
+* [Http Methods](#http-methods)
 
 
 # Htt pNamespace
@@ -85,4 +86,16 @@ More info:
 |**Get_authority** ([$hide_password]) :string | Gets the authority. [user[:password]@]:]host[:port] |
     
 
-    
+## Http Methods
+
+**Consts:**
+ALL      , NONE   , CONNECT  , DELETE   , GET      , HEAD     , OPTIONS  , PATCH    , POST     , PUT      , TRACE    
+
+
+      
+|static **Str** (int $method_code ) :string |Returns method name for an atlas int method code |
+|static **Get_code** (string $method_name) :int | Returns the atlas int code for a Http method.|
+|static **Match** ($method_code_or_name, int $mask) :bool|Checks if a method code match the mask|
+
+example of mask: ```Method::GET|Method::POST```
+ 
