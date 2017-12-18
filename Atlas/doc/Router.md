@@ -41,7 +41,7 @@ Can use a raw regular expression or use the "easy" version.
     ':num)'		 => '[0-9]+)',
     ':segment)'	 => '[^/]+)'
 ```
-You can add a new palce-holder or edit an exiting one whith  **Router::Add_placeholder**
+You can add a new place-holder or edit an exiting one whith  **Router::Add_placeholder**
 
 
 ## Router Methods
@@ -61,23 +61,26 @@ You can add a new palce-holder or edit an exiting one whith  **Router::Add_place
 |:-------------------|
 |public static function Prefix(string $patter_prefix='', $call_to_prefix=''):Router_item
 |  |  
-|static Replace(string $pattern, string $replacement, bool $is_raw_reg_exp=false):Router_item |
-|static Add(string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |
-|  |  
-|static Add_methods(int $method_mask, string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item|   
-|static Add_connect(string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
-|static Add_delete (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
-|static Add_get    (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
-|static Add_head   (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
-|static Add_options(string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
-|static Add_patch  (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
-|static Add_post   (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
-|static Add_put    (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
-|static Add_trace  (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
-|static Add_patch_put(string $pattern, $call_to, bool $is_raw_reg_exp=false):Router_item |    
+|static **Replace** (string $pattern, string $replacement, bool $is_raw_reg_exp=false):Router_item |
+|static **Add** (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |
+|  | 
+|static **Add_methods** (int $method_mask, string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item|   
+|static **Add_connect** (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
+|static **Add_delete** (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
+|static **Add_get**    (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
+|static **Add_head**   (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
+|static **Add_options** (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
+|static **Add_patch**  (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
+|static **Add_post**   (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
+|static **Add_put**    (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
+|static **Add_trace**  (string $pattern, $call_to, bool $is_raw_reg_exp=false) :Router_item |     
+|static **Add_patch_put** (string $pattern, $call_to, bool $is_raw_reg_exp=false):Router_item |    
 
-|Router_item structure|
-| 
+
+## Router_item structure
+
+|Router_item structure| |
+|:--------|:-----|
 |$data  | |
 |$is_raw_exp | | 
 |$method_mask  | | 

@@ -92,7 +92,8 @@ More info:
 ALL      , NONE   , CONNECT  , DELETE   , GET      , HEAD     , OPTIONS  , PATCH    , POST     , PUT      , TRACE    
 
 
-      
+|Http\Methods methods |  |
+|:--------|:--------|      
 |static **Str** (int $method_code ) :string |Returns method name for an atlas int method code |
 |static **Get_code** (string $method_name) :int | Returns the atlas int code for a Http method.|
 |static **Match** ($method_code_or_name, int $mask) :bool|Checks if a method code match the mask|
