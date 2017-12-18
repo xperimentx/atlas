@@ -98,3 +98,4 @@ class Methods
                 : (self::Code($method_code_or_name) & $mask) != 0;
     }
 }
+

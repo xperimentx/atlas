@@ -25,16 +25,20 @@ use Xperimentx\Atlas\Http;
 class Environment
 {
     private static $__initialized = false;
+
     private static $host         = null;
     private static $host_uri     = '';
     private static $is_ajax_     = null;
     private static $is_https_    = null;
     private static $method ;
+    private static $method_code ;
     private static $port;
     private static $protocol ;
     private static $query_string ;
+    private static $request_time  ;
     private static $request_uri ;
     private static $uri          = null;
+
 
     /**
      * Checks is via is command line.
@@ -44,7 +48,6 @@ class Environment
     {
         return defined('STDIN');
     }
-
 
 
     /**
@@ -71,7 +74,7 @@ class Environment
      */
     public static  function Set_host(string $host_name)
     {
-        self::$_host    = $host_name;
+        self::$host     = $host_name;
         self::$host_uri = null; // must recalculate
         self::$uri      = null; // must recalculate
     }
@@ -148,6 +151,7 @@ class Environment
         return new Http\Uri(self::Get_uri());
     }
 
+
     /**
      * Returns a new Uri object form the requested URI.
      * @return Http\Uri_friendly
@@ -156,7 +160,6 @@ class Environment
     {
         return new Http\Uri_friendly(self::Get_uri());
     }
-
 
 
     /**
@@ -181,7 +184,7 @@ class Environment
      * @return float
      * @see Time_from_Request()
      */
-    public static function Request_time(): float
+    public static function Get_request_time(): float
     {
         return self::$request_time;
     }
@@ -202,26 +205,37 @@ class Environment
      * Protocol which the page was requested: ex: 'HTTP/1.1'.
      * @return string
      */
-    public static function Protocol(): string
+    public static function Get_protocol(): string
     {
         return self::$protocol;
     }
 
 
     /**
-     * Method used to access the page: 'GET', 'HEAD', 'POST', 'PUT'...
+     * Method used to access the page: 'CLI', 'GET', 'HEAD', 'POST', 'PUT'...
      * @var string
      */
-    public static function Method(): string
+    public static function Get_method(): string
     {
         return self::$method;
     }
 
 
     /**
+     * Int code corresponding to method code used to access the page: 'CLI', 'GET', 'HEAD', 'POST', 'PUT'...
+     * @var string
+     */
+    public static function Get_method_code(): int
+    {
+        return self::$method_code;
+    }
+
+
+
+    /**
      * @var int Server port.
      */
-    public static function Port(): int
+    public static function Get_port(): int
     {
         return self::$port;
     }
@@ -240,8 +254,11 @@ class Environment
         self::$request_time     = $_SERVER['REQUEST_TIME_FLOAT'] ?? 0.0;
         self::$protocol         = $_SERVER['SERVER_PROTOCOL'   ] ?? '';
         self::$method           = $_SERVER['REQUEST_METHOD'    ] ?? '';
-        self::$port             = (int) $_SERVER['SERVER_PORT' ] ?? 0;
+        self::$port             = (int)($_SERVER['SERVER_PORT' ] ?? 0);
         self::$request_uri      = $_SERVER['REQUEST_URI'       ] ?? '';
+
+        self::$method_code      = Http\Methods::Get_code(self::$method);
+
 
   /*
         self::$query_string     = $_SERVER['QUERY_STRING'      ] ?? '';

@@ -25,14 +25,14 @@ class Stage
 
     static private $stage   = self::PRODUCTION;
 
-    
+
     /**
      * Sets stage, trusted host name and error reporting.
      * @param string $stage             Stage  PRODUCTION, DEVELOPMENT TESTING   = 'testing';
      * @param string $host_name         If not empty sets the host_name
      * @param bool   $report_all_errors If true Indicates to php  report and display all errors.
      */
-    private static  function Set(string $stage, string $host_name, bool $report_all_errors)
+    private static  function Set(string $stage, string $host_name=null, bool $report_all_errors=true)
     {
         self::$stage = $stage;
 
@@ -85,7 +85,7 @@ class Stage
 
 
     /**
-     * Gets  the stage
+     * Gets the stage
      * @return string
      */
     public static function Get() :string
