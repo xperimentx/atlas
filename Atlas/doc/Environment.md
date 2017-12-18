@@ -10,14 +10,7 @@ which can be spoofed.
  
 ## Environment
 
-
-/**
- * Environment info.
- *
- * @link https://github.com/xperimentx/atlas/blob/master/Atlas/doc/Enviroment.md
- * @author Roberto González Vázquez
- */
-| Environment class ||
+| Environment class |     |
 |:-------|:----------|
 |static **Set_host** (string $host_name)     |  Sets host name. <br>For security reasons is recommend set this value in production stage.     |
 | | |
@@ -58,9 +51,7 @@ else Stage::Set_production ('demo.xperimentx.com');
 ```
 
 
-/**
- * Stage of the project
- */
+ 
 |class Stage| |
 |:-----------|:-------|
 |    const PRODUCTION  = 'production'; | |
