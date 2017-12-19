@@ -61,7 +61,7 @@ class Autoloader
      *
      * @param string $class_name The fully-qualified class name.
      */
-    public static function Load_class($class_name)
+    public static function Load_class(string $class_name)
     {
         // Check if is a mapped class
         if (isset(self::$class_map[$class_name]))
@@ -132,7 +132,7 @@ class Autoloader
      *
      * @param bool            $prepend          If true, will prepend base_dir instead of appending it.
      */
-    static public function Add_namespace($namespace_prefix, $base_dir, $prepend = false)
+    static public function Add_namespace(string $namespace_prefix, $base_dir, bool $prepend = false)
     {
         $namespace_prefix = trim($namespace_prefix, '\\').'\\' ;
 
@@ -168,7 +168,7 @@ class Autoloader
      * @param string      $full_qualified_class_name Full qualified class name.
      * @param string|aray $filename_with_path        File name with path.
      */
-    static public function Add_class($full_qualified_class_name, $filename_with_path)
+    static public function Add_class(string $full_qualified_class_name, $filename_with_path)
     {
         self::$class_map[$full_qualified_class_name]=$filename_with_path;
     }
@@ -189,7 +189,7 @@ class Autoloader
      * @param string $base_dir         A base directory to include
      * @param bool   $prepend          If true, will prepend basedir instead of appending it.
      */
-    static public function Add_include_path ($base_dir, $prepend = true)
+    static public function Add_include_path (string $base_dir, bool $prepend = true)
     {
         if ($prepend)
               \set_include_path (rtrim($base_dir, '\\/'). PATH_SEPARATOR . \get_include_path());
@@ -206,13 +206,16 @@ class Autoloader
      * @param int $dir_up_levels Uses path of the Parent directory's path that is $dir_up_leves levels up.
      *
      */
-    static public function Register($root_path=NULL, $dir_up_levels=0)
+    static public function Register(string $root_path=NULL, int $dir_up_levels=0)
     {
         if (self::$is_registered) reuturn;
 
         self::$is_registered   = true;
         self::$root_atlas      = __DIR__;
         self::$root_xperimentx = dirname(self::$root_atlas, 2);
+
+        if (!$root_path)
+            $root_path = $_SERVER['DOCUMENT_ROOT'] ?? null;
 
         if ($root_path)
         {
@@ -224,6 +227,16 @@ class Autoloader
         spl_autoload_register('Xperimentx\Atlas\Autoloader::load_class');
 
         ///todo: include basic atlas files
+    }
+
+
+    /**
+     * Returns root path
+     * @return string
+     */
+    static public function Get_root_path () : string
+    {
+        return self::$root_path;
     }
 }
 

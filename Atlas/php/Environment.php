@@ -38,6 +38,7 @@ class Environment
     private static $request_time  ;
     private static $request_uri ;
     private static $uri          = null;
+    private static $root_path    = null;
 
 
     /**
@@ -82,6 +83,7 @@ class Environment
 
     /**
      * Gets host name.
+     * @return string
      */
     public static function Get_host() :string
     {
@@ -238,6 +240,37 @@ class Environment
     public static function Get_port(): int
     {
         return self::$port;
+    }
+
+
+    /**
+     * Sets root path
+     * @param string $root_path
+     */
+    static public function Set_root_path (string $root_path) : string
+    {
+        self::$root_path = rtrim($root_path,'\\/');
+    }
+
+
+    /**
+     * Returns root path
+     * @return string
+     */
+    static public function Get_root_path () : string
+    {
+        if (null===self::$root_path)
+        {
+            if (class_exists('Xperimentx\Atlas\Autoloader', false))
+            {
+                self::$root_path = Autoloader::Get_root_path();
+            }
+
+            if (!self::$root_path)
+                self::$root_path = $_SERVER['DOCUMENT_ROOT'] ?? '';
+        }
+
+        return self::$root_path;
     }
 
 
