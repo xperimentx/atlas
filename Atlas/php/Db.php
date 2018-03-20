@@ -721,9 +721,12 @@ class Db
      * @param string $parent_class_name Active recod class name to extend
      * @return string Php code of the active record class
      */
-    function Active_record_class_maker(string $table, string $class_name, string $parent_class_name='\Xperimentx\Atlas\Active_record') :string
+    function Active_record_class_maker(string $table, string $class_name=null, string $parent_class_name='\Xperimentx\Atlas\Active_record') :string
     {
         $cols = $this->Show_columns($table);
+
+        if (!$class_name)
+            $class_name = ucfirst ($table);
 
         if (!$cols) return '';
         $properties ='';
@@ -775,7 +778,7 @@ class Db
         return <<<PHP
 class $class_name extends $parent_class_name
 {
-    public static _table = '$table';
+    public static \$_table = '$table';
 $properties
 }
 PHP;

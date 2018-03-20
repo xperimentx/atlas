@@ -92,9 +92,9 @@ class Environment
             self::$host  = $_SERVER['HTTP_HOST']
                          ?? $_SERVER['SERVER_NAME']
 
-                         ?? $_ENV["HOSTNAME"]
-                         ?? $_ENV["SERVER_NAME"]
-                         ?? $_ENV["COMPUTERNAME"]
+                         ?? $_ENV['HOSTNAME']
+                         ?? $_ENV['SERVER_NAME']
+                         ?? $_ENV['COMPUTERNAME']
                          ?? '';
         }
 

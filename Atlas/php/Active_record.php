@@ -51,13 +51,13 @@ class Active_record
     public $id  = NULL ;
 
     /** @var string Db table name. Redeclare in your model */
-    static public $_table = NULL;
+    public static $_table = NULL;
 
     /** @var string  Name field. Redeclare in your model if not is name */
-    static public $_name_field    =  'name';
+    public static $_name_field    =  'name';
 
     /** @var Db  Database. Redeclare in not use the default Db*/
-    static public $_db=null;
+    public static $_db=null;
 
     /** @var bool  Use obj cache by default. Redeclare if needed.     */
     static protected $_obj_cache_used_by_default = FALSE;
@@ -114,7 +114,7 @@ class Active_record
     {
         $this->id=null;
 
-        $this->Assign_data($data);
+        $this->Assign($data);
 
 
         if (!is_null($this->id))
@@ -133,13 +133,13 @@ class Active_record
      * Calls <b>On_load</b> when it loads successfully.
      *
      * @param string $where_sql Safe WHERE statement.
-     *                          SELECT * FROM `$this->_table` WHERE $where_sql
+     *                          SELECT * FROM `_table` WHERE $where_sql
      *
      * @return bool
      */
     public function Load_from_where($where_sql)
     {
-        return $this->Load_from_data(static::$_db->Row("SELECT * FROM `$this->_table` WHERE $where_sql"));
+        return $this->Load_from_data(static::$_db->Row('SELECT * FROM `'.static::$_table."` WHERE $where_sql"));
     }
 
 
@@ -161,7 +161,7 @@ class Active_record
      * @param misc $field_value
      * @return bool
      */
-    static public function Load_from_field($field_name, $field_value)
+    public static function Load_from_field($field_name, $field_value)
     {
         return $this->Load_from_where("`$field_name`=".static::$_db->Safe($field_value));
     }
@@ -170,7 +170,7 @@ class Active_record
      * Gets a new object.
      * @return static
      */
-     static public function Obj_new()
+     public static function Obj_new()
     {
         return new static;
     }
@@ -181,13 +181,13 @@ class Active_record
      * If not data returns null.
      *
      * @param string $where_sql Safe WHERE statement.
-     *                          SELECT * FROM `$this->_table` WHERE $where_sql
+     *                          SELECT * FROM `_table` WHERE $where_sql
      *
      * @param bool|NULL $use_cache Use cache, Null=>$_cache_used_by_default
      *
      * @return static|null
      */
-    static public function  Obj_where($where_sql, $use_cache=null)
+    public static function  Obj_where($where_sql, $use_cache=null)
     {
         if ($use_cache or $use_cache===NULL && static::$_obj_cache_used_by_default )
         {
@@ -210,7 +210,7 @@ class Active_record
      * @param int Primary key
      * @return bool
      */
-    public function Obj_id($id)
+    public static function Obj_id($id)
     {
         return static::Obj_where('id='.(int)$id);
     }
@@ -222,7 +222,7 @@ class Active_record
      * @param misc $field_value
      * @return bool
      */
-    static public function Obj_field($field_name, $field_value)
+    public static function Obj_field($field_name, $field_value)
     {
         return static::Obj_where("`$field_name`=".static::$_db->Safe($field_value));
     }
@@ -252,7 +252,7 @@ class Active_record
      * Deletes records from db. Do not call On_delete().
      *
      * @param string $where_sql Safe WHERE statement.
-     *                          DELETE FROM `$this->_table` WHERE $where_sql
+     *                          DELETE FROM `_table` WHERE $where_sql
      * @return int
      */
     public function Delete_where($where_sql)
@@ -263,7 +263,7 @@ class Active_record
 
     public function Truncate()
     {
-        return static::$_db->Truncate_table($this->_table);
+        return static::$_db->Truncate_table(static::$_table);
     }
 
 
@@ -286,19 +286,19 @@ class Active_record
      * Vector id=>name
      * @return array
      */
-    static public function Vector_name($sql_extra=NULL, $order_by='2')
+    public static function Vector_name($sql_extra=NULL, $order_by='2')
     {
         return static::Vector (static::$_name_field, $sql_extra, $order_by);
     }
 
 
-    static public function Scalar_where($field_name,$where_sql)
+    public static function Scalar_where($field_name,$where_sql)
     {
         return static::$_db->Scalar("SELECT $field_name FROM `".static::$_table."` WHERE $where_sql");
     }
 
 
-    static public function Scalar_from_id($field_name)
+    public static function Scalar_from_id($field_name)
     {
         return static::Scalar_where($field_name, 'id='.(int)$this->id);
     }
@@ -312,9 +312,9 @@ class Active_record
      * @param string $extra_sql  Extra sql after FROM _table: joins, where, order by...
      * @return array
      */
-    static public function Rows_fields($fields=null, $extra_sql=null,  $class_name='stdClass')
+    public static function Rows_fields($fields=null, $extra_sql=null,  $class_name='stdClass')
     {
-        $fields_x = $fields ?: "`$this->_table`.*";
+        $fields_x = $fields ?: '`'.static::$_table.'`.*';
 
         return static::$_db->Rows ("SELECT $fields_x FROM `".static::$_table."` $extra_sql;", $class_name);
     }
@@ -327,9 +327,9 @@ class Active_record
      * @param string $extra_sql  Extra sql after FROM _table: joins, where, order by...
      * @return static[]
      */
-    static public function Rows ($extra_sql=null)
+    public static function Rows ($extra_sql=null)
     {
-        return static::$_db->Rows ("SELECT `$this->_table`.* FROM `".static::$_table."` $extra_sql;", get_called_class());
+        return static::$_db->Rows ('SELECT `'.static::$_table.'`.* FROM `'.static::$_table."` $extra_sql;", get_called_class());
     }
 
 
@@ -349,7 +349,7 @@ class Active_record
         if ($is_new && property_exists($this, 'date_created'))
             $this->date_created = date('Y-m-d H:i:s');
 
-        if (!$is_new && property_exists($this, 'date_modified'))
+        if (property_exists($this, 'date_modified'))
             $this->date_modified = date('Y-m-d H:i:s');
 
         //preparación
@@ -423,7 +423,7 @@ class Active_record
      * @param bool    $do_safe  This values will be processed by Safe().
      * @return int|null         Affected rows or null if error
      */
-    static public function Update_query($data, $where, $do_safe)
+    public static function Update_query($data, $where, $do_safe)
     {
         return static::$_db->Update(static::$_table, $data, $where, $do_safe);
     }

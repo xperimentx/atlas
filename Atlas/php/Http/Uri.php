@@ -43,14 +43,14 @@ class Uri
     /**@var string Query          */ public $query     = '';
     /**@var string Fragment       */ public $fragment  = '';
 
-    
+
     /**
      * @param string $uri Uri to parse
      */
-    function __construct (string $url=null)
+    function __construct (string $uri=null)
     {
-        if ($url)
-            $this->Parse($url);
+        if ($uri)
+            $this->Parse($uri);
     }
 
 

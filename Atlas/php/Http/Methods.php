@@ -36,7 +36,7 @@ class Methods
 
 
     /**
-     * Retursn method name for an atlas int method code
+     * Returns method name for an atlas int method code
      * @param int $method_code
      * @return string  GET, POST...
      */
