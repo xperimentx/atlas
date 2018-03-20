@@ -116,7 +116,6 @@ class Active_record
 
         $this->Assign($data);
 
-
         if (!is_null($this->id))
         {
             $this->On_load();
@@ -137,9 +136,11 @@ class Active_record
      *
      * @return bool
      */
-    public function Load_from_where($where_sql)
+    public function Load_from_where($where_sql, $from_sql_extra=null)
     {
-        return $this->Load_from_data(static::$_db->Row('SELECT * FROM `'.static::$_table."` WHERE $where_sql"));
+        return $this->Load_from_data(Db::Row('SELECT `'.static::$_table.'`.*
+                                              FROM   `'.static::$_table."` $from_sql_extra
+                                              WHERE $where_sql"));
     }
 
 
@@ -149,9 +150,9 @@ class Active_record
      * @param int Primary key
      * @return bool
      */
-    public function Load_from_id($id)
+    public function Load_from_id(int $id, $where_sql_extra=null, $from_sql_extra=null)
     {
-        return $this->Load_from_where('id='.(int)$id);
+        return $this->Load_from_where("id=$id $where_sql_extra", $from_sql_extra);
     }
 
 
@@ -161,9 +162,10 @@ class Active_record
      * @param misc $field_value
      * @return bool
      */
-    public static function Load_from_field($field_name, $field_value)
+    public static function Load_from_field($field_name, $field_value, $where_sql_extra=null, $from_sql_extra=null)
     {
-        return $this->Load_from_where("`$field_name`=".static::$_db->Safe($field_value));
+        return $this->Load_from_where("`$field_name`=".static::$_db->Safe($field_value).' '.$where_sql_extra
+                                     , $from_sql_extra);
     }
 
     /**
@@ -187,7 +189,7 @@ class Active_record
      *
      * @return static|null
      */
-    public static function  Obj_where($where_sql, $use_cache=null)
+    public static function  Obj_where($where_sql, $from_sql_extra=null, $use_cache=null)
     {
         if ($use_cache or $use_cache===NULL && static::$_obj_cache_used_by_default )
         {
@@ -199,7 +201,7 @@ class Active_record
         }
         else $obj = new static();
 
-        $obj->Load_from_where($where_sql);
+        $obj->Load_from_where($where_sql, $from_sql_extra);
 
         return is_null($obj->id) ? null: $obj;
     }
@@ -210,9 +212,9 @@ class Active_record
      * @param int Primary key
      * @return bool
      */
-    public static function Obj_id($id)
+  public static function Obj_id(int $id, $where_sql_extra=null, $from_sql_extra=null,  $use_cache=null)
     {
-        return static::Obj_where('id='.(int)$id);
+        return static::Obj_where("id=$id $where_sql_extra", $from_sql_extra, $use_cache);
     }
 
 
@@ -222,9 +224,11 @@ class Active_record
      * @param misc $field_value
      * @return bool
      */
-    public static function Obj_field($field_name, $field_value)
+    public static function Obj_field($field_name, $field_value
+                                    ,$where_sql_extra=null, $from_sql_extra=null,  $use_cache=null)
     {
-        return static::Obj_where("`$field_name`=".static::$_db->Safe($field_value));
+        return static::Obj_where("`$field_name`=".static::$_db->Safe($field_value).' '.$where_sql_extra
+                                , $from_sql_extra, $use_cache);
     }
 
 
