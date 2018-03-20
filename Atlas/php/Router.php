@@ -36,6 +36,9 @@ class Router
 		':segment)'	 => '[^/]+)'
     ];
 
+    /** @vasr string[] */
+    protected static $user_placeholders = [];
+
     /** @var Router_item[] */
     protected static $items = [];
 
@@ -56,7 +59,7 @@ class Router
 
     public static function Add_placeholder($template, $regex)
     {
-        self::$place_holder[$template]=$regex;
+        self::$user_placeholders[$template]=$regex;
     }
 
 
@@ -67,6 +70,16 @@ class Router
     public static function Set_uri_path(string $uri)
     {
         self::$uri_path = $uri;
+    }
+
+
+    /**
+     * Gets the current URI path
+     * @return string
+     */
+    public static function Get_uri_path(  )
+    {
+        return self::$uri_path;
     }
 
 
@@ -112,8 +125,9 @@ class Router
 
         $matches = null;
 
-        $wild_keys   = array_keys   (self::$placeholders);
-        $wild_values = array_values (self::$placeholders);
+        $wild        = self::$user_placeholders + self::$placeholders;
+        $wild_keys   = array_keys   ($wild);
+        $wild_values = array_values ($wild);
 
         self::$continue_routing = true;
 
@@ -137,9 +151,11 @@ class Router
                     {
                         echo $ok ? "\n\n ok --- {$i->pattern}\n" : "\n\n ko --- {$i->pattern}\n";
                         if ($matches) print_r ($matches);
+                        self::$continue_routing = !$i->stops_routing;
                     }
 
-                    elseif (is_string($i->data))
+                    if (!$ok) break;
+                    if (is_string($i->data) && strpos($i->data, '->'))
                     {
                         $aux= explode('::',$i->data);
                         if (count($aux)!=2)
@@ -147,20 +163,47 @@ class Router
 
                         $aux_obj = new $aux[0];
                         $aux_obj->{$aux[1]}($matches);
+                        self::$continue_routing = !$i->stops_routing;
                     }
-
+/*
                     elseif ($i->data instanceof \Closure)
                     {
                         ($i->data)($matches);
+                        self::$continue_routing = !$i->stops_routing;
+                    }*/
+
+                    elseif (is_callable($i->data))
+                    {
+                        call_user_func($i->data,$matches);
+                        self::$continue_routing = !$i->stops_routing;
                     }
                     break;
 
+
                 case Router_item::REPLACE:
                     $result = preg_replace($reg_ex, $i->data, self::$uri_path);
-                    
+
                     if (null!==$result)
                         self::$uri_path = $result;
+
+                    self::$continue_routing = !$i->stops_routing;
                     break;
+
+                case Router_item::REDIRECT:
+
+                    $ok =  preg_match($reg_ex, self::$uri_path, $matches);
+
+                    if (!$ok) break;
+
+                    $result = preg_replace($reg_ex, $i->data, self::$uri_path);
+
+                    if (null!==$result)
+                        \Atlas::Stop_url ($result);
+
+                    self::$continue_routing = !$i->stops_routing;
+
+                    break;
+
 
                 default:
 
@@ -173,7 +216,9 @@ class Router
 
     }
 
-
+    /**
+     * @return Router_item
+     */
     public static function Add(string $pattern, $call_to, bool $is_raw_reg_exp=false)
     {
         self::$items[] = $i = new Router_item();
@@ -181,24 +226,49 @@ class Router
         $i->pattern    = self::$pattern_prefix.$pattern;
         $i->data       = is_string($call_to) ?self::$call_to_prefix.$call_to : $call_to;
         $i->mode       = Router_item::BASIC;
+        return $i;
     }
 
-    public static function Replace(string $pattern, string $replacement, bool $is_raw_reg_exp=false)
+
+    /**
+     * @return Router_item
+     */
+    public static function Rewrite(string $pattern, string $replacement, bool $is_raw_reg_exp=false)
+    {
+       self::$items[]    = $i = new Router_item();
+        $i->mode          = Router_item::REPLACE;
+        $i->stops_routing = false;
+        $i->pattern       = self::$pattern_prefix. $pattern;
+        $i->is_raw_exp    = $is_raw_reg_exp;
+        $i->data          = $replacement;
+        return $i;
+    }
+
+
+    /**
+     * @return Router_item
+     */
+    public static function Redirect(string $pattern, string $replacement, bool $is_raw_reg_exp=false)
     {
         self::$items[] = $i = new Router_item();
+        $i->mode       = Router_item::REDIRECT;
         $i->is_raw_exp = $is_raw_reg_exp;
         $i->pattern    = self::$pattern_prefix. $pattern;
         $i->data       = $replacement;
-        $i->mode       = Router_item::REPLACE;
+        return $i;
     }
 
 
+    /**
+     * @return Router_item
+     */
     public static function Add_methods(int $method_mask, string $pattern, $call_to, bool $is_raw_reg_exp=false)
     {
         $obj = $this->Add($pattern, $call_to, $is_raw_reg_exp);
         $obj->method_mask = $method_mask;
         return $obj;
     }
+
 
     public static function Add_connect(string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::CONNECT, $pattern, $call_to, $is_raw_reg_exp);}
     public static function Add_delete (string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::DELETE , $pattern, $call_to, $is_raw_reg_exp);}

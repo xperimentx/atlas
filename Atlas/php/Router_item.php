@@ -23,8 +23,9 @@ use Xperimentx\Atlas\Http\Methods;
  */
 class Router_item
 {
-    const REPLACE = 1;
-    const BASIC   = 2;
+    const REPLACE  = 1;
+    const REDIRECT = 3;
+    const BASIC    = 2;
 
     public $data ;
     public $is_raw_exp = false;
@@ -49,7 +50,7 @@ class Router_item
         $this->stops_routing = true;
     }
 
-    public function Cc()
+    public function Not_last()
     {
         $this->stops_routing = false;
     }
