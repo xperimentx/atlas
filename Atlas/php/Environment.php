@@ -293,16 +293,6 @@ class Environment
         self::$request_uri      = $_SERVER['REQUEST_URI'       ] ?? '';
         self::$method_code      = Http\Methods::Get_code(self::$method);
 
-
-  /*
-        self::$query_string     = $_SERVER['QUERY_STRING'      ] ?? '';
-        self::$php_self         = $_SERVER['PHP_SELF'          ] ?? '';
-        self::$document_root    = $_SERVER['DOCUMENT_ROOT'       ] ?? '';
-        self::$script_filename  = $_SERVER['SCRIPT_FILENAME'     ] ?? '';
-        self::$script_name      = $_SERVER['SCRIPT_NAME'         ] ?? '';
-        self::$http_accept_language = $_SERVER['HTTP_ACCEPT_LANGUAGE'           ] ?? '';
-
-*/
     }
 }
 
