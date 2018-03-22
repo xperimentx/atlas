@@ -7,7 +7,7 @@
  * @link      https://xperimentX.com
  *
  * @author    Roberto González Vázquez, https://github.com/xperimentx
- * @copyright 2017 Roberto González Vázquez
+ * @copyright 2017 - 2018 Roberto González Vázquez
  *
  * @license   MIT
  */
