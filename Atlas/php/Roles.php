@@ -12,8 +12,7 @@
  */
 
 namespace Xperimentx\Atlas;
-
-namespace Atlas;
+  
 
 /**
  * Role-based security

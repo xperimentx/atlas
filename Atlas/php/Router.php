@@ -54,8 +54,13 @@ class Router
     protected static $original_uri_path=null;
     protected static $uri_path =null;
     protected static $http_method = null;
+    
     protected static $pattern_prefix = null;
     protected static $call_to_prefix = null;
+    
+    protected static $pattern_prefix_lifo = [];
+    protected static $call_to_prefix_lifo = [];
+    protected static $uri_path_lifo       = [];
 
     public static function Add_placeholder($template, $regex)
     {
@@ -144,6 +149,8 @@ class Router
 
             switch ($i->mode)
             {
+                // ---------------------------------------------------------------------------------
+                
                 case Router_item::BASIC:
                     $ok =  preg_match($reg_ex, self::$uri_path, $matches);
 
@@ -179,7 +186,8 @@ class Router
                     }
                     break;
 
-
+                // ---------------------------------------------------------------------------------
+                    
                 case Router_item::REPLACE:
                     $result = preg_replace($reg_ex, $i->data, self::$uri_path);
 
@@ -188,7 +196,22 @@ class Router
 
                     self::$continue_routing = !$i->stops_routing;
                     break;
+                
+                // ---------------------------------------------------------------------------------
+                    
+                case Router_item::PUSH_URI_PATH:
+                    array_push(self::$uri_path_lifo, self::$uri_path ) ;                     
+                    break;
+                
+                // ---------------------------------------------------------------------------------
+                
+                case Router_item::POP_URI_PATH:
+                    if (self::$uri_path_lifo)
+                        self::$uri_path = array_pop(self::$uri_path_lifo);                                        
+                    break;
 
+                // ---------------------------------------------------------------------------------
+                
                 case Router_item::REDIRECT:
 
                     $ok =  preg_match($reg_ex, self::$uri_path, $matches);
@@ -217,6 +240,8 @@ class Router
     }
 
     /**
+     * Adds call_to step.
+     * In this step $call_to is executed if the pattern is met
      * @return Router_item
      */
     public static function Add(string $pattern, $call_to, bool $is_raw_reg_exp=false)
@@ -231,11 +256,13 @@ class Router
 
 
     /**
+     * Adds a rewrite step.
+     * In this step, the uri_path is rewritten if the pattern is met
      * @return Router_item
      */
     public static function Rewrite(string $pattern, string $replacement, bool $is_raw_reg_exp=false)
     {
-       self::$items[]    = $i = new Router_item();
+        self::$items[]    = $i = new Router_item();
         $i->mode          = Router_item::REPLACE;
         $i->stops_routing = false;
         $i->pattern       = self::$pattern_prefix. $pattern;
@@ -243,9 +270,11 @@ class Router
         $i->data          = $replacement;
         return $i;
     }
-
+    
 
     /**
+     * Adds a redirect step.
+     * In this step, redirects to a new url if the pattern is met
      * @return Router_item
      */
     public static function Redirect(string $pattern, string $replacement, bool $is_raw_reg_exp=false)
@@ -257,7 +286,30 @@ class Router
         $i->data       = $replacement;
         return $i;
     }
-
+    
+    
+    /**
+     * Add a save uri to the lifo step.
+     * In this step, pushes the current uri_path to the uri_path_lifo.
+     * Saves the state.
+     */
+    public static function Push_uri_path()
+    {
+        self::$items[] = $i = new Router_item();
+        $i->mode       = Router_item::PUSH_URI_PATH;        
+    }
+    
+    
+    /**
+     * Add a recover uri freom the lifo step.
+     * Pops the uri_path from muri_path_lifo in this step.     
+     */
+    public static function Pop_uri_path()
+    {
+        self::$items[] = $i = new Router_item();
+        $i->mode       = Router_item::POP_URI_PATH;        
+    }
+        
 
     /**
      * @return Router_item
@@ -281,9 +333,34 @@ class Router
     public static function Add_trace  (string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::TRACE  , $pattern, $call_to, $is_raw_reg_exp);}
     public static function Add_patch_put(string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::PATCH|Methods::PUT, $pattern, $call_to, $is_raw_reg_exp);}
 
-    public static function Prefix(string $patter_prefix='', $call_to_prefix='')
+    
+    public static function Pattern_prefix_begin(string $pattern_prefix='', string $call_to_prefix='')
     {
+        array_push(self::$pattern_prefix_lifo, $pattern_prefix);        
         self::$pattern_prefix = $patter_prefix;
-        self::$call_to_prefix = $call_to_prefix;
     }
+    
+    
+    public static function Call_to_prefix_begin(string $pattern_prefix='', string $call_to_prefix='')
+    {        
+        array_push(self::$call_to_prefix_lifo, $call_to_prefix);     
+        self::$call_to_prefix = $call_to_prefix;               
+    }
+    
+
+    public static function Call_to_prefix_end()
+    {
+        self::$call_to_prefix = self::$call_to_prefix_lifo 
+                              ? array_pop(self::$call_to_prefix_lifo )
+                              : '';
+    }
+   
+    
+    public static function Pattern_prefix_end()
+    {
+        self::$pattern_prefix = self::$pattern_prefix_lifo
+                              ? array_pop(self::$pattern_prefix_lifo )
+                              : '';
+    }
+                
 }

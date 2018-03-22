@@ -1,16 +1,3 @@
-Config
-App
-Control
-Web
-media
-log
-devel
-index.php
-migration.php
-App.php
-
-
-
 # project files --------
 nbproject
 .idea
@@ -22,14 +9,3 @@ nbproject
 Thumbs.db
 .DS_Store
 
-
-# composer ---------------
-vendor
-composer.phar
-
-
-# phpunit ----------------
-phpunit.phar
-phpunit.xml
-tests/_output/*
-tests/_support/_generated

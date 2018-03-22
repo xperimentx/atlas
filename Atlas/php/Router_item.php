@@ -26,11 +26,13 @@ class Router_item
     const REPLACE  = 1;
     const REDIRECT = 3;
     const BASIC    = 2;
+    const PUSH_URI_PATH = 10;
+    const POP_URI_PATH  = 11;
 
     public $data ;
-    public $is_raw_exp = false;
+    public $is_raw_exp   = false;
     public $method_mask = Methods::ALL;
-    public $mode = null;
+    public $mode        = null;
     public $pattern ;
     public $stops_routing = true;
 
