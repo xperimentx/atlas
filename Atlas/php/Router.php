@@ -14,7 +14,7 @@
 
 namespace Xperimentx\Atlas;
 
-use Xperimentx\Atlas\Http\Status_codes;
+use Xperimentx\Atlas;
 use Xperimentx\Atlas\Http\Methods;
 
 /**
@@ -25,7 +25,7 @@ use Xperimentx\Atlas\Http\Methods;
 class Router
 {
  	/**
-	 * @var string[] Uri Placeholders
+	 * @var string[] Uri Place holders
 	 */
 	protected static $placeholders = [
         ':alpha)'	 => '[a-zA-Z]+)',
@@ -54,10 +54,10 @@ class Router
     protected static $original_uri_path=null;
     protected static $uri_path =null;
     protected static $http_method = null;
-    
+
     protected static $pattern_prefix = null;
     protected static $call_to_prefix = null;
-    
+
     protected static $pattern_prefix_lifo = [];
     protected static $call_to_prefix_lifo = [];
     protected static $uri_path_lifo       = [];
@@ -150,7 +150,7 @@ class Router
             switch ($i->mode)
             {
                 // ---------------------------------------------------------------------------------
-                
+
                 case Router_item::BASIC:
                     $ok =  preg_match($reg_ex, self::$uri_path, $matches);
 
@@ -161,33 +161,16 @@ class Router
                         self::$continue_routing = !$i->stops_routing;
                     }
 
-                    if (!$ok) break;
-                    if (is_string($i->data) && strpos($i->data, '->'))
+                    if ($ok)
                     {
-                        $aux= explode('::',$i->data);
-                        if (count($aux)!=2)
-                            continue;
-
-                        $aux_obj = new $aux[0];
-                        $aux_obj->{$aux[1]}($matches);
+                        Atlas::Call_to ($i->data, $matches);
                         self::$continue_routing = !$i->stops_routing;
                     }
-/*
-                    elseif ($i->data instanceof \Closure)
-                    {
-                        ($i->data)($matches);
-                        self::$continue_routing = !$i->stops_routing;
-                    }*/
 
-                    elseif (is_callable($i->data))
-                    {
-                        call_user_func($i->data,$matches);
-                        self::$continue_routing = !$i->stops_routing;
-                    }
                     break;
 
                 // ---------------------------------------------------------------------------------
-                    
+
                 case Router_item::REPLACE:
                     $result = preg_replace($reg_ex, $i->data, self::$uri_path);
 
@@ -196,22 +179,22 @@ class Router
 
                     self::$continue_routing = !$i->stops_routing;
                     break;
-                
+
                 // ---------------------------------------------------------------------------------
-                    
+
                 case Router_item::PUSH_URI_PATH:
-                    array_push(self::$uri_path_lifo, self::$uri_path ) ;                     
-                    break;
-                
-                // ---------------------------------------------------------------------------------
-                
-                case Router_item::POP_URI_PATH:
-                    if (self::$uri_path_lifo)
-                        self::$uri_path = array_pop(self::$uri_path_lifo);                                        
+                    array_push(self::$uri_path_lifo, self::$uri_path ) ;
                     break;
 
                 // ---------------------------------------------------------------------------------
-                
+
+                case Router_item::POP_URI_PATH:
+                    if (self::$uri_path_lifo)
+                        self::$uri_path = array_pop(self::$uri_path_lifo);
+                    break;
+
+                // ---------------------------------------------------------------------------------
+
                 case Router_item::REDIRECT:
 
                     $ok =  preg_match($reg_ex, self::$uri_path, $matches);
@@ -221,22 +204,17 @@ class Router
                     $result = preg_replace($reg_ex, $i->data, self::$uri_path);
 
                     if (null!==$result)
-                        \Atlas::Stop_url ($result);
+                        Atlas::Stop_url ($result);
 
                     self::$continue_routing = !$i->stops_routing;
 
                     break;
-
-
                 default:
-
             }
         }
         /*
-
         if (self::$continue_routing)
             self::$item_default->Route ($method_code, self::$current_uri, self::$original_uri);*/
-
     }
 
     /**
@@ -270,7 +248,7 @@ class Router
         $i->data          = $replacement;
         return $i;
     }
-    
+
 
     /**
      * Adds a redirect step.
@@ -286,8 +264,8 @@ class Router
         $i->data       = $replacement;
         return $i;
     }
-    
-    
+
+
     /**
      * Add a save uri to the lifo step.
      * In this step, pushes the current uri_path to the uri_path_lifo.
@@ -296,20 +274,20 @@ class Router
     public static function Push_uri_path()
     {
         self::$items[] = $i = new Router_item();
-        $i->mode       = Router_item::PUSH_URI_PATH;        
+        $i->mode       = Router_item::PUSH_URI_PATH;
     }
-    
-    
+
+
     /**
      * Add a recover uri freom the lifo step.
-     * Pops the uri_path from muri_path_lifo in this step.     
+     * Pops the uri_path from muri_path_lifo in this step.
      */
     public static function Pop_uri_path()
     {
         self::$items[] = $i = new Router_item();
-        $i->mode       = Router_item::POP_URI_PATH;        
+        $i->mode       = Router_item::POP_URI_PATH;
     }
-        
+
 
     /**
      * @return Router_item
@@ -333,34 +311,34 @@ class Router
     public static function Add_trace  (string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::TRACE  , $pattern, $call_to, $is_raw_reg_exp);}
     public static function Add_patch_put(string $pattern, $call_to, bool $is_raw_reg_exp=false) {return self::Methods(Methods::PATCH|Methods::PUT, $pattern, $call_to, $is_raw_reg_exp);}
 
-    
-    public static function Pattern_prefix_begin(string $pattern_prefix='', string $call_to_prefix='')
+
+    public static function Pattern_prefix_begin(string $pattern_prefix='' )
     {
-        array_push(self::$pattern_prefix_lifo, $pattern_prefix);        
-        self::$pattern_prefix = $patter_prefix;
+        array_push(self::$pattern_prefix_lifo, $pattern_prefix);
+        self::$pattern_prefix = $pattern_prefix;
     }
-    
-    
-    public static function Call_to_prefix_begin(string $pattern_prefix='', string $call_to_prefix='')
-    {        
-        array_push(self::$call_to_prefix_lifo, $call_to_prefix);     
-        self::$call_to_prefix = $call_to_prefix;               
+
+
+    public static function Call_to_prefix_begin(string $call_to_prefix='')
+    {
+        array_push(self::$call_to_prefix_lifo, $call_to_prefix);
+        self::$call_to_prefix = $call_to_prefix;
     }
-    
+
 
     public static function Call_to_prefix_end()
     {
-        self::$call_to_prefix = self::$call_to_prefix_lifo 
+        self::$call_to_prefix = self::$call_to_prefix_lifo
                               ? array_pop(self::$call_to_prefix_lifo )
                               : '';
     }
-   
-    
+
+
     public static function Pattern_prefix_end()
     {
         self::$pattern_prefix = self::$pattern_prefix_lifo
                               ? array_pop(self::$pattern_prefix_lifo )
                               : '';
     }
-                
+
 }

@@ -13,6 +13,7 @@
 
 namespace Xperimentx\Atlas;
 
+
 /**
  * Autoloader, PSR-4 compatible.
  *
@@ -41,6 +42,7 @@ class Autoloader
      * @see Add_namespace()
      */
     static private $namespace_map = [];
+
 
     /**
      * @var string[]  Maps classes with their file name with path.
@@ -72,17 +74,11 @@ class Autoloader
 
         $translated     = str_replace('\\','/',$class_name).'.php';
 
-        // Xperimentx Atlas default mapping, simply to be a little faster.
-        if ('Xperimentx\\Atlas\\' === substr($class_name, 0, 17))
-        {
-            include_once self::$root_atlas.  substr($translated, 16);
-            return;
-        }
-
         // Xperimentx Packages default mapping, simply to be a little faster.
         if ('Xperimentx\\' === substr($class_name, 0, 11))
         {
             $pos = strpos($class_name, '\\', 12);
+
             include self::$root_xperimentx
                     . substr($translated, 10, $pos-9) // package
                     . 'php'
@@ -138,9 +134,14 @@ class Autoloader
 
         if (is_array($base_dir))
         {
-            if     (!isset(self::$namespace_map[$namespace_prefix]))  self::$namespace_map[$namespace_prefix] = $base_dir;
-            elseif ($prepend)                               self::$namespace_map[$namespace_prefix] = array_merge ($base_dir, self::$namespace_map[$namespace_prefix]);
-            else                                            self::$namespace_map[$namespace_prefix] = array_merge (self::$namespace_map[$namespace_prefix], $base_dir);
+            if (!isset(self::$namespace_map[$namespace_prefix]))
+                self::$namespace_map[$namespace_prefix] = $base_dir;
+
+            elseif ($prepend)
+                self::$namespace_map[$namespace_prefix] = array_merge ($base_dir, self::$namespace_map[$namespace_prefix]);
+
+            else
+                self::$namespace_map[$namespace_prefix] = array_merge (self::$namespace_map[$namespace_prefix], $base_dir);
         }
 
 
@@ -206,13 +207,15 @@ class Autoloader
      * @param int $dir_up_levels Uses path of the Parent directory's path that is $dir_up_leves levels up.
      *
      */
-    static public function Register(string $root_path=NULL, int $dir_up_levels=0)
+    static public function Register(string $root_path=null, int $dir_up_levels=0, $include_basic_atlas_fn=true )
     {
         if (self::$is_registered) reuturn;
 
         self::$is_registered   = true;
         self::$root_atlas      = __DIR__;
         self::$root_xperimentx = dirname(self::$root_atlas, 2);
+
+        include_once  self::$root_atlas .'/Atlas.php' ;
 
         if (!$root_path)
             $root_path = $_SERVER['DOCUMENT_ROOT'] ?? null;
@@ -227,6 +230,10 @@ class Autoloader
         spl_autoload_register('Xperimentx\Atlas\Autoloader::load_class');
 
         ///todo: include basic atlas files
+        if ($include_basic_atlas_fn)
+        {
+            include self::$root_atlas .'/Atlas-fn.php' ;
+        }
     }
 
 

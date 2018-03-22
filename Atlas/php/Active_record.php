@@ -47,7 +47,7 @@ namespace Xperimentx\Atlas;
  */
 class Active_record
 {
-     /** @var int Primary key, auto increment */
+    /** @var int Primary key, auto increment */
     public $id  = NULL ;
 
     /** @var string Db table name. Redeclare in your model */
